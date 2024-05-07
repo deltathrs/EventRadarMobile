@@ -1,5 +1,5 @@
-import 'package:event_radar2/pages/home_screen.dart';
-import 'package:event_radar2/pages/profile.dart';
+import 'package:event_radar2/pages/home/home_screen.dart';
+import 'package:event_radar2/pages/profile/profile.dart';
 import 'package:event_radar2/pages/schedule/schedule_screen.dart';
 import 'package:flutter/material.dart';
 

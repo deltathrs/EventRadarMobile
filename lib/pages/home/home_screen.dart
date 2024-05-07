@@ -1,6 +1,7 @@
 import 'package:event_radar2/components/homepage/homepage_eventcard.dart';
 import 'package:event_radar2/components/homepage/homepage_speakers.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:event_radar2/pages/home/search_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -25,16 +26,48 @@ class _HomePageState extends State<HomePage> {
   }
 
   final CarouselController carouselController = CarouselController();
-  final TextEditingController _searchController = TextEditingController();
+
   int adIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          IconButton(onPressed: signUserOut, icon: const Icon(Icons.logout)),
-        ],
-      ),
+          scrolledUnderElevation: 0,
+          centerTitle: true,
+          title: GestureDetector(
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => SearchScreen()));
+            },
+            child: Container(
+              height: 37,
+              width: 378,
+              decoration: BoxDecoration(
+                border: Border.all(color: Color(0xFF6E6E6E)),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 3,
+                  ),
+                  Icon(Icons.search),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    'Search public speaking webinar',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                      color: Color(0xFF6E6E6E),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          )),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
