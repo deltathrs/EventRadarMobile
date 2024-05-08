@@ -35,7 +35,9 @@ dependencies:
   flutter:
     sdk: flutter
   google_sign_in: ^6.2.1
+  iconify_flutter: ^0.0.5
   intl: ^0.19.0
+  readmore: ^3.0.0
   syncfusion_flutter_calendar: ^20.4.44
   table_calendar: ^3.1.0
 
@@ -61,6 +63,7 @@ flutter:
     - asset/img/homepage/
     - asset/img/profile/
     - asset/img/search/
+    - asset/img/event/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

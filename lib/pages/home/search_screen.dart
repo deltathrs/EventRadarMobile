@@ -1,4 +1,5 @@
-import 'package:event_radar2/pages/home/event_box.dart';
+import 'package:event_radar2/pages/event/event_box.dart';
+import 'package:event_radar2/pages/event/event_detail.dart';
 import 'package:flutter/material.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -269,9 +270,15 @@ EventList() {
               shrinkWrap: true,
               itemCount: 6,
               itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: EventBox(),
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => EventDetail()));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: EventBox(),
+                  ),
                 );
               }),
         ),

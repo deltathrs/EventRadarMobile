@@ -1,6 +1,7 @@
 import 'package:event_radar2/components/homepage/homepage_eventcard.dart';
 import 'package:event_radar2/components/homepage/homepage_speakers.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:event_radar2/pages/event/event_detail.dart';
 import 'package:event_radar2/pages/home/search_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -174,13 +175,19 @@ class _HomePageState extends State<HomePage> {
           scrollDirection: Axis.horizontal,
           itemCount: 3, // Number of items you want to display
           itemBuilder: (context, index) {
-            return HomepageEventCard(
-              title: "Public Speaking Webinar",
-              image: Image.asset('asset/img/homepage/event1.png'),
-              lastRegistrationDate: DateTime.now(),
-              eventDate: DateTime.now(),
-              eventType: "Webinar",
-              eventCategory: ["Public Speaking", "Webinar"],
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => EventDetail()));
+              },
+              child: HomepageEventCard(
+                title: "Public Speaking Webinar",
+                image: Image.asset('asset/img/homepage/event1.png'),
+                lastRegistrationDate: DateTime.now(),
+                eventDate: DateTime.now(),
+                eventType: "Webinar",
+                eventCategory: ["Public Speaking", "Webinar"],
+              ),
             );
           },
         ),
