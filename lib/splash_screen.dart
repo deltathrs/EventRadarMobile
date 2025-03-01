@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'authentication/auth_screen.dart';
+import 'feature/authentication/presentation/screen/auth_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen>
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     Future.delayed(const Duration(seconds: 5), () {
       Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (_) => AuthPage()));
+          .pushReplacement(MaterialPageRoute(builder: (_) => const AuthPage()));
     });
   }
 
