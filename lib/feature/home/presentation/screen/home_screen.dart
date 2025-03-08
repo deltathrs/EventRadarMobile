@@ -40,8 +40,8 @@ class _HomePageState extends State<HomePage> {
           centerTitle: true,
           title: GestureDetector(
             onTap: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => const SearchScreen()));
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const SearchScreen()));
             },
             child: Container(
               height: 37.h,
@@ -180,8 +180,10 @@ class _HomePageState extends State<HomePage> {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const EventDetail()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const EventDetail()));
               },
               child: HomepageEventCard(
                 title: "Public Speaking Webinar",

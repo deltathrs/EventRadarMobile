@@ -15,19 +15,19 @@ class CustomLogoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 84.w,
+      width: 82.w,
       height: 109.h,
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Color(0xFFF4F4F4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(10.r)),
+        color: const Color(0xFFF4F4F4),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
             imagePath,
-            width: 36.w, // Adjust image width as needed
-            height: 36.h, // Adjust image height as needed
+            width: 36.w,
+            height: 36.h,
           ),
           const SizedBox(
             height: 2,

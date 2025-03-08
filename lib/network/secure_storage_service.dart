@@ -1,0 +1,59 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+class SecureStorageService {
+  final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
+
+  // Store a session token securely
+  Future<void> storeSessionToken(String token) async {
+    await _secureStorage.write(key: 'session_token', value: token);
+  }
+
+  Future<void> storeFCMToken(String token) async {
+    await _secureStorage.write(key: 'fcm_token', value: token);
+  }
+
+  Future<void> storeUserId(String userId) async {
+    await _secureStorage.write(key: "user_id", value: userId);
+  }
+
+  Future<void> storePassword(String password) async {
+    await _secureStorage.write(key: "password", value: password);
+  }
+
+  Future<void> storeRememberMe(String rememberMe) async {
+    await _secureStorage.write(key: "remember_me", value: rememberMe);
+  }
+
+  // Retrieve the stored session token
+  Future<String?> getSessionToken() async {
+    return await _secureStorage.read(key: 'session_token');
+  }
+
+  Future<String?> getFCMToken() async {
+    return await _secureStorage.read(key: 'fcm_token');
+  }
+
+
+  Future<String?> getUserId() async {
+    return await _secureStorage.read(key: 'user_id');
+  }
+
+  Future<String?> getPassword() async {
+    return await _secureStorage.read(key: 'password');
+  }
+
+  // Delete the session token
+  Future<void> deleteSessionToken() async {
+    await _secureStorage.delete(key: 'session_token');
+  }
+
+  // Clear all secure storage (for example, when logging out)
+  Future<void> clearStorage() async {
+    await _secureStorage.deleteAll();
+  }
+
+  Future<void> clearStorageWithRememberMe() async {
+    await _secureStorage.delete(key: 'session_token');
+    await _secureStorage.delete(key: 'fcm_token');
+  }
+}
