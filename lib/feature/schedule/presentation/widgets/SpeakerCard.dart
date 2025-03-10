@@ -1,7 +1,3 @@
-import 'package:eventradar/appStyle.dart';
-import 'package:eventradar/color_pallete.dart';
-import 'package:eventradar/widgets/detail_Speaker/detailTextSpeaker.dart';
-import 'package:eventradar/widgets/home/speakers.dart';
 import 'package:flutter/material.dart';
 
 class DetailCardSpeaker extends StatefulWidget {

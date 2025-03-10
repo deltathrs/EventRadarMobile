@@ -1,8 +1,4 @@
-import 'package:eventradar/appStyle.dart';
-import 'package:eventradar/color_pallete.dart';
-import 'package:eventradar/widgets/detail_Communities/detailCommunities.dart';
-import 'package:eventradar/widgets/detail_Speaker/detailTextSpeaker.dart';
-import 'package:eventradar/widgets/home/speakers.dart';
+import 'package:event_radar2/feature/schedule/presentation/widgets/detailCommunities.dart';
 import 'package:flutter/material.dart';
 
 class Communitiescard extends StatefulWidget {

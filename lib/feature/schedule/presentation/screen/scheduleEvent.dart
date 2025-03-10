@@ -1,9 +1,3 @@
-import 'package:eventradar/appStyle.dart';
-import 'package:eventradar/color_pallete.dart';
-import 'package:eventradar/models/speakerListModel.dart';
-import 'package:eventradar/models/storeDataCalender.dart';
-import 'package:eventradar/services/speakerservice.dart';
-import 'package:eventradar/widgets/scheduleEvent/eventCard.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -18,38 +12,38 @@ class _ScheduleEventPageState extends State<ScheduleEventPage> {
   late DateTime _focusedDay;
   late DateTime _selectedDay;
 
-  Map<DateTime, List<Storedatacalender>> eventday = {};
+  // Map<DateTime, List<Storedatacalender>> eventday = {};
 
-  void storeDataCalender(List<Speaker> speakerList) {
-    eventday.clear();
-    for (var speaker in speakerList) {
-      if (speaker.seminarList.isNotEmpty) {
-        for (var e in speaker.seminarList ?? []) {
-          DateTime date = DateTime(e.date.year, e.date.month, e.date.day);
-          eventday[date] = eventday[date] ?? [];
-          eventday[date]!.add(Storedatacalender(
-              seminarDate: e.date,
-              seminarTitle: e.title,
-              seminarDesc: e.desc,
-              seminarModa: e.moda,
-              seminarTime: e.time));
-        }
-      }
-    }
-  }
+  // void storeDataCalender(List<Speaker> speakerList) {
+  //   eventday.clear();
+  //   for (var speaker in speakerList) {
+  //     if (speaker.seminarList.isNotEmpty) {
+  //       for (var e in speaker.seminarList ?? []) {
+  //         DateTime date = DateTime(e.date.year, e.date.month, e.date.day);
+  //         eventday[date] = eventday[date] ?? [];
+  //         eventday[date]!.add(Storedatacalender(
+  //             seminarDate: e.date,
+  //             seminarTitle: e.title,
+  //             seminarDesc: e.desc,
+  //             seminarModa: e.moda,
+  //             seminarTime: e.time));
+  //       }
+  //     }
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
     _focusedDay = DateTime.now();
     _selectedDay = _focusedDay;
-    Speakerservice().getData().then(
-      (value) {
-        setState(() {
-          storeDataCalender(value);
-        });
-      },
-    );
+    // Speakerservice().getData().then(
+    //   (value) {
+    //     setState(() {
+    //       storeDataCalender(value);
+    //     });
+    //   },
+    // );
   }
 
   @override
@@ -60,13 +54,12 @@ class _ScheduleEventPageState extends State<ScheduleEventPage> {
           child: Container(
             padding: EdgeInsets.all(20),
             child: Column(
-              spacing: 20,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text("Schedule", style: Appstyle.styletext1),
+                Text("Schedule", style: TextStyle()),
                 Container(
                   decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: TemplateColor.light)),
+                      border: Border.all(width: 1, color: Colors.grey)),
                   child: TableCalendar(
                       calendarStyle: CalendarStyle(
                         defaultTextStyle:

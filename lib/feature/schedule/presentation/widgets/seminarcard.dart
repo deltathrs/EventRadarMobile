@@ -1,5 +1,3 @@
-import 'package:eventradar/appStyle.dart';
-import 'package:eventradar/color_pallete.dart';
 import 'package:flutter/material.dart';
 
 class SeminarCard extends StatefulWidget {
