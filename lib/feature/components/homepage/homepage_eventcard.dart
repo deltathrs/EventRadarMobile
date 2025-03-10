@@ -28,7 +28,7 @@ class HomepageEventCard extends StatelessWidget {
       color: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.r),
-        side:  BorderSide(
+        side: BorderSide(
           color: Colors.grey,
           width: 0.5.w,
         ),
@@ -40,11 +40,10 @@ class HomepageEventCard extends StatelessWidget {
             eventImage(image),
             SizedBox(
               width: 200.w,
-              height: 165.h,
               child: Column(
                 children: [
                   Padding(
-                    padding:  EdgeInsets.all(8.0.w),
+                    padding: EdgeInsets.all(8.0.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -63,14 +62,14 @@ class HomepageEventCard extends StatelessWidget {
                         const SizedBox(height: 12),
                         Row(
                           children: [
-                             Icon(
+                            Icon(
                               Icons.calendar_today,
                               size: 16.w,
                             ),
                             const SizedBox(width: 8),
                             Text(
                               'Last Regist: ${lastRegistrationDate.day}/${lastRegistrationDate.month}/${lastRegistrationDate.year}',
-                              style:  TextStyle(
+                              style: TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w600,
@@ -129,7 +128,7 @@ class HomepageEventCard extends StatelessWidget {
 
   Widget _roundedBackground(String text) {
     return Container(
-      padding:  EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: Colors.grey.withOpacity(0.2),

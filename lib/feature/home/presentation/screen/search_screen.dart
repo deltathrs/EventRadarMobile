@@ -27,78 +27,86 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-          scrolledUnderElevation: 0,
-          title: Text(
-            'Searching',
-            style: TextStyle(
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w600,
-                fontSize: 20.sp),
-          )),
+        scrolledUnderElevation: 0,
+        backgroundColor: Colors.white,
+        title: Text(
+          'Searching',
+          style: TextStyle(
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w600,
+              fontSize: 20.sp),
+        ),
+        bottom: PreferredSize(
+          preferredSize: Size(double.infinity, 37.h),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Center(
+                    child: SizedBox(
+                  width: double.infinity, // Ensures it takes the full width
+                  child: TextField(
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                    ),
+                  ),
+                )),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      condition = !condition;
+                      condition2 = !condition2;
+                      print(condition);
+                      print(condition2);
+                    });
+                  },
+                  child: Container(
+                    width: 37.w,
+                    height: 37.h,
+                    decoration: BoxDecoration(
+                        color: const Color(0xFFF5F5F5),
+                        border: Border.all(color: const Color(0xFF6E6E6E)),
+                        shape: BoxShape.circle),
+                    child: Center(
+                      child: Image.asset('asset/img/search/filter_search.png'),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 37,
+                  height: 37,
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFF5F5F5),
+                      border: Border.all(color: const Color(0xFF6E6E6E)),
+                      shape: BoxShape.circle),
+                  child: Center(
+                    child: Image.asset('asset/img/search/arrow_top_down.png'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(12.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: 274.w,
-                    height: 37.h,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xFF6E6E6E)),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Center(
-                      child: TextField(
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.search),
-                            border: InputBorder.none),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 7,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        condition = !condition;
-                        condition2 = !condition2;
-                        print(condition);
-                        print(condition2);
-                      });
-                    },
-                    child: Container(
-                      width: 37,
-                      height: 37,
-                      decoration: BoxDecoration(
-                          color: const Color(0xFFF5F5F5),
-                          border: Border.all(color: const Color(0xFF6E6E6E)),
-                          shape: BoxShape.circle),
-                      child: Center(
-                        child:
-                            Image.asset('asset/img/search/filter_search.png'),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 7,
-                  ),
-                  Container(
-                    width: 37,
-                    height: 37,
-                    decoration: BoxDecoration(
-                        color: const Color(0xFFF5F5F5),
-                        border: Border.all(color: const Color(0xFF6E6E6E)),
-                        shape: BoxShape.circle),
-                    child: Center(
-                      child: Image.asset('asset/img/search/arrow_top_down.png'),
-                    ),
-                  ),
-                ],
-              ),
               const SizedBox(
                 height: 10,
               ),
@@ -262,7 +270,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
 EventList() {
   return Padding(
-    padding:  EdgeInsets.all(12.0.w),
+    padding: EdgeInsets.all(12.0.w),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -274,11 +282,13 @@ EventList() {
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const EventDetail()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const EventDetail()));
                   },
                   child: Padding(
-                    padding:  EdgeInsets.all(8.0.w),
+                    padding: EdgeInsets.all(8.0.w),
                     child: const EventBox(),
                   ),
                 );

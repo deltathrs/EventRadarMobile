@@ -17,11 +17,14 @@ class _EventDetailState extends State<EventDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
         title: Text(
           'Details',
           style: TextStyle(
-              fontFamily: 'Poppins', fontSize: 32.sp, fontWeight: FontWeight.w600),
+              fontFamily: 'Poppins',
+              fontSize: 32.sp,
+              fontWeight: FontWeight.w600),
         ),
       ),
       body: SingleChildScrollView(
@@ -72,7 +75,7 @@ class _EventDetailState extends State<EventDetail> {
                       child: Center(
                     child: Container(
                       width: 350.w,
-                      height: 270.h,
+                      height: 300.h,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20.r),
                           color: Colors.white),
@@ -103,7 +106,10 @@ class _EventDetailState extends State<EventDetail> {
                             const SizedBox(
                               height: 15,
                             ),
-                            Line(303),
+                            const Divider(
+                              color: Color(0xFFC9C9C9),
+                              thickness: 1,
+                            ),
                             const SizedBox(
                               height: 10,
                             ),
@@ -115,9 +121,9 @@ class _EventDetailState extends State<EventDetail> {
                             const SizedBox(
                               height: 2,
                             ),
-                            Line(303),
-                            const SizedBox(
-                              height: 7,
+                            const Divider(
+                              color: Color(0xFFC9C9C9),
+                              thickness: 1,
                             ),
                             OrganizerInfo(
                                 'asset/img/event/email_logo.png',
@@ -168,10 +174,6 @@ class _EventDetailState extends State<EventDetail> {
                   const SizedBox(
                     height: 15,
                   ),
-                  Line(377),
-                  const SizedBox(
-                    height: 15,
-                  ),
                   Text(
                     'Benefits',
                     style: TextStyle(
@@ -187,26 +189,25 @@ class _EventDetailState extends State<EventDetail> {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
-                        ListBenefits('Lorem ipsum dolor.'),
+                        listBenefits('Lorem ipsum dolor.'),
                         const SizedBox(
                           height: 2,
                         ),
-                        ListBenefits('Lorem ipsum dolor.'),
+                        listBenefits('Lorem ipsum dolor.'),
                         const SizedBox(
                           height: 2,
                         ),
-                        ListBenefits('Lorem ipsum dolor.'),
+                        listBenefits('Lorem ipsum dolor.'),
                         const SizedBox(
                           height: 2,
                         ),
-                        ListBenefits('Lorem ipsum dolor.'),
+                        listBenefits('Lorem ipsum dolor.'),
                       ],
                     ),
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  Line(377),
                   const SizedBox(
                     height: 15,
                   ),
@@ -222,14 +223,13 @@ class _EventDetailState extends State<EventDetail> {
                     padding: EdgeInsets.all(8.w),
                     child: Column(
                       children: [
-                        ListEligibility('Open for public'),
+                        listEligibility('Open for public'),
                       ],
                     ),
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  Line(377),
                   const SizedBox(
                     height: 15,
                   ),
@@ -246,17 +246,17 @@ class _EventDetailState extends State<EventDetail> {
                   ),
                   Column(
                     children: [
-                      EventTicket(const Color(0xFF0022BA), 'Free Webinar', 40000, 4,
-                          '17 Jan 2021'),
+                      eventTicket(const Color(0xFF0022BA), 'Free Webinar',
+                          40000, 4, '17 Jan 2021'),
                       const SizedBox(
                         height: 10,
                       ),
-                      EventTicket(const Color(0xFF0022BA),
+                      eventTicket(const Color(0xFF0022BA),
                           'Regular + Workshop Session', 0, 0, '15 Jan 2021'),
                       const SizedBox(
                         height: 10,
                       ),
-                      EventTicket(const Color(0xFF505050),
+                      eventTicket(const Color(0xFF505050),
                           'VIP + Intensive Mentoring', 50000, 2, '11 Jan 2021'),
                       const SizedBox(
                         height: 10,
@@ -272,13 +272,13 @@ class _EventDetailState extends State<EventDetail> {
     );
   }
 
-  Stack EventTicket(
+  Widget eventTicket(
       Color outline, String title, int price, int slot, String date) {
     return Stack(
       children: [
         Container(
           width: 344.w,
-          height: 135.h,
+          height: 145.h,
           decoration: BoxDecoration(
             border: Border.all(color: outline),
             borderRadius: BorderRadius.circular(15.r),
@@ -301,10 +301,9 @@ class _EventDetailState extends State<EventDetail> {
         ),
         Positioned(
           top: 10.h,
-          left: 20.w,
+          left: 15.w,
           child: Container(
-            width: 320.w,
-            height: 125.h,
+            width: 310.w,
             color: Colors.transparent,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -317,90 +316,90 @@ class _EventDetailState extends State<EventDetail> {
                       fontWeight: FontWeight.w600,
                       color: const Color(0xFF505050)),
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
-                Line(286),
-                const SizedBox(
-                  height: 3,
+                const Divider(
+                  color: Color(0xFFC9C9C9),
+                  thickness: 1,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(3.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.calendar_month_outlined,
-                            color: outline,
-                          ),
-                          const SizedBox(
-                            width: 3,
-                          ),
-                          Text(
-                            'Registration Deadline',
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 8.sp,
-                                fontWeight: FontWeight.w500,
-                                color: const Color(0xFF4F4F4F)),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        date,
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w600,
-                            fontSize: 8.sp,
-                            color: const Color(0xFF4F4F4F)),
-                      )
-                    ],
+                  child: SizedBox(
+                    width: 224.w,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.calendar_month_outlined,
+                              color: outline,
+                            ),
+                            Text(
+                              ' Registration Deadline',
+                              style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 8.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color(0xFF4F4F4F)),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          date,
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 8.sp,
+                              color: const Color(0xFF4F4F4F)),
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(3.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.person,
-                            color: outline,
-                          ),
-                          const SizedBox(
-                            width: 3,
-                          ),
-                          Text(
-                            'Tickets Left',
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 8.sp,
-                                fontWeight: FontWeight.w500,
-                                color: const Color(0xFF4F4F4F)),
-                          ),
-                        ],
-                      ),
-                      slot == 0
-                          ? Text(
-                              'Sold out',
+                  child: SizedBox(
+                    width: 224.w,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.person,
+                              color: outline,
+                            ),
+                            const SizedBox(
+                              width: 3,
+                            ),
+                            Text(
+                              'Tickets Left',
                               style: TextStyle(
                                   fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w600,
                                   fontSize: 8.sp,
+                                  fontWeight: FontWeight.w500,
                                   color: const Color(0xFF4F4F4F)),
-                            )
-                          : Text(
-                              '${slot} tickets',
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 8.sp,
-                                  color: const Color(0xFF4F4F4F)),
-                            )
-                    ],
+                            ),
+                          ],
+                        ),
+                        slot == 0
+                            ? Text(
+                                'Sold out',
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 8.sp,
+                                    color: const Color(0xFF4F4F4F)),
+                              )
+                            : Text(
+                                '$slot tickets',
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 8.sp,
+                                    color: const Color(0xFF4F4F4F)),
+                              )
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(
@@ -424,11 +423,8 @@ class _EventDetailState extends State<EventDetail> {
                                 '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M7 15h2c0 1.08 1.37 2 3 2s3-.92 3-2c0-1.1-1.04-1.5-3.24-2.03C9.64 12.44 7 11.78 7 9c0-1.79 1.47-3.31 3.5-3.82V3h3v2.18C15.53 5.69 17 7.21 17 9h-2c0-1.08-1.37-2-3-2s-3 .92-3 2c0 1.1 1.04 1.5 3.24 2.03C14.36 11.56 17 12.22 17 15c0 1.79-1.47 3.31-3.5 3.82V21h-3v-2.18C8.47 18.31 7 16.79 7 15"/></svg>',
                                 color: Color(0xFFFFB800),
                               ),
-                              const SizedBox(
-                                width: 5,
-                              ),
                               Text(
-                                'Rp ${price}',
+                                ' Rp $price',
                                 style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w600,
@@ -449,7 +445,7 @@ class _EventDetailState extends State<EventDetail> {
     );
   }
 
-  Row ListEligibility(String eligibility) {
+  Row listEligibility(String eligibility) {
     return Row(
       children: [
         const Iconify(
@@ -469,7 +465,7 @@ class _EventDetailState extends State<EventDetail> {
     );
   }
 
-  Row ListBenefits(String benefit) {
+  Row listBenefits(String benefit) {
     return Row(
       children: [
         const Iconify(
@@ -489,13 +485,13 @@ class _EventDetailState extends State<EventDetail> {
     );
   }
 
-  Container Line(double widthLine) {
-    return Container(
-      height: 1,
-      width: widthLine,
-      color: const Color(0xFFC9C9C9),
-    );
-  }
+  // Container ine(double widthLine) {
+  //   return Container(
+  //     height: 1,
+  //     width: widthLine,
+  //     color: const Color(0xFFC9C9C9),
+  //   );
+  // }
 
   OrganizerInfo(String email_logo, String name, String email) {
     return Row(
@@ -555,8 +551,7 @@ class _EventDetailState extends State<EventDetail> {
 
   LocationSession(String location) {
     return Padding(
-      padding:  EdgeInsets.all(12.0.w
-      ),
+      padding: EdgeInsets.all(12.0.w),
       child: Row(
         children: [
           const Icon(

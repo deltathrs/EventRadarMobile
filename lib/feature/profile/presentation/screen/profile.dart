@@ -1,6 +1,6 @@
 import 'package:event_radar2/feature/authentication/presentation/screen/login_screen.dart';
-import 'package:event_radar2/feature/components/profile/custom_logo.dart';
-import 'package:event_radar2/feature/components/profile/custom_payment_info.dart';
+import 'package:event_radar2/feature/profile/presentation/widgets/custom_logo.dart';
+import 'package:event_radar2/feature/profile/presentation/widgets/custom_payment_info.dart';
 import 'package:event_radar2/feature/profile/presentation/screen/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -115,26 +115,17 @@ class _ProfilePageState extends State<ProfilePage> {
               height: 10,
             ),
             const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 CustomLogoWidget(
                     imagePath: 'asset/img/profile/saved_icon.png',
                     text: 'Saved'),
-                SizedBox(
-                  width: 4,
-                ),
                 CustomLogoWidget(
                     imagePath: 'asset/img/profile/registered_icon.png',
                     text: 'Registered'),
-                SizedBox(
-                  width: 4,
-                ),
                 CustomLogoWidget(
                     imagePath: 'asset/img/profile/finished_icon.png',
                     text: 'Finished'),
-                SizedBox(
-                  width: 4,
-                ),
                 CustomLogoWidget(
                     imagePath: 'asset/img/profile/certificate_icon.png',
                     text: 'Certificate'),
