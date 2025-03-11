@@ -1,3 +1,7 @@
+import 'package:event_radar2/appStyle.dart';
+import 'package:event_radar2/feature/schedule/data/speakerListModel.dart';
+import 'package:event_radar2/feature/schedule/data/storeDataCalender.dart';
+import 'package:event_radar2/feature/schedule/presentation/widgets/eventCard.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -12,25 +16,25 @@ class _ScheduleEventPageState extends State<ScheduleEventPage> {
   late DateTime _focusedDay;
   late DateTime _selectedDay;
 
-  // Map<DateTime, List<Storedatacalender>> eventday = {};
+  Map<DateTime, List<Storedatacalender>> eventday = {};
 
-  // void storeDataCalender(List<Speaker> speakerList) {
-  //   eventday.clear();
-  //   for (var speaker in speakerList) {
-  //     if (speaker.seminarList.isNotEmpty) {
-  //       for (var e in speaker.seminarList ?? []) {
-  //         DateTime date = DateTime(e.date.year, e.date.month, e.date.day);
-  //         eventday[date] = eventday[date] ?? [];
-  //         eventday[date]!.add(Storedatacalender(
-  //             seminarDate: e.date,
-  //             seminarTitle: e.title,
-  //             seminarDesc: e.desc,
-  //             seminarModa: e.moda,
-  //             seminarTime: e.time));
-  //       }
-  //     }
-  //   }
-  // }
+  void storeDataCalender(List<Speaker> speakerList) {
+    eventday.clear();
+    for (var speaker in speakerList) {
+      if (speaker.seminarList.isNotEmpty) {
+        for (var e in speaker.seminarList ?? []) {
+          DateTime date = DateTime(e.date.year, e.date.month, e.date.day);
+          eventday[date] = eventday[date] ?? [];
+          eventday[date]!.add(Storedatacalender(
+              seminarDate: e.date,
+              seminarTitle: e.title,
+              seminarDesc: e.desc,
+              seminarModa: e.moda,
+              seminarTime: e.time));
+        }
+      }
+    }
+  }
 
   @override
   void initState() {

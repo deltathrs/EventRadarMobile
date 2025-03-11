@@ -1,3 +1,4 @@
+import 'package:event_radar2/appStyle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

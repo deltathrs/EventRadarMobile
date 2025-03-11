@@ -46,7 +46,7 @@ dependencies:
   logger: ^2.5.0
   readmore: ^3.0.0
   responsive_grid_list: ^1.4.0
-  syncfusion_flutter_calendar: ^20.4.44
+  syncfusion_flutter_calendar:
   table_calendar: ^3.1.0
 
 dev_dependencies:

@@ -1,3 +1,6 @@
+import 'package:event_radar2/appStyle.dart';
+import 'package:event_radar2/color_pallete.dart';
+import 'package:event_radar2/feature/schedule/presentation/widgets/detailTextSpeaker.dart';
 import 'package:flutter/material.dart';
 
 class DetailCardSpeaker extends StatefulWidget {
@@ -49,12 +52,12 @@ class _DetailCardSpeakerState extends State<DetailCardSpeaker> {
           children: [
             Row(
               children: [
-                listScircleContent(
-                  ontap: null,
-                  showname: false,
-                  imageSpeaker: widget.image,
-                  name: "",
-                ),
+                // listScircleContent(
+                //   ontap: null,
+                //   showname: false,
+                //   imageSpeaker: widget.image,
+                //   name: "",
+                // ),
                 Expanded(child: SizedBox()),
                 Row(
                   children: [

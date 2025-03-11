@@ -1,3 +1,5 @@
+import 'package:event_radar2/appStyle.dart';
+import 'package:event_radar2/color_pallete.dart';
 import 'package:flutter/material.dart';
 
 class SeminarCard extends StatefulWidget {
