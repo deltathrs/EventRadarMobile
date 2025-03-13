@@ -1,7 +1,5 @@
-import 'package:event_radar2/feature/authentication/presentation/screen/login_screen.dart';
 import 'package:event_radar2/feature/home/presentation/screen/home_screen.dart';
 import 'package:event_radar2/feature/profile/presentation/screen/profile.dart';
-import 'package:event_radar2/feature/schedule/presentation/screen/schedule_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -29,7 +27,6 @@ class _NavigationPage extends State<NavigationPage> {
         index: currentPageIndex,
         children: const <Widget>[
           HomePage(),
-          SchedulePage(), // NOTE: Add some page here
           HomePage(), // NOTE: Add some page here
           ProfilePage(),
         ],
