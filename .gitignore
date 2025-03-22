@@ -45,3 +45,4 @@ app.*.map.json
 # Environment files (prevent sensitive data from being committed)
 .env
 .env.*
+*.env
