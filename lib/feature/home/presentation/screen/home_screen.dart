@@ -1,12 +1,16 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:event_radar2/feature/authentication/presentation/screen/login_screen.dart';
-import 'package:event_radar2/feature/components/homepage/homepage_eventcard.dart';
-import 'package:event_radar2/feature/components/homepage/homepage_speakers.dart';
-import 'package:event_radar2/feature/components/event/event_detail.dart';
+import 'package:event_radar2/feature/home/presentation/widgets/homepage_eventcard.dart';
+import 'package:event_radar2/feature/home/presentation/widgets/homepage_speakers.dart';
+import 'package:event_radar2/feature/home/presentation/widgets/event_detail.dart';
+import 'package:event_radar2/feature/home/presentation/cubits/events/events_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/screen/search_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,6 +24,16 @@ class _HomePageState extends State<HomePage> {
     {"id": 1, "image_path": 'asset/img/homepage/adpage1.png'},
     {"id": 2, "image_path": 'asset/img/homepage/adpage2.png'},
   ];
+
+  final EventsCubit cubit = GetIt.instance<EventsCubit>();
+
+  @override
+  void initState() {
+    super.initState();
+    cubit.getEventList();
+  }
+
+  final String baseUrlImage = dotenv.env['BASE_URL']!;
 
   final user = FirebaseAuth.instance.currentUser!;
 
@@ -35,13 +49,17 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+          backgroundColor: Colors.white,
           scrolledUnderElevation: 0,
           centerTitle: true,
           title: GestureDetector(
             onTap: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const SearchScreen()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SearchScreen()));
             },
             child: Container(
               height: 37.h,
@@ -171,32 +189,42 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget homepageEvents() {
-    return SizedBox(
-      height: 310.h,
-      child: Expanded(
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: 3, // Number of items you want to display
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const EventDetail()));
-              },
-              child: HomepageEventCard(
-                title: "Public Speaking Webinar",
-                image: Image.asset('asset/img/homepage/event1.png'),
-                lastRegistrationDate: DateTime.now(),
-                eventDate: DateTime.now(),
-                eventType: "Webinar",
-                eventCategory: ["Public Speaking", "Webinar"],
+    return BlocBuilder<EventsCubit, EventsState>(
+      bloc: cubit,
+      builder: (context, state) {
+        if (state is EventListLoaded) {
+          return SizedBox(
+            height: 310.h,
+            child: Expanded(
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: state.events.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const EventDetail()));
+                    },
+                    child: HomepageEventCard(
+                      title: state.events[index].name,
+                      image:
+                          "$baseUrlImage${state.events[index].eventThumbnail}",
+                      lastRegistrationDate: state.events[index].registrationEnd,
+                      eventDate: state.events[index].datetime,
+                      eventType:
+                          state.events[index].isOnline ? "Online" : "Offline",
+                      eventCategory: state.events[index].categories,
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
-      ),
+            ),
+          );
+        }
+        return const Center(child: CircularProgressIndicator());
+      },
     );
   }
 

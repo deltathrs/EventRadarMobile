@@ -2,6 +2,7 @@
 //
 //     final eventModel = eventModelFromJson(jsonString);
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
@@ -15,24 +16,28 @@ class EventModel {
   int id;
   String name;
   DateTime datetime;
+  DateTime registrationEnd;
   int maxParticipants;
   String location;
   bool isApproved;
   bool isOnline;
   int organizerId;
-  String categoryName;
+  String eventThumbnail;
+  List<String> categories;
   String organizerName;
 
   EventModel({
     required this.id,
     required this.name,
     required this.datetime,
+    required this.registrationEnd,
     required this.maxParticipants,
     required this.location,
     required this.isApproved,
     required this.isOnline,
     required this.organizerId,
-    required this.categoryName,
+    required this.eventThumbnail,
+    required this.categories,
     required this.organizerName,
   });
 
@@ -40,12 +45,14 @@ class EventModel {
         id: json["id"],
         name: json["name"],
         datetime: DateTime.parse(json["datetime"]),
+        registrationEnd: DateTime.parse(json["registration_end"]),
         maxParticipants: json["max_participants"],
         location: json["location"],
         isApproved: json["is_approved"],
         isOnline: json["is_online"],
         organizerId: json["organizer_id"],
-        categoryName: json["category_name"],
+        eventThumbnail: json["event_thumbnail"],
+        categories: List<String>.from(json["categories"].map((x) => x)),
         organizerName: json["organizer_name"],
       );
 
@@ -53,12 +60,14 @@ class EventModel {
         "id": id,
         "name": name,
         "datetime": datetime.toIso8601String(),
+        "registration_end": registrationEnd.toIso8601String(),
         "max_participants": maxParticipants,
         "location": location,
         "is_approved": isApproved,
         "is_online": isOnline,
         "organizer_id": organizerId,
-        "category_name": categoryName,
+        "event_thumbnail": eventThumbnail,
+        "categories": List<dynamic>.from(categories.map((x) => x)),
         "organizer_name": organizerName,
       };
 }

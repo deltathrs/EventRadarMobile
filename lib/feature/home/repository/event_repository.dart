@@ -11,9 +11,12 @@ class EventRepository {
   EventRepository(
       {required this.secureStorageService, required this.apiService});
 
+  final Logger _logger = Logger();
+
   Future<List<EventModel>> getEventList() async {
     try {
-      final response = await apiService.getApiData(dotenv.env['EVENT'] ?? "");
+      final response = await apiService.getApiData(dotenv.env['EVENTS'] ?? "",
+          isLogin: false);
 
       List<dynamic> jsonData = response.data['data'];
 
@@ -21,7 +24,7 @@ class EventRepository {
           .map((item) => EventModel.fromJson(Map<String, dynamic>.from(item)))
           .toList();
     } catch (e, stackTrace) {
-      Logger().e('Error getSupplierInvoice: $e, stackTrace: $stackTrace');
+      _logger.e('Error getEventList: $e', stackTrace: stackTrace);
       throw e;
     }
   }

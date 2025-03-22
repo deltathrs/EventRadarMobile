@@ -1,15 +1,26 @@
 import 'package:event_radar2/feature/authentication/presentation/screen/login_screen.dart';
+import 'package:event_radar2/feature/home/data/event_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 class EventBox extends StatefulWidget {
-  const EventBox({super.key});
+  final EventModel eventData;
+  const EventBox({super.key, required this.eventData});
 
   @override
   State<EventBox> createState() => _EventBoxState();
 }
 
 class _EventBoxState extends State<EventBox> {
+  final String baseUrlImage = dotenv.env['BASE_URL']!;
+
+  String formatDate(String isoDate) {
+    DateTime dateTime = DateTime.parse(isoDate);
+    return DateFormat("d MMMM yyyy", "id_ID").format(dateTime);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -20,21 +31,35 @@ class _EventBoxState extends State<EventBox> {
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Padding(
-        padding:  EdgeInsets.all(8.w),
+        padding: EdgeInsets.all(8.w),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset('asset/img/search/event_thumbnail.png'),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12.r),
+              child: SizedBox(
+                width: 100.w,
+                height: 100.h,
+                child: Image.network(
+                  "$baseUrlImage${widget.eventData.eventThumbnail}",
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
             const SizedBox(
               width: 5,
             ),
             Expanded(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                  Row(  
                     children: [
-                      categoryEvent('Seminar'),
-                      categoryEvent('Business'),
+                      categoryEvent('Seminar', false),
+                      SizedBox(
+                        width: 5.w,
+                      ),
+                      categoryEvent('Business', true),
                     ],
                   ),
                   const SizedBox(
@@ -42,7 +67,7 @@ class _EventBoxState extends State<EventBox> {
                   ),
                   Flexible(
                     child: Text(
-                      'Lorem ipsum dolor sit amet consectetur.',
+                      widget.eventData.name,
                       style: TextStyle(
                           fontFamily: 'Poppins',
                           fontWeight: FontWeight.w600,
@@ -67,7 +92,8 @@ class _EventBoxState extends State<EventBox> {
                         width: 5,
                       ),
                       Text(
-                        '12 Jan 2021',
+                        formatDate(
+                            widget.eventData.registrationEnd.toIso8601String()),
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 8.sp,
@@ -92,7 +118,7 @@ class _EventBoxState extends State<EventBox> {
                         width: 5,
                       ),
                       Text(
-                        '15 Jan 2021',
+                        formatDate(widget.eventData.datetime.toIso8601String()),
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 8.sp,
@@ -104,14 +130,18 @@ class _EventBoxState extends State<EventBox> {
               ),
             ),
             Container(
-              width: 26.w,
-              height: 26.h,
               decoration: BoxDecoration(
                 border: Border.all(color: const Color(0xFF6E6E6E)),
-                borderRadius: BorderRadius.circular(12.r),
+                shape: BoxShape.circle,
               ),
-              child: Center(
-                child: Image.asset('asset/img/search/favorite_icon.png'),
+              child: Padding(
+                padding: EdgeInsets.all(8.w),
+                child: Center(
+                  child: Icon(
+                    Icons.favorite_border,
+                    size: 12.w,
+                  ),
+                ),
               ),
             ),
           ],
@@ -120,16 +150,15 @@ class _EventBoxState extends State<EventBox> {
     );
   }
 
-  categoryEvent(String category) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8),
-      child: Container(
-        width: 55.w,
-        height: 15.h,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: const Color(0xFF888888)),
-        ),
+  categoryEvent(String category, bool isCategory) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15.r),
+        border: isCategory ? Border.all(color: const Color(0xFF888888)) : null,
+        color: isCategory ? null : Color(0xFFDADAFB),
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
         child: Center(
           child: Text(
             category,
@@ -137,7 +166,9 @@ class _EventBoxState extends State<EventBox> {
                 fontFamily: 'Poppins',
                 fontSize: 7.sp,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF888888)),
+                color: isCategory
+                    ? const Color(0xFF888888)
+                    : const Color(0xFF0022BA)),
           ),
         ),
       ),

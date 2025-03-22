@@ -1,7 +1,10 @@
+import 'package:event_radar2/feature/home/presentation/cubits/events/events_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/screen/home_screen.dart';
 import 'package:event_radar2/feature/profile/presentation/screen/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({Key? key}) : super(key: key);
@@ -25,10 +28,17 @@ class _NavigationPage extends State<NavigationPage> {
     return SafeArea(
       child: IndexedStack(
         index: currentPageIndex,
-        children: const <Widget>[
-          HomePage(),
-          HomePage(), // NOTE: Add some page here
-          ProfilePage(),
+        children: <Widget>[
+          const HomePage(),
+          const HomePage(), // NOTE: Add some page here
+          const ProfilePage(),
+          BlocProvider(
+            create: (context) => GetIt.instance<EventsCubit>(),
+            child: const HomePage(),
+          ),
+
+          const HomePage(), // NOTE: Add some page here
+          const ProfilePage(),
         ],
       ),
     );

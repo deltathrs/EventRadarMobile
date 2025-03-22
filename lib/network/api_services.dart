@@ -31,7 +31,7 @@ class ApiService {
   }
 
   Future<Response<dynamic>> getApiData(String urlServicesName,
-      {Map<String, dynamic>? queryParams}) async {
+      {Map<String, dynamic>? queryParams, bool? isLogin}) async {
     try {
       _logger
           .i("getApiData to ${urlServicesName} with queryParam: $queryParams");
@@ -39,7 +39,7 @@ class ApiService {
       final options = await _getAuthOptions();
       final response = await dio.get(
         _baseUrl + urlServicesName,
-        options: options,
+        options: isLogin == true ? options : null,
         queryParameters: queryParams,
       );
       _logger.i(
