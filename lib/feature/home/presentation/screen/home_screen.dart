@@ -1,11 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:event_radar2/feature/authentication/presentation/screen/login_screen.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/homepage_eventcard.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/homepage_speakers.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/event_detail.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/events/events_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/screen/search_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -34,13 +32,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   final String baseUrlImage = dotenv.env['BASE_URL']!;
-
-  final user = FirebaseAuth.instance.currentUser!;
-
-  //sign out
-  void signUserOut() {
-    FirebaseAuth.instance.signOut();
-  }
 
   final CarouselSliderController carouselController =
       CarouselSliderController();
@@ -211,7 +202,6 @@ class _HomePageState extends State<HomePage> {
                       title: state.events[index].name,
                       image:
                           "$baseUrlImage${state.events[index].eventThumbnail}",
-                      lastRegistrationDate: state.events[index].registrationEnd,
                       eventDate: state.events[index].datetime,
                       eventType:
                           state.events[index].isOnline ? "Online" : "Offline",

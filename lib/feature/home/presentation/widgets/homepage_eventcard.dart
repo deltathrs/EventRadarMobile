@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 class HomepageEventCard extends StatelessWidget {
   final TextEditingController? controller;
   final String title;
   final String image;
-  final DateTime lastRegistrationDate;
   final DateTime eventDate;
   final String eventType;
   final List<String> eventCategory;
@@ -17,7 +17,6 @@ class HomepageEventCard extends StatelessWidget {
     this.controller,
     required this.title,
     required this.image,
-    required this.lastRegistrationDate,
     required this.eventDate,
     required this.eventType,
     required this.eventCategory,
@@ -27,7 +26,8 @@ class HomepageEventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     String formatDate(String isoDate) {
       DateTime dateTime = DateTime.parse(isoDate);
-      return DateFormat("d MMMM yyyy", "id_ID").format(dateTime);
+      initializeDateFormatting('id', null);
+      return DateFormat("d MMMM yyyy", "id").format(dateTime);
     }
 
     return Card(
@@ -66,29 +66,6 @@ class HomepageEventCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 12),
                         cardTitle(title),
-                        const SizedBox(height: 12),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Last Regist',
-                              style: GoogleFonts.poppins(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xFF888888),
-                              ),
-                            ),
-                            Text(
-                              formatDate(
-                                  lastRegistrationDate.toIso8601String()),
-                              style: GoogleFonts.poppins(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF4F4F4F),
-                              ),
-                            ),
-                          ],
-                        ),
                         const SizedBox(height: 5),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

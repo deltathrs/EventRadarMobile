@@ -2,8 +2,6 @@
 //
 //     final eventModel = eventModelFromJson(jsonString);
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 List<EventModel> eventModelFromJson(String str) =>
@@ -15,8 +13,8 @@ String eventModelToJson(List<EventModel> data) =>
 class EventModel {
   int id;
   String name;
+  String eventDetail;
   DateTime datetime;
-  DateTime registrationEnd;
   int maxParticipants;
   String location;
   bool isApproved;
@@ -24,13 +22,13 @@ class EventModel {
   int organizerId;
   String eventThumbnail;
   List<String> categories;
-  String organizerName;
+  OrganizerName organizerName;
 
   EventModel({
     required this.id,
     required this.name,
+    required this.eventDetail,
     required this.datetime,
-    required this.registrationEnd,
     required this.maxParticipants,
     required this.location,
     required this.isApproved,
@@ -44,8 +42,8 @@ class EventModel {
   factory EventModel.fromJson(Map<String, dynamic> json) => EventModel(
         id: json["id"],
         name: json["name"],
+        eventDetail: json["event_detail"],
         datetime: DateTime.parse(json["datetime"]),
-        registrationEnd: DateTime.parse(json["registration_end"]),
         maxParticipants: json["max_participants"],
         location: json["location"],
         isApproved: json["is_approved"],
@@ -53,14 +51,14 @@ class EventModel {
         organizerId: json["organizer_id"],
         eventThumbnail: json["event_thumbnail"],
         categories: List<String>.from(json["categories"].map((x) => x)),
-        organizerName: json["organizer_name"],
+        organizerName: organizerNameValues.map[json["organizer_name"]]!,
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "event_detail": eventDetail,
         "datetime": datetime.toIso8601String(),
-        "registration_end": registrationEnd.toIso8601String(),
         "max_participants": maxParticipants,
         "location": location,
         "is_approved": isApproved,
@@ -68,6 +66,25 @@ class EventModel {
         "organizer_id": organizerId,
         "event_thumbnail": eventThumbnail,
         "categories": List<dynamic>.from(categories.map((x) => x)),
-        "organizer_name": organizerName,
+        "organizer_name": organizerNameValues.reverse[organizerName],
       };
+}
+
+enum OrganizerName { BOB_JOHNSON, JANE_DOE }
+
+final organizerNameValues = EnumValues({
+  "Bob Johnson": OrganizerName.BOB_JOHNSON,
+  "Jane Doe": OrganizerName.JANE_DOE
+});
+
+class EnumValues<T> {
+  Map<String, T> map;
+  late Map<T, String> reverseMap;
+
+  EnumValues(this.map);
+
+  Map<T, String> get reverse {
+    reverseMap = map.map((k, v) => MapEntry(v, k));
+    return reverseMap;
+  }
 }

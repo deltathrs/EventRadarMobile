@@ -36,7 +36,6 @@ class _NavigationPage extends State<NavigationPage> {
             create: (context) => GetIt.instance<EventsCubit>(),
             child: const HomePage(),
           ),
-
           const HomePage(), // NOTE: Add some page here
           const ProfilePage(),
         ],

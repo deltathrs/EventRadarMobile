@@ -1,4 +1,3 @@
-import 'package:event_radar2/feature/authentication/presentation/screen/login_screen.dart';
 import 'package:event_radar2/feature/home/data/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -18,7 +17,7 @@ class _EventBoxState extends State<EventBox> {
 
   String formatDate(String isoDate) {
     DateTime dateTime = DateTime.parse(isoDate);
-    return DateFormat("d MMMM yyyy", "id_ID").format(dateTime);
+    return DateFormat("d MMMM yyyy", "id").format(dateTime);
   }
 
   @override
@@ -53,7 +52,7 @@ class _EventBoxState extends State<EventBox> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(  
+                  Row(
                     children: [
                       categoryEvent('Seminar', false),
                       SizedBox(
@@ -77,32 +76,6 @@ class _EventBoxState extends State<EventBox> {
                   ),
                   const SizedBox(
                     height: 8,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Last Regist',
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 8.sp,
-                            fontWeight: FontWeight.w400,
-                            color: const Color(0xFF888888)),
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        formatDate(
-                            widget.eventData.registrationEnd.toIso8601String()),
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 8.sp,
-                            fontWeight: FontWeight.w500),
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 3,
                   ),
                   Row(
                     children: [
