@@ -16,11 +16,6 @@ class EventBox extends StatefulWidget {
 class _EventBoxState extends State<EventBox> {
   final String baseUrlImage = dotenv.env['BASE_URL']!;
 
-  String formatDate(String isoDate) {
-    DateTime dateTime = DateTime.parse(isoDate);
-    return DateFormat("d MMMM yyyy", "id_ID").format(dateTime);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -53,7 +48,7 @@ class _EventBoxState extends State<EventBox> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(  
+                  Row(
                     children: [
                       categoryEvent('Seminar', false),
                       SizedBox(
@@ -92,8 +87,7 @@ class _EventBoxState extends State<EventBox> {
                         width: 5,
                       ),
                       Text(
-                        formatDate(
-                            widget.eventData.registrationEnd.toIso8601String()),
+                        widget.eventData.registrationEnd.toString(),
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 8.sp,
@@ -118,7 +112,7 @@ class _EventBoxState extends State<EventBox> {
                         width: 5,
                       ),
                       Text(
-                        formatDate(widget.eventData.datetime.toIso8601String()),
+                        widget.eventData.datetime.toString(),
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 8.sp,

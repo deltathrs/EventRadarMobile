@@ -79,8 +79,7 @@ class HomepageEventCard extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              formatDate(
-                                  lastRegistrationDate.toIso8601String()),
+                              lastRegistrationDate.toString(),
                               style: GoogleFonts.poppins(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w500,
@@ -102,7 +101,7 @@ class HomepageEventCard extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              formatDate(eventDate.toIso8601String()),
+                              eventDate.toString(),
                               style: GoogleFonts.poppins(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w500,

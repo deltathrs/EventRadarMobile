@@ -21,28 +21,28 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
 
   //sign user in method
-  void signUserIn() async {
-    //loading buffer
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
+  // void signUserIn() async {
+  //   //loading buffer
+  //   showDialog(
+  //       context: context,
+  //       builder: (context) {
+  //         return const Center(
+  //           child: CircularProgressIndicator(),
+  //         );
+  //       });
 
-    //sign in
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
+  //   //sign in
+  //   try {
+  //     await FirebaseAuth.instance.signInWithEmailAndPassword(
+  //         email: emailController.text, password: passwordController.text);
 
-      Navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
+  //     Navigator.pop(context);
+  //   } on FirebaseAuthException catch (e) {
+  //     Navigator.pop(context);
 
-      showErrorMessage(e.code);
-    }
-  }
+  //     showErrorMessage(e.code);
+  //   }
+  // }
 
   void showErrorMessage(String message) {
     showDialog(
@@ -179,7 +179,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: 20,
               ),
               MyButton(
-                onTap: signUserIn,
+                onTap: (){},
                 text: 'Sign In',
                 color: Colors.blue,
               ),
@@ -257,7 +257,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-        
               const SizedBox(
                 height: 10,
               ),
