@@ -1,4 +1,3 @@
-import 'package:event_radar2/feature/authentication/presentation/screen/login_screen.dart';
 import 'package:event_radar2/feature/home/data/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -15,6 +14,11 @@ class EventBox extends StatefulWidget {
 
 class _EventBoxState extends State<EventBox> {
   final String baseUrlImage = dotenv.env['BASE_URL']!;
+
+  String formatDate(String isoDate) {
+    DateTime dateTime = DateTime.parse(isoDate);
+    return DateFormat("d MMMM yyyy", "id").format(dateTime);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,31 +77,7 @@ class _EventBoxState extends State<EventBox> {
                   const SizedBox(
                     height: 8,
                   ),
-                  Row(
-                    children: [
-                      Text(
-                        'Last Regist',
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 8.sp,
-                            fontWeight: FontWeight.w400,
-                            color: const Color(0xFF888888)),
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        widget.eventData.registrationEnd.toString(),
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 8.sp,
-                            fontWeight: FontWeight.w500),
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 3,
-                  ),
+              
                   Row(
                     children: [
                       Text(

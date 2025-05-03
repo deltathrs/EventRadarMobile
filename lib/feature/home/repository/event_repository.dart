@@ -15,10 +15,10 @@ class EventRepository {
 
   Future<List<EventModel>> getEventList() async {
     try {
-      final response = await apiService.getApiData(dotenv.env['EVENTS'] ?? "",
+      final response = await apiService.getApiData("${dotenv.env['EVENTS']}1",
           isLogin: false);
 
-      List<dynamic> jsonData = response.data['data'];
+      List<dynamic> jsonData = response.data['data']['events'];
 
       return jsonData
           .map((item) => EventModel.fromJson(Map<String, dynamic>.from(item)))
