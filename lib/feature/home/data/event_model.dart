@@ -11,7 +11,7 @@ String eventModelToJson(List<EventModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class EventModel {
-  int id;
+  String id;
   String name;
   String eventDetail;
   DateTime datetime;
@@ -19,10 +19,10 @@ class EventModel {
   String location;
   bool isApproved;
   bool isOnline;
-  int organizerId;
+  String organizerId;
   String eventThumbnail;
   List<String> categories;
-  OrganizerName organizerName;
+  String organizerName;
 
   EventModel({
     required this.id,
@@ -51,7 +51,7 @@ class EventModel {
         organizerId: json["organizer_id"],
         eventThumbnail: json["event_thumbnail"],
         categories: List<String>.from(json["categories"].map((x) => x)),
-        organizerName: organizerNameValues.map[json["organizer_name"]]!,
+        organizerName: json["organizer_name"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -66,25 +66,6 @@ class EventModel {
         "organizer_id": organizerId,
         "event_thumbnail": eventThumbnail,
         "categories": List<dynamic>.from(categories.map((x) => x)),
-        "organizer_name": organizerNameValues.reverse[organizerName],
+        "organizer_name": organizerName,
       };
-}
-
-enum OrganizerName { BOB_JOHNSON, JANE_DOE }
-
-final organizerNameValues = EnumValues({
-  "Bob Johnson": OrganizerName.BOB_JOHNSON,
-  "Jane Doe": OrganizerName.JANE_DOE
-});
-
-class EnumValues<T> {
-  Map<String, T> map;
-  late Map<T, String> reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    reverseMap = map.map((k, v) => MapEntry(v, k));
-    return reverseMap;
-  }
 }

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -20,10 +21,16 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     // TODO: implement initState
     super.initState();
+    initializeApp();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+  }
+
+  void initializeApp() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
     Future.delayed(const Duration(seconds: 5), () {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (_) => UserStatus.isLoggedIn == true
+          builder: (_) => isLoggedIn == true
               ? const NavigationPage()
               : BlocProvider(
                   create: (context) => GetIt.instance<AuthCubit>(),

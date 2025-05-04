@@ -1,13 +1,17 @@
 import 'package:event_radar2/feature/authentication/presentation/screen/login_screen.dart';
 import 'package:event_radar2/feature/components/utils/bottom_sheet_utils.dart';
+import 'package:event_radar2/feature/home/data/event_model.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/event_box.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/event_detail.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/events/events_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/filter_bottom_sheet.dart';
+import 'package:event_radar2/feature/home/presentation/widgets/filter_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -17,11 +21,25 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  final EventsCubit cubit = GetIt.instance<EventsCubit>();
+  TextEditingController searchController = TextEditingController();
+  List<String> filterList = [];
+  bool? isOnline;
+
   @override
   void initState() {
     super.initState();
-    cubit.getEventList();
+  }
+
+  void _onFilterApplied(List<String> filters, bool isOn) {
+    setState(() {
+      filterList = filters;
+      isOnline = isOn;
+    });
+
+    context.read<EventsCubit>().updateFilters(
+        name: searchController.text,
+        isOnline: isOnline,
+        categories: filterList);
   }
 
   @override
@@ -68,108 +86,90 @@ class _SearchScreenState extends State<SearchScreen> {
                 SizedBox(
                   width: 5,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    BottomSheetUtils.showCustomBottomSheet(context,
-                        child: FilterBottomSheet());
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: const Color(0xFFF5F5F5),
-                        border: Border.all(color: const Color(0xFF6E6E6E)),
-                        shape: BoxShape.circle),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: Icon(
-                          Icons.filter_list,
-                          size: 20.w,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: const Color(0xFFF5F5F5),
-                      border: Border.all(color: const Color(0xFF6E6E6E)),
-                      shape: BoxShape.circle),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Icon(
-                        Icons.keyboard_double_arrow_up_outlined,
-                        size: 20.w,
-                      ),
-                    ),
-                  ),
-                ),
+                FilterWidget(
+                    categories: filterList, onFilterApplied: _onFilterApplied),
               ],
             ),
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(12.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 10.h,
-              ),
-              eventList(),
-            ],
-          ),
-        ),
+      body: Padding(
+        padding: EdgeInsets.all(12.w),
+        child: eventList(),
       ),
     );
   }
 
   Widget eventList() {
-    return BlocConsumer<EventsCubit, EventsState>(
-      bloc: cubit,
-      listener: (context, state) {
-        // TODO: implement listener
-      },
-      builder: (context, state) {
-        if (state is EventListLoaded) {
-          return Padding(
-            padding: EdgeInsets.all(12.0.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: state.events.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const EventDetail()));
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0.w),
-                          child: EventBox(
-                            eventData: state.events[index],
-                          ),
-                        ),
-                      );
-                    }),
-              ],
-            ),
-          );
-        }
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
+    return RefreshIndicator(
+      color: const Color.fromARGB(255, 21, 112, 239),
+      backgroundColor: Colors.white,
+      onRefresh: () => Future.sync(() => context.read<EventsCubit>().refresh()),
+      child: PagedListView(
+          pagingController: context.read<EventsCubit>().pagingController,
+          builderDelegate: PagedChildBuilderDelegate<EventModel>(
+            itemBuilder: (context, item, index) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const EventDetail()));
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(8.0.w),
+                  child: EventBox(
+                    eventData: item,
+                  ),
+                ),
+              );
+            },
+            noMoreItemsIndicatorBuilder: (context) {
+              return Center(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Text("No more data",
+                        style: GoogleFonts.inter(
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w400,
+                        )),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              );
+            },
+            noItemsFoundIndicatorBuilder: (context) {
+              return Center(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Text("No data found",
+                        style: GoogleFonts.inter(
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w400,
+                        )),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              );
+            },
+            firstPageErrorIndicatorBuilder: (context) {
+              return Center(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Text("Error loading data",
+                        style: GoogleFonts.inter(
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w400,
+                        )),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              );
+            },
+          )),
     );
   }
 }

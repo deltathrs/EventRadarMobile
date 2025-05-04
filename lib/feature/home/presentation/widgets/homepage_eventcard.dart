@@ -73,15 +73,15 @@ class HomepageEventCard extends StatelessWidget {
                             Text(
                               'Event Date',
                               style: GoogleFonts.poppins(
-                                fontSize: 12.sp,
+                                fontSize: 11.sp,
                                 fontWeight: FontWeight.w400,
                                 color: Color(0xFF888888),
                               ),
                             ),
                             Text(
-                              eventDate.toString(),
+                              formatDate(eventDate.toIso8601String()),
                               style: GoogleFonts.poppins(
-                                fontSize: 12.sp,
+                                fontSize: 11.sp,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xFF4F4F4F),
                               ),
@@ -106,11 +106,17 @@ class HomepageEventCard extends StatelessWidget {
       height: 100.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: Color(0xFF888888)),
-        image: DecorationImage(
-          image: NetworkImage(image),
-          fit: BoxFit.fill,
-        ),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Image.network(
+        image,
+        fit: BoxFit.fill,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset(
+            'asset/img/event/placeholder.jpg',
+            fit: BoxFit.fill,
+          );
+        },
       ),
     );
   }
@@ -120,7 +126,7 @@ class HomepageEventCard extends StatelessWidget {
       text,
       style: TextStyle(
         fontFamily: 'Poppins',
-        fontSize: 20.sp,
+        fontSize: 16.sp,
         fontWeight: FontWeight.w600,
       ),
     );

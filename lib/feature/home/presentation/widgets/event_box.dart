@@ -37,13 +37,18 @@ class _EventBoxState extends State<EventBox> {
             ClipRRect(
               borderRadius: BorderRadius.circular(12.r),
               child: SizedBox(
-                width: 100.w,
-                height: 100.h,
-                child: Image.network(
-                  "$baseUrlImage${widget.eventData.eventThumbnail}",
-                  fit: BoxFit.fill,
-                ),
-              ),
+                  width: 100.w,
+                  height: 100.h,
+                  child: Image.network(
+                    "$baseUrlImage${widget.eventData.eventThumbnail}",
+                    fit: BoxFit.fill,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'asset/img/event/placeholder.jpg',
+                        fit: BoxFit.fill,
+                      );
+                    },
+                  )),
             ),
             const SizedBox(
               width: 5,
@@ -54,11 +59,11 @@ class _EventBoxState extends State<EventBox> {
                 children: [
                   Row(
                     children: [
-                      categoryEvent('Seminar', false),
+                      categoryEvent(widget.eventData.categories[0], false),
                       SizedBox(
                         width: 5.w,
                       ),
-                      categoryEvent('Business', true),
+                      categoryEvent(widget.eventData.categories[1], true),
                     ],
                   ),
                   const SizedBox(
@@ -77,8 +82,8 @@ class _EventBoxState extends State<EventBox> {
                   const SizedBox(
                     height: 8,
                   ),
-              
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Event Date',
@@ -88,11 +93,9 @@ class _EventBoxState extends State<EventBox> {
                             fontWeight: FontWeight.w400,
                             color: const Color(0xFF888888)),
                       ),
-                      const SizedBox(
-                        width: 5,
-                      ),
                       Text(
-                        widget.eventData.datetime.toString(),
+                        DateFormat('d MMMM yyyy', 'id_ID')
+                            .format(widget.eventData.datetime),
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 8.sp,
@@ -101,21 +104,6 @@ class _EventBoxState extends State<EventBox> {
                     ],
                   ),
                 ],
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFF6E6E6E)),
-                shape: BoxShape.circle,
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(8.w),
-                child: Center(
-                  child: Icon(
-                    Icons.favorite_border,
-                    size: 12.w,
-                  ),
-                ),
               ),
             ),
           ],

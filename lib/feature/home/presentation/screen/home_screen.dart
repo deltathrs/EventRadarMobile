@@ -27,8 +27,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    super.initState();
     cubit.getEventList();
+    super.initState();
   }
 
   final String baseUrlImage = dotenv.env['BASE_URL']!;
@@ -50,7 +50,10 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const SearchScreen()));
+                      builder: (context) => BlocProvider(
+                            create: (context) => GetIt.instance<EventsCubit>(),
+                            child: const SearchScreen(),
+                          )));
             },
             child: Container(
               height: 37.h,

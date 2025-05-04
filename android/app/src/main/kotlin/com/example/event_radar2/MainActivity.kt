@@ -1,4 +1,4 @@
-package com.example.event_radar2
+package com.eventradar.cloud
 
 import io.flutter.embedding.android.FlutterActivity
 

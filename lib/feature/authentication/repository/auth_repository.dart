@@ -4,6 +4,7 @@ import 'package:event_radar2/network/secure_storage_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepository {
   final ApiService apiService;
@@ -23,8 +24,11 @@ class AuthRepository {
           dotenv.env['LOGIN'] ?? "", modelData);
 
       if (response.statusCode == 200) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
         secureStorageService
             .storeSessionToken(response.data['data']['token'] ?? "");
+
+        await prefs.setBool('isLoggedIn', true);
 
         UserStatus.isLoggedIn = true;
 

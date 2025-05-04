@@ -18,3 +18,17 @@ final class EventListFailed extends EventsState {
 
   EventListFailed({required this.message});
 }
+
+final class EventDetailLoading extends EventsState {}
+
+final class EventDetailLoaded extends EventsState {
+  final EventDetailModel eventDetail;
+
+  EventDetailLoaded({required this.eventDetail});
+}
+
+final class EventDetailFailed extends EventsState {
+  final String message;
+
+  EventDetailFailed({required this.message});
+}
