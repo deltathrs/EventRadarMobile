@@ -1,4 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:event_radar2/feature/home/data/ad_slider_model.dart';
+import 'package:event_radar2/feature/home/presentation/cubits/ad_slider/ad_slider_cubit.dart';
+import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/homepage_eventcard.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/homepage_speakers.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/event_detail.dart';
@@ -18,16 +21,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List imageList = [
-    {"id": 1, "image_path": 'asset/img/homepage/adpage1.png'},
-    {"id": 2, "image_path": 'asset/img/homepage/adpage2.png'},
-  ];
-
   final EventsCubit cubit = GetIt.instance<EventsCubit>();
 
   @override
   void initState() {
     cubit.getEventList();
+    context.read<AdSliderCubit>().getAdSliderList();
     super.initState();
   }
 
@@ -106,60 +105,68 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget carousel() {
-    return Stack(
-      children: [
-        InkWell(
-          onTap: () {
-            print(adIndex);
-          },
-          child: CarouselSlider(
-              items: imageList
-                  .map(
-                    (item) => Image.asset(
-                      item["image_path"],
-                      fit: BoxFit.fill,
-                      width: 430,
-                      height: 196,
-                    ),
-                  )
-                  .toList(),
-              carouselController: carouselController,
-              options: CarouselOptions(
-                  scrollPhysics: const BouncingScrollPhysics(),
-                  autoPlay: true,
-                  aspectRatio: 2,
-                  viewportFraction: 1,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      adIndex = index;
-                    });
-                  })),
-        ),
-        Positioned(
-          bottom: 10.h,
-          left: 0,
-          right: 0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: imageList.asMap().entries.map((entry) {
-              print(entry);
-              print(entry.key);
-              return GestureDetector(
-                onTap: () => carouselController.animateToPage(entry.key),
-                child: Container(
-                  height: 8.h,
-                  width: 8.w,
-                  margin: EdgeInsets.symmetric(horizontal: 3.0.w),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.r),
-                    color: adIndex == entry.key ? Colors.blue : Colors.grey,
-                  ),
+    return BlocBuilder<AdSliderCubit, AdSliderState>(
+      builder: (context, state) {
+        if (state is AdSliderLoaded) {
+          return Stack(
+            children: [
+              InkWell(
+                onTap: () {
+                  print(adIndex);
+                },
+                child: CarouselSlider(
+                    items: state.adSliderList
+                        .map(
+                          (item) => Image.network(
+                            "$baseUrlImage${item.image}",
+                            fit: BoxFit.fill,
+                            width: 430,
+                            height: 196,
+                          ),
+                        )
+                        .toList(),
+                    carouselController: carouselController,
+                    options: CarouselOptions(
+                        scrollPhysics: const BouncingScrollPhysics(),
+                        autoPlay: true,
+                        aspectRatio: 2,
+                        viewportFraction: 1,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            adIndex = index;
+                          });
+                        })),
+              ),
+              Positioned(
+                bottom: 10.h,
+                left: 0,
+                right: 0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: state.adSliderList.asMap().entries.map((entry) {
+                    print(entry);
+                    print(entry.key);
+                    return GestureDetector(
+                      onTap: () => carouselController.animateToPage(entry.key),
+                      child: Container(
+                        height: 8.h,
+                        width: 8.w,
+                        margin: EdgeInsets.symmetric(horizontal: 3.0.w),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.r),
+                          color:
+                              adIndex == entry.key ? Colors.blue : Colors.grey,
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 ),
-              );
-            }).toList(),
-          ),
-        ),
-      ],
+              ),
+            ],
+          );
+        }
+        return const Center(child: CircularProgressIndicator());
+      },
     );
   }
 
@@ -199,7 +206,13 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const EventDetail()));
+                              builder: (context) => BlocProvider(
+                                    create: (context) =>
+                                        GetIt.instance<EventDetailCubit>(),
+                                    child: EventDetail(
+                                      eventId: state.events[index].id,
+                                    ),
+                                  )));
                     },
                     child: HomepageEventCard(
                       title: state.events[index].name,

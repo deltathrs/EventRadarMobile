@@ -82,25 +82,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
             const SizedBox(
-              height: 15,
-            ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomInfoWidget(
-                    imagePath: 'asset/img/profile/badge.png',
-                    title: 'Badge',
-                    value: 'Gold'),
-                SizedBox(
-                  width: 5,
-                ),
-                CustomInfoWidget(
-                    imagePath: 'asset/img/profile/active_point.png',
-                    title: 'Active Point',
-                    value: '3456'),
-              ],
-            ),
-            const SizedBox(
               height: 25,
             ),
             Text(

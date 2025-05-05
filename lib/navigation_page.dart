@@ -1,6 +1,9 @@
+import 'package:event_radar2/feature/home/presentation/cubits/ad_slider/ad_slider_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/events/events_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/screen/home_screen.dart';
+import 'package:event_radar2/feature/notification/presentation/screens/notification_page.dart';
 import 'package:event_radar2/feature/profile/presentation/screen/profile.dart';
+import 'package:event_radar2/feature/schedule/presentation/screens/schedule_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,14 +32,19 @@ class _NavigationPage extends State<NavigationPage> {
       child: IndexedStack(
         index: currentPageIndex,
         children: <Widget>[
-          const HomePage(),
-          const HomePage(), // NOTE: Add some page here
-          const ProfilePage(),
-          BlocProvider(
-            create: (context) => GetIt.instance<EventsCubit>(),
+          MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => GetIt.instance<EventsCubit>(),
+              ),
+              BlocProvider(
+                create: (context) => GetIt.instance<AdSliderCubit>(),
+              ),
+            ],
             child: const HomePage(),
           ),
-          const HomePage(), // NOTE: Add some page here
+          const SchedulePage(),
+          const NotificationPage(),
           const ProfilePage(),
         ],
       ),

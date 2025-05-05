@@ -25,7 +25,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final AuthCubit _cubit = GetIt.instance<AuthCubit>();
 
   void showErrorMessage(String message) {
-    showDialog(
+    showDialog( 
         context: context,
         builder: (context) {
           return AlertDialog(

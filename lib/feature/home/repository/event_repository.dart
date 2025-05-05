@@ -1,5 +1,6 @@
 import 'package:event_radar2/feature/home/data/event_detail_model.dart';
 import 'package:event_radar2/feature/home/data/event_model.dart';
+import 'package:event_radar2/feature/profile/data/ticket_detail_model.dart';
 import 'package:event_radar2/network/api_services.dart';
 import 'package:event_radar2/network/secure_storage_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -13,10 +14,10 @@ class EventRepository {
       {required this.secureStorageService, required this.apiService});
 
   final Logger _logger = Logger();
-
+ 
   Future<List<EventModel>> getEventList(
       List<String> categories, String name, bool isOnline, int page) async {
-    try {
+    try { 
       final modelData = {
         "categories": categories,
         "name": name,
@@ -40,12 +41,40 @@ class EventRepository {
 
   Future<EventDetailModel> getEventDetail(String eventId) async {
     try {
-      final response = 
-          await apiService.getApiData("${dotenv.env['EVENTS']}/$eventId");
+      final response =
+          await apiService.getApiData("${dotenv.env['EVENT']}/$eventId");
 
       return EventDetailModel.fromJson(response.data['data']);
     } catch (e, stackTrace) {
       _logger.e('Error getEventDetail: $e', stackTrace: stackTrace);
+      throw e;
+    }
+  }
+
+  Future<String> buyEvent(String ticketId) async {
+    try {
+      final response =
+          await apiService.getApiData("${dotenv.env['BUY_TICKET']}/$ticketId");
+
+      return response.data['data']['message'];
+    } catch (e, stackTrace) {
+      _logger.e('Error buyEvent: $e', stackTrace: stackTrace);
+      throw e;
+    }
+  }
+
+  Future<List<TicketDetailModel>> getTicketDetailList() async {
+    try {
+      final response = await apiService.getApiData("${dotenv.env['TICKET']}");
+
+      List<dynamic> jsonData = response.data['data'];
+
+      return jsonData
+          .map((item) =>
+              TicketDetailModel.fromJson(Map<String, dynamic>.from(item)))
+          .toList();
+    } catch (e, stackTrace) {
+      _logger.e('Error getTicketDetailList: $e', stackTrace: stackTrace);
       throw e;
     }
   }

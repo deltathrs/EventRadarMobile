@@ -1,18 +1,46 @@
 import 'dart:ui';
 
+import 'package:event_radar2/feature/components/utils/bottom_sheet_utils.dart';
+import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 
 class EventDetail extends StatefulWidget {
-  const EventDetail({super.key});
+  final String eventId;
+  const EventDetail({super.key, required this.eventId});
 
   @override
   State<EventDetail> createState() => _EventDetailState();
 }
 
 class _EventDetailState extends State<EventDetail> {
+  final String baseUrlImage = dotenv.env['BASE_URL']!;
+  final EventDetailCubit eventDetail = GetIt.instance<EventDetailCubit>();
+  final EventDetailCubit eventTransaction = GetIt.instance<EventDetailCubit>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    eventDetail.getEventDetail(widget.eventId);
+  }
+
+  String formatDate(String isoDate) {
+    DateTime dateTime = DateTime.parse(isoDate);
+    return DateFormat("d MMMM yyyy", "id").format(dateTime);
+  }
+
+  String formatTime(String isoDate) {
+    DateTime dateTime = DateTime.parse(isoDate).toLocal();
+    return DateFormat.Hm().format(dateTime);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,421 +55,509 @@ class _EventDetailState extends State<EventDetail> {
               fontWeight: FontWeight.w600),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 308.h,
-              width: double.infinity,
-              child: Stack(
-                fit: StackFit.expand,
+      body: BlocConsumer<EventDetailCubit, EventDetailState>(
+        bloc: eventDetail,
+        listener: (context, state) {},
+        builder: (context, state) {
+          if (state is EventDetailLoaded) {
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset(
-                    'asset/img/event/event_img.png',
-                    fit: BoxFit.cover,
-                  ),
-                  ClipRRect(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: Container(
-                        color: Colors.grey.withOpacity(0.1),
-                        alignment: Alignment.center,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: (MediaQuery.of(context).size.width - 195.w) / 2.w,
-                    top: (308.h - 275.h) / 2.h,
-                    child: Image.asset(
-                      'asset/img/event/event_img.png',
-                      width: 195.w,
-                      height: 275.h,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 316.h,
-              width: double.infinity,
-              child: Stack(
-                children: [
-                  Container(
-                    color: const Color(0xFFD3E1FF),
-                  ),
-                  Positioned.fill(
-                      child: Center(
-                    child: Container(
-                      width: 350.w,
-                      height: 300.h,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.r),
-                          color: Colors.white),
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                CategoryEvent('Seminar'),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                CategoryEvent('Finance'),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              'Online Finances Seminar',
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 16.sp),
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            const Divider(
-                              color: Color(0xFFC9C9C9),
-                              thickness: 1,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            TimeAndCalendar('15 Jan 2021', '09.00 - 11.00 UTC'),
-                            const SizedBox(
-                              height: 2,
-                            ),
-                            LocationSession('Online'),
-                            const SizedBox(
-                              height: 2,
-                            ),
-                            const Divider(
-                              color: Color(0xFFC9C9C9),
-                              thickness: 1,
-                            ),
-                            OrganizerInfo(
-                                'asset/img/event/email_logo.png',
-                                'Accounting Finance',
-                                'finances.accounting@gmail.com'),
-                          ],
+                  SizedBox(
+                    height: 308.h,
+                    width: double.infinity,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Image.network(
+                          "$baseUrlImage${state.eventDetail.eventThumbnail}",
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'asset/img/event/placeholder.jpg',
+                              fit: BoxFit.cover,
+                            );
+                          },
                         ),
-                      ),
+                        ClipRRect(
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                            child: Container(
+                              color: Colors.grey.withOpacity(0.1),
+                              alignment: Alignment.center,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          left:
+                              (MediaQuery.of(context).size.width - 195.w) / 2.w,
+                          top: (308.h - 275.h) / 2.h,
+                          child: Image.network(
+                            "$baseUrlImage${state.eventDetail.eventThumbnail}",
+                            width: 195.w,
+                            height: 275.h,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.asset(
+                                width: 195.w,
+                                height: 275.h,
+                                'asset/img/event/placeholder.jpg',
+                                fit: BoxFit.contain,
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  )),
+                  ),
+                  SizedBox(
+                    height: 316.h,
+                    width: double.infinity,
+                    child: Stack(
+                      children: [
+                        Container(
+                          color: const Color(0xFFD3E1FF),
+                        ),
+                        Positioned.fill(
+                            child: Center(
+                          child: Container(
+                            width: 350.w,
+                            height: 300.h,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.r),
+                                color: Colors.white),
+                            child: Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      CategoryEvent(state.eventDetail.isOnline
+                                          ? 'Online'
+                                          : 'Offline'),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      CategoryEvent(
+                                          state.eventDetail.categories[0]),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    state.eventDetail.name,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16.sp),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  const Divider(
+                                    color: Color(0xFFC9C9C9),
+                                    thickness: 1,
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  TimeAndCalendar(state.eventDetail.datetime),
+                                  const SizedBox(
+                                    height: 2,
+                                  ),
+                                  LocationSession(state.eventDetail.isOnline
+                                      ? 'Online'
+                                      : state.eventDetail.location),
+                                  const SizedBox(
+                                    height: 2,
+                                  ),
+                                  const Divider(
+                                    color: Color(0xFFC9C9C9),
+                                    thickness: 1,
+                                  ),
+                                  OrganizerInfo(
+                                      'asset/img/event/email_logo.png',
+                                      state.eventDetail.organizerName,
+                                      'finances.accounting@gmail.com'),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'About',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ReadMoreText(
+                            state.eventDetail.eventDetail,
+                            trimMode: TrimMode.Line,
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 11.sp),
+                            trimLines: 3,
+                            colorClickableText: const Color(0xFF1F24EA),
+                            trimCollapsedText: 'Read more',
+                            trimExpandedText: 'Show less',
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Text(
+                          'Benefits',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              listBenefits('Lorem ipsum dolor.'),
+                              const SizedBox(
+                                height: 2,
+                              ),
+                              listBenefits('Lorem ipsum dolor.'),
+                              const SizedBox(
+                                height: 2,
+                              ),
+                              listBenefits('Lorem ipsum dolor.'),
+                              const SizedBox(
+                                height: 2,
+                              ),
+                              listBenefits('Lorem ipsum dolor.'),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        // const SizedBox(
+                        //   height: 15,
+                        // ),
+                        // Text(
+                        //   'Eligibility',
+                        //   style: TextStyle(
+                        //     fontFamily: 'Poppins',
+                        //     fontWeight: FontWeight.w600,
+                        //     fontSize: 14.sp,
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: EdgeInsets.all(8.w),
+                        //   child: Column(
+                        //     children: [
+                        //       listEligibility('Open for public'),
+                        //     ],
+                        //   ),
+                        // ),
+                        // const SizedBox(
+                        //   height: 10,
+                        // ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Text(
+                          'Available Ticket',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          height: 400.h,
+                          child: ListView.builder(
+                              itemCount: state.eventDetail.tickets.length,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: EdgeInsets.only(bottom: 10.h),
+                                  child: eventTicket(
+                                      state.eventDetail.tickets[index]
+                                                  .ticketType ==
+                                              "Standard Ticket"
+                                          ? const Color(0xFF505050)
+                                          : const Color(0xFF0022BA),
+                                      state.eventDetail.tickets[index]
+                                          .ticketType,
+                                      state.eventDetail.tickets[index].price,
+                                      state.eventDetail.tickets[index]
+                                          .ticketLimit,
+                                      formatDate(state.eventDetail
+                                          .tickets[index].registrationEnd
+                                          .toIso8601String()),
+                                      state.eventDetail.tickets[index].id),
+                                );
+                              }),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
+            );
+          }
+
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Color(0xFF0022BA),
             ),
-            const SizedBox(
-              height: 20,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget eventTicket(Color outline, String title, double price, int slot,
+      String date, String ticketId) {
+    return BlocListener<EventDetailCubit, EventDetailState>(
+      bloc: eventTransaction,
+      listener: (context, state) {
+        if (state is EventDetailBuyLoading) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              });
+        }
+
+        if (state is EventDetailBuySuccess) {
+          Navigator.pop(context);
+          BottomSheetUtils.displayResultBottomSheet(
+              title: "Successfully Buy Event",
+              description: "Event has been added to your collection list",
+              image: "asset/img/event/success.jpg",
+              completion: "Continue",
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              context: context);
+        }
+        if (state is EventDetailBuyFailed) {
+          Navigator.pop(context);
+          BottomSheetUtils.displayResultBottomSheet(
+              title: "Failed to Buy Event",
+              description: state.message,
+              image: "asset/img/event/failed.jpg",
+              completion: "Back",
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              context: context);
+        }
+      },
+      child: Stack(
+        children: [
+          Container(
+            width: 344.w,
+            height: 145.h,
+            decoration: BoxDecoration(
+              border: Border.all(color: outline),
+              borderRadius: BorderRadius.circular(15.r),
             ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
+          ),
+          Positioned(
+            top: 0,
+            bottom: 0,
+            left: 0,
+            child: Container(
+              width: 11.w,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(15.r),
+                  bottomLeft: Radius.circular(15.r),
+                ),
+                color: outline,
+              ),
+            ),
+          ),
+          Positioned(
+            top: 10.h,
+            left: 15.w,
+            child: Container(
+              width: 310.w,
+              color: Colors.transparent,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'About',
+                    title,
                     style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.sp,
-                    ),
+                        fontFamily: 'Poppins',
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF505050)),
                   ),
-                  const SizedBox(
-                    height: 10,
+                  const Divider(
+                    color: Color(0xFFC9C9C9),
+                    thickness: 1,
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ReadMoreText(
-                      'Lorem ipsum dolor sit amet consectetur. Elementum dui dictum fringilla neque. Praesent odio pretium ut in quis condimentum dictum. Eget gravida gravida dui ornare enim faucibus ut dignissim semper. Eget pharetra ullamcorper vel commodo sed elit curabitur lectus lorem. Magnis congue enim nisl imperdiet lorem pulvinar risus. Ut semper ipsum vulputate arcu tristique sit velit ac. Viverra tincidunt adipiscing ut tellus sollicitudin nibh augue viverra.',
-                      trimMode: TrimMode.Line,
-                      style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 11.sp),
-                      trimLines: 3,
-                      colorClickableText: const Color(0xFF1F24EA),
-                      trimCollapsedText: 'Read more',
-                      trimExpandedText: 'Show less',
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Text(
-                    'Benefits',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        listBenefits('Lorem ipsum dolor.'),
-                        const SizedBox(
-                          height: 2,
-                        ),
-                        listBenefits('Lorem ipsum dolor.'),
-                        const SizedBox(
-                          height: 2,
-                        ),
-                        listBenefits('Lorem ipsum dolor.'),
-                        const SizedBox(
-                          height: 2,
-                        ),
-                        listBenefits('Lorem ipsum dolor.'),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Text(
-                    'Eligibility',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.sp,
+                    padding: const EdgeInsets.all(3.0),
+                    child: SizedBox(
+                      width: 224.w,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.calendar_month_outlined,
+                                color: outline,
+                              ),
+                              Text(
+                                ' Registration Deadline',
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 8.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: const Color(0xFF4F4F4F)),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            date,
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 8.sp,
+                                color: const Color(0xFF4F4F4F)),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(8.w),
-                    child: Column(
-                      children: [
-                        listEligibility('Open for public'),
-                      ],
+                    padding: const EdgeInsets.all(3.0),
+                    child: SizedBox(
+                      width: 224.w,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.person,
+                                color: outline,
+                              ),
+                              const SizedBox(
+                                width: 3,
+                              ),
+                              Text(
+                                'Tickets Left',
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 8.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: const Color(0xFF4F4F4F)),
+                              ),
+                            ],
+                          ),
+                          slot == 0
+                              ? Text(
+                                  'Sold out',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 8.sp,
+                                      color: const Color(0xFF4F4F4F)),
+                                )
+                              : Text(
+                                  '$slot tickets',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 8.sp,
+                                      color: const Color(0xFF4F4F4F)),
+                                )
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 2,
                   ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Text(
-                    'Available Ticket',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Column(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      eventTicket(const Color(0xFF0022BA), 'Free Webinar',
-                          40000, 4, '17 Jan 2021'),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      eventTicket(const Color(0xFF0022BA),
-                          'Regular + Workshop Session', 0, 0, '15 Jan 2021'),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      eventTicket(const Color(0xFF505050),
-                          'VIP + Intensive Mentoring', 50000, 2, '11 Jan 2021'),
-                      const SizedBox(
-                        height: 10,
+                      price <= 0
+                          ? Text(
+                              'FREE',
+                              style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 11.sp,
+                                  color: const Color(0xFFFFB800)),
+                            )
+                          : Row(
+                              children: [
+                                const Iconify(
+                                  '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M7 15h2c0 1.08 1.37 2 3 2s3-.92 3-2c0-1.1-1.04-1.5-3.24-2.03C9.64 12.44 7 11.78 7 9c0-1.79 1.47-3.31 3.5-3.82V3h3v2.18C15.53 5.69 17 7.21 17 9h-2c0-1.08-1.37-2-3-2s-3 .92-3 2c0 1.1 1.04 1.5 3.24 2.03C14.36 11.56 17 12.22 17 15c0 1.79-1.47 3.31-3.5 3.82V21h-3v-2.18C8.47 18.31 7 16.79 7 15"/></svg>',
+                                  color: Color(0xFFFFB800),
+                                ),
+                                Text(
+                                  ' Rp $price',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 11.sp,
+                                      color: const Color(0xFFFFB800)),
+                                )
+                              ],
+                            ),
+                      GestureDetector(
+                        onTap: () {
+                          eventTransaction.buyEvent(ticketId);
+                        },
+                        child: const Iconify(
+                            '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 50 50"><path fill="#1a34ff" d="M25 42c-9.4 0-17-7.6-17-17S15.6 8 25 8s17 7.6 17 17s-7.6 17-17 17m0-32c-8.3 0-15 6.7-15 15s6.7 15 15 15s15-6.7 15-15s-6.7-15-15-15"/><path fill="#1a34ff" d="M16 24h18v2H16z"/><path fill="#1a34ff" d="M24 16h2v18h-2z"/></svg>'),
                       ),
                     ],
                   )
                 ],
               ),
-            )
-          ],
-        ),
+            ),
+          ),
+        ],
       ),
-    );
-  }
-
-  Widget eventTicket(
-      Color outline, String title, int price, int slot, String date) {
-    return Stack(
-      children: [
-        Container(
-          width: 344.w,
-          height: 145.h,
-          decoration: BoxDecoration(
-            border: Border.all(color: outline),
-            borderRadius: BorderRadius.circular(15.r),
-          ),
-        ),
-        Positioned(
-          top: 0,
-          bottom: 0,
-          left: 0,
-          child: Container(
-            width: 11.w,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15.r),
-                bottomLeft: Radius.circular(15.r),
-              ),
-              color: outline,
-            ),
-          ),
-        ),
-        Positioned(
-          top: 10.h,
-          left: 15.w,
-          child: Container(
-            width: 310.w,
-            color: Colors.transparent,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF505050)),
-                ),
-                const Divider(
-                  color: Color(0xFFC9C9C9),
-                  thickness: 1,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: SizedBox(
-                    width: 224.w,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.calendar_month_outlined,
-                              color: outline,
-                            ),
-                            Text(
-                              ' Registration Deadline',
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 8.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: const Color(0xFF4F4F4F)),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          date,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 8.sp,
-                              color: const Color(0xFF4F4F4F)),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: SizedBox(
-                    width: 224.w,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.person,
-                              color: outline,
-                            ),
-                            const SizedBox(
-                              width: 3,
-                            ),
-                            Text(
-                              'Tickets Left',
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 8.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: const Color(0xFF4F4F4F)),
-                            ),
-                          ],
-                        ),
-                        slot == 0
-                            ? Text(
-                                'Sold out',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 8.sp,
-                                    color: const Color(0xFF4F4F4F)),
-                              )
-                            : Text(
-                                '$slot tickets',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 8.sp,
-                                    color: const Color(0xFF4F4F4F)),
-                              )
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 2,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    price <= 0
-                        ? Text(
-                            'FREE',
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 11.sp,
-                                color: const Color(0xFFFFB800)),
-                          )
-                        : Row(
-                            children: [
-                              const Iconify(
-                                '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M7 15h2c0 1.08 1.37 2 3 2s3-.92 3-2c0-1.1-1.04-1.5-3.24-2.03C9.64 12.44 7 11.78 7 9c0-1.79 1.47-3.31 3.5-3.82V3h3v2.18C15.53 5.69 17 7.21 17 9h-2c0-1.08-1.37-2-3-2s-3 .92-3 2c0 1.1 1.04 1.5 3.24 2.03C14.36 11.56 17 12.22 17 15c0 1.79-1.47 3.31-3.5 3.82V21h-3v-2.18C8.47 18.31 7 16.79 7 15"/></svg>',
-                                color: Color(0xFFFFB800),
-                              ),
-                              Text(
-                                ' Rp $price',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 11.sp,
-                                    color: const Color(0xFFFFB800)),
-                              )
-                            ],
-                          ),
-                    const Iconify(
-                        '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 50 50"><path fill="#1a34ff" d="M25 42c-9.4 0-17-7.6-17-17S15.6 8 25 8s17 7.6 17 17s-7.6 17-17 17m0-32c-8.3 0-15 6.7-15 15s6.7 15 15 15s15-6.7 15-15s-6.7-15-15-15"/><path fill="#1a34ff" d="M16 24h18v2H16z"/><path fill="#1a34ff" d="M24 16h2v18h-2z"/></svg>'),
-                  ],
-                )
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 
@@ -574,7 +690,7 @@ class _EventDetailState extends State<EventDetail> {
     );
   }
 
-  TimeAndCalendar(String date, String time) {
+  TimeAndCalendar(DateTime date) {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Row(
@@ -590,7 +706,7 @@ class _EventDetailState extends State<EventDetail> {
                 width: 3,
               ),
               Text(
-                date,
+                formatDate(date.toIso8601String()),
                 style: TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 11.sp,
@@ -609,7 +725,7 @@ class _EventDetailState extends State<EventDetail> {
                 width: 3,
               ),
               Text(
-                time,
+                formatTime(date.toIso8601String()),
                 style: TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 11.sp,
