@@ -2,6 +2,7 @@
 //
 //     final ticketDetailModel = ticketDetailModelFromJson(jsonString);
 
+import 'package:meta/meta.dart';
 import 'dart:convert';
 
 List<TicketDetailModel> ticketDetailModelFromJson(String str) =>
@@ -20,8 +21,10 @@ class TicketDetailModel {
   String location;
   bool isApproved;
   bool isOnline;
+  String organizerName;
   String organizerId;
   String eventThumbnail;
+  List<String> categories;
   List<Ticket> tickets;
 
   TicketDetailModel({
@@ -33,8 +36,10 @@ class TicketDetailModel {
     required this.location,
     required this.isApproved,
     required this.isOnline,
+    required this.organizerName,
     required this.organizerId,
     required this.eventThumbnail,
+    required this.categories,
     required this.tickets,
   });
 
@@ -48,8 +53,10 @@ class TicketDetailModel {
         location: json["location"],
         isApproved: json["is_approved"],
         isOnline: json["is_online"],
+        organizerName: json["organizer_name"],
         organizerId: json["organizer_id"],
         eventThumbnail: json["event_thumbnail"],
+        categories: List<String>.from(json["categories"].map((x) => x)),
         tickets:
             List<Ticket>.from(json["tickets"].map((x) => Ticket.fromJson(x))),
       );
@@ -63,8 +70,10 @@ class TicketDetailModel {
         "location": location,
         "is_approved": isApproved,
         "is_online": isOnline,
+        "organizer_name": organizerName,
         "organizer_id": organizerId,
         "event_thumbnail": eventThumbnail,
+        "categories": List<dynamic>.from(categories.map((x) => x)),
         "tickets": List<dynamic>.from(tickets.map((x) => x.toJson())),
       };
 }

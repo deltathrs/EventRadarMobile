@@ -3,6 +3,22 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class BottomSheetUtils {
+  static Future<void> showLoadingDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      barrierDismissible:
+          false, // biasanya loading dialog tidak bisa ditutup sembarangan
+      builder: (context) {
+        return PopScope(
+          canPop: false,
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
+    );
+  }
+
   static void showCustomBottomSheet(BuildContext context,
       {required Widget child}) {
     showModalBottomSheet(
@@ -59,12 +75,12 @@ class BottomSheetUtils {
                 Container(
                   width: double.infinity,
                   height: 277.h,
-                  color: const Color(0xFFF1F0F0),
+                  color: Colors.white,
                   child: Center(
                     child: Image.asset(
                       image,
-                      width: 237.w,
-                      height: 223.h,
+                      width: 250.w,
+                      height: 250.h,
                     ),
                   ),
                 ),

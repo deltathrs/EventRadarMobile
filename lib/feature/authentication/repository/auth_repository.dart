@@ -2,7 +2,9 @@ import 'package:event_radar2/feature/authentication/data/data_model.dart';
 import 'package:event_radar2/network/api_services.dart';
 import 'package:event_radar2/network/secure_storage_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,6 +40,97 @@ class AuthRepository {
       }
     } catch (e, stackTrace) {
       Logger().e('Error login: $e', stackTrace: stackTrace);
+      throw e;
+    }
+  }
+
+  Future<void> signInWithGoogle() async {
+    if (kDebugMode) {
+      print('Starting Google Sign-In process...');
+    }
+
+    // Interactive signing in process
+    final GoogleSignInAccount? gUser = await GoogleSignIn(
+      forceCodeForRefreshToken: true,
+      scopes: [
+        'openid',
+        'email',
+        'profile',
+      ],
+      clientId:
+          "592533004605-b1i1jedkfn5rq8cb0rhl8g3mjefs6sro.apps.googleusercontent.com",
+      serverClientId:
+          "592533004605-lujjb5t5lni3g1tg4md8e9o44314rvl7.apps.googleusercontent.com",
+    ).signIn();
+
+    if (gUser != null) {
+      if (kDebugMode) {
+        print('Google Sign-In successful. Retrieving auth details');
+      }
+
+      // Obtain auth details from request
+      final GoogleSignInAuthentication gAuth = await gUser.authentication;
+      print(gAuth);
+
+      // Log Google Sign-In response
+      if (kDebugMode) {
+        print('Google Sign-In response: $gAuth');
+      }
+
+      print('Google Id Token: ${gAuth.idToken}');
+
+      // Access token and ID token
+      if (kDebugMode) {
+        print('Access Token: ${gAuth.accessToken}');
+      }
+
+      // Retrieving user information (full name, email, and photo URL)
+      String fullName = gUser.displayName ?? 'No name available';
+      String email = gUser.email;
+      String? photoUrl = gUser.photoUrl;
+      final credential = GoogleAuthProvider.credential(
+          idToken: gAuth.idToken, accessToken: gAuth.accessToken);
+
+      print(credential);
+
+      // if (kDebugMode) {
+      //   print('Full Name: $fullName');
+      //   print('Email: $email');
+      //   print('Photo URL: $photoUrl');
+      // }
+
+      if (kDebugMode) {
+        print('User information stored in SharedPreferences.');
+      }
+
+      // You can now use the access token and user details
+      debugPrint('Access Google Token: ${gAuth.accessToken}', wrapWidth: 1024);
+
+      secureStorageService.storeSessionToken(gAuth.idToken ?? "");
+
+      await googleLogin();
+      await GoogleSignIn().signOut();
+    } else {
+      // Handle sign-in cancellation
+      if (kDebugMode) {
+        print('Google Sign-In cancelled.');
+      }
+      throw 'Sign-in process was cancelled';
+    }
+  }
+
+  Future<String> googleLogin() async {
+    try {
+      final response = await apiService.postApiDataWithToken(
+          dotenv.env['LOGIN_GOOGLE']!, null);
+
+      if (response.statusCode == 200) {
+        secureStorageService.storeSessionToken(response.data['token'] ?? "");
+        return response.data['token'];
+      }
+      return response.data;
+    } catch (e, stackTrace) {
+      Logger().e('Error googleLogin: $e', stackTrace: stackTrace);
       throw e;
     }
   }

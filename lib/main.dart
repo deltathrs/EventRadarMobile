@@ -14,10 +14,10 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  UserStatus.deviceToken = await messaging.getToken();
+  // FirebaseMessaging messaging = FirebaseMessaging.instance;
+  // UserStatus.deviceToken = await messaging.getToken();
 
-  print("FCM Token: ${UserStatus.deviceToken}");
+  // print("FCM Token: ${UserStatus.deviceToken}");
   await dotenv.load(fileName: "url.env");
   DependencyInjection.getInstance.setupDI();
   runApp(const MyApp());

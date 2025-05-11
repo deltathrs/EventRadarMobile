@@ -19,6 +19,20 @@ final class LoginFailed extends AuthState {
   LoginFailed(this.error);
 }
 
+final class GoogleLoginLoading extends AuthState {}
+
+final class GoogleLoginSuccess extends AuthState {
+  final String message;
+
+  GoogleLoginSuccess(this.message);
+}
+
+final class GoogleLoginFailed extends AuthState {
+  final String error;
+
+  GoogleLoginFailed(this.error);
+}
+
 final class RegisterLoading extends AuthState {}
 
 final class RegisterSuccess extends AuthState {

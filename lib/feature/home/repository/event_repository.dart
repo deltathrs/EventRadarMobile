@@ -14,10 +14,10 @@ class EventRepository {
       {required this.secureStorageService, required this.apiService});
 
   final Logger _logger = Logger();
- 
+
   Future<List<EventModel>> getEventList(
       List<String> categories, String name, bool isOnline, int page) async {
-    try { 
+    try {
       final modelData = {
         "categories": categories,
         "name": name,
@@ -35,6 +35,39 @@ class EventRepository {
           .toList();
     } catch (e, stackTrace) {
       _logger.e('Error getEventList: $e', stackTrace: stackTrace);
+      throw e;
+    }
+  }
+
+  Future<String> addEventToFavourite(String eventId) async {
+    try {
+      final response = await apiService.putApiData(
+          "${dotenv.env['FAVOURITE']!}/$eventId", null);
+
+      if (response.statusCode == 200) {
+        return response.data['data']['message'];
+      }
+      throw response.data;
+    } catch (e, stackTrace) {
+      Logger().e("Error AddToFavourite: $e", stackTrace: stackTrace);
+      throw e;
+    }
+  }
+
+  Future<List<EventModel>> getFavouriteEventList() async {
+    try {
+      final response = await apiService.getApiData(dotenv.env['FAVOURITE']!);
+
+      if (response.statusCode == 200) {
+        List<dynamic> jsonData = response.data['data'];
+
+        return jsonData
+            .map((item) => EventModel.fromJson(Map<String, dynamic>.from(item)))
+            .toList();
+      }
+      throw response.data;
+    } catch (e, stackTrace) {
+      Logger().e("Error getFavouriteEventList: $e", stackTrace: stackTrace);
       throw e;
     }
   }

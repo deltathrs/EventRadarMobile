@@ -30,69 +30,65 @@ class HomepageEventCard extends StatelessWidget {
       return DateFormat("d MMMM yyyy", "id").format(dateTime);
     }
 
-    return Card(
-      borderOnForeground: true,
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.r),
-        side: BorderSide(
-          color: Colors.grey,
-          width: 0.5.w,
-        ),
-      ),
+    return Container(
+      width: 175.w,
+      height: 226.h,
+      decoration: BoxDecoration(
+          border: Border.all(color: Color(0xFF888888)),
+          borderRadius: BorderRadius.circular(15.r)),
       child: Padding(
-        padding: EdgeInsets.all(8.0.w),
+        padding: EdgeInsets.all(12.w),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             eventImage(image),
             SizedBox(
-              width: 200.w,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(8.0.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _roundedBackground(eventType, false),
-                            const SizedBox(width: 8),
-                            Expanded(
-                                child: _roundedBackground(
-                                    eventCategory.join(', '), true)),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        cardTitle(title),
-                        const SizedBox(height: 5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Event Date',
-                              style: GoogleFonts.poppins(
-                                fontSize: 11.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xFF888888),
-                              ),
-                            ),
-                            Text(
-                              formatDate(eventDate.toIso8601String()),
-                              style: GoogleFonts.poppins(
-                                fontSize: 11.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF4F4F4F),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                categoryLocationBox(eventType, false),
+                categoryLocationBox(eventCategory[0], true),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              width: 120.w,
+              child: Text(
+                title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.poppins(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF231FEA)),
               ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Event Date',
+                  style: GoogleFonts.poppins(
+                      fontSize: 9.sp,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF888888)),
+                ),
+                Text(
+                  formatDate(eventDate.toIso8601String()),
+                  style: GoogleFonts.poppins(
+                      fontSize: 9.sp,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF4F4F4F)),
+                ),
+              ],
             ),
           ],
         ),
@@ -102,8 +98,8 @@ class HomepageEventCard extends StatelessWidget {
 
   Widget eventImage(String image) {
     return Container(
-      width: 100.w,
-      height: 100.h,
+      width: 89.w,
+      height: 115.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.r),
       ),
@@ -121,19 +117,9 @@ class HomepageEventCard extends StatelessWidget {
     );
   }
 
-  Text cardTitle(String text) {
-    return Text(
-      text,
-      style: TextStyle(
-        fontFamily: 'Poppins',
-        fontSize: 16.sp,
-        fontWeight: FontWeight.w600,
-      ),
-    );
-  }
-
-  Widget _roundedBackground(String text, bool isCategory) {
+  Widget categoryLocationBox(String text, bool isCategory) {
     return Container(
+      constraints: BoxConstraints(maxWidth: 95.w),
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15.r),
@@ -143,9 +129,8 @@ class HomepageEventCard extends StatelessWidget {
       child: Text(
         text,
         overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          fontFamily: 'Poppins',
-          fontSize: 12.sp,
+        style: GoogleFonts.poppins(
+          fontSize: 10.sp,
           fontWeight: FontWeight.w600,
           color: isCategory ? Color(0xFF888888) : Color(0xFF0022BA),
         ),

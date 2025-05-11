@@ -25,7 +25,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final AuthCubit _cubit = GetIt.instance<AuthCubit>();
 
   void showErrorMessage(String message) {
-    showDialog( 
+    showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
@@ -66,11 +66,11 @@ class _RegisterPageState extends State<RegisterPage> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  backgroundColor: Colors.green,
+                  backgroundColor: Colors.white,
                   title: Center(
                     child: Text(
                       state.message,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.blue),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -347,8 +347,28 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   MyButton(
                     onTap: () {
-                      _cubit.register(emailController.text,
-                          fullNameController.text, passwordController.text);
+                      if (isAgree == true) {
+                        _cubit.register(emailController.text,
+                            fullNameController.text, passwordController.text);
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              backgroundColor: Colors.white,
+                              title: Center(
+                                child: Text(
+                                  "Please agree to the terms and conditions",
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }
                     },
                     text: 'Sign Up',
                     color: Colors.blue,

@@ -40,49 +40,58 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-          backgroundColor: Colors.white,
-          scrolledUnderElevation: 0,
-          centerTitle: true,
-          title: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                            create: (context) => GetIt.instance<EventsCubit>(),
-                            child: const SearchScreen(),
-                          )));
-            },
-            child: Container(
-              height: 37.h,
-              width: 378.w,
-              decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFF6E6E6E)),
-                borderRadius: BorderRadius.circular(15.r),
-              ),
-              child: Row(
-                children: [
-                  const SizedBox(
-                    width: 3,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(64.h),
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20.r),
+              bottomRight: Radius.circular(20.r)),
+          child: AppBar(
+              backgroundColor: Colors.transparent,
+              scrolledUnderElevation: 0,
+              elevation: 0,
+              centerTitle: true,
+              title: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                                create: (context) =>
+                                    GetIt.instance<EventsCubit>(),
+                                child: const SearchScreen(),
+                              )));
+                },
+                child: Container(
+                  height: 37.h,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: const Color(0xFF6E6E6E)),
+                    borderRadius: BorderRadius.circular(15.r),
                   ),
-                  const Icon(Icons.search),
-                  const SizedBox(
-                    width: 5,
+                  child: Row(
+                    children: [
+                      const SizedBox(
+                        width: 3,
+                      ),
+                      const Icon(Icons.search),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        'Search public speaking webinar',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12.sp,
+                          color: const Color(0xFF6E6E6E),
+                        ),
+                      )
+                    ],
                   ),
-                  Text(
-                    'Search public speaking webinar',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12.sp,
-                      color: const Color(0xFF6E6E6E),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          )),
+                ),
+              )),
+        ),
+      ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
@@ -201,27 +210,30 @@ class _HomePageState extends State<HomePage> {
                 scrollDirection: Axis.horizontal,
                 itemCount: state.events.length,
                 itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BlocProvider(
-                                    create: (context) =>
-                                        GetIt.instance<EventDetailCubit>(),
-                                    child: EventDetail(
-                                      eventId: state.events[index].id,
-                                    ),
-                                  )));
-                    },
-                    child: HomepageEventCard(
-                      title: state.events[index].name,
-                      image:
-                          "$baseUrlImage${state.events[index].eventThumbnail}",
-                      eventDate: state.events[index].datetime,
-                      eventType:
-                          state.events[index].isOnline ? "Online" : "Offline",
-                      eventCategory: state.events[index].categories,
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BlocProvider(
+                                      create: (context) =>
+                                          GetIt.instance<EventDetailCubit>(),
+                                      child: EventDetail(
+                                        eventId: state.events[index].id,
+                                      ),
+                                    )));
+                      },
+                      child: HomepageEventCard(
+                        title: state.events[index].name,
+                        image:
+                            "$baseUrlImage${state.events[index].eventThumbnail}",
+                        eventDate: state.events[index].datetime,
+                        eventType:
+                            state.events[index].isOnline ? "Online" : "Offline",
+                        eventCategory: state.events[index].categories,
+                      ),
                     ),
                   );
                 },

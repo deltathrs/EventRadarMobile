@@ -2,6 +2,7 @@ import 'package:event_radar2/feature/home/presentation/cubits/ad_slider/ad_slide
 import 'package:event_radar2/feature/home/presentation/cubits/events/events_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/screen/home_screen.dart';
 import 'package:event_radar2/feature/notification/presentation/screens/notification_page.dart';
+import 'package:event_radar2/feature/profile/presentation/cubits/profile/profile_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/screen/profile.dart';
 import 'package:event_radar2/feature/schedule/presentation/screens/schedule_page.dart';
 import 'package:flutter/material.dart';
@@ -43,9 +44,15 @@ class _NavigationPage extends State<NavigationPage> {
             ],
             child: const HomePage(),
           ),
-          const SchedulePage(),
+          BlocProvider(
+            create: (context) => GetIt.instance<ProfileCubit>(),
+            child: const SchedulePage(),
+          ),
           const NotificationPage(),
-          const ProfilePage(),
+          BlocProvider(
+            create: (context) => GetIt.instance<ProfileCubit>(),
+            child: const ProfilePage(),
+          ),
         ],
       ),
     );

@@ -85,32 +85,24 @@ class ApiService {
       return response;
     } on DioException catch (e) {
       _logger.e('DioError on POST request to $urlServicesName: $e');
-      throw Exception("${e.response?.statusCode} - $e");
-    } catch (e) {
-      _logger.e('Unexpected error on POST request to $urlServicesName: $e');
-      rethrow;
-    }
-  }
+      throw Exception(
+          "${e.response?.statusCode} - ${e.response?.data != null ? e.response?.data is Map<String, dynamic> ? (() {
+              final error = e.response?.data;
 
-  Future<Response<dynamic>> postApiDataWithTokenReportLive(
-      String urlServicesName, Object? modelData) async {
-    debugPrint("postApiDataWithToken modelData: $modelData");
-
-    try {
-      _logger.i(
-          "postApiDataWithToken to ${urlServicesName} with modelData: $modelData");
-      final options = await _getAuthOptions();
-      final response = await dio.post(
-          'https://idms-api-report-testing.indomobil.co.id/' + urlServicesName,
-          options: options,
-          data: modelData);
-
-      _logger.i(
-          'POST request to $urlServicesName with token successful. with response ${response.data}');
-      return response;
-    } on DioException catch (e) {
-      _logger.e('DioError on POST request to $urlServicesName: $e');
-      throw Exception("${e.response?.statusCode} - $e");
+              if (error != null) {
+                if (error.toString().toLowerCase().contains('timeout')) {
+                  return 'Something went wrong. Please Try again later';
+                }
+                return error;
+              } else if (error != null) {
+                if (error.toString().toLowerCase().contains('timeout')) {
+                  return 'Something went wrong. Please Try again later';
+                }
+                return error;
+              } else {
+                return 'Something went wrong. Please Try again later';
+              }
+            })() : (e.response?.data.toString().contains(':') ?? false) ? e.response?.data.toString().split(':').skip(1).join(':').trim() : e.response?.data.toString() : 'Something went wrong. Please Try again later'}");
     } catch (e) {
       _logger.e('Unexpected error on POST request to $urlServicesName: $e');
       rethrow;
@@ -130,7 +122,24 @@ class ApiService {
       return response;
     } on DioException catch (e) {
       _logger.e('DioError on POST request to $urlServicesName: $e');
-      throw Exception("${e.response?.statusCode} - $e");
+      throw Exception(
+          "${e.response?.statusCode} - ${e.response?.data != null ? e.response?.data is Map<String, dynamic> ? (() {
+              final error = e.response?.data;
+
+              if (error != null) {
+                if (error.toString().toLowerCase().contains('timeout')) {
+                  return 'Something went wrong. Please Try again later';
+                }
+                return error;
+              } else if (error != null) {
+                if (error.toString().toLowerCase().contains('timeout')) {
+                  return 'Something went wrong. Please Try again later';
+                }
+                return error;
+              } else {
+                return 'Something went wrong. Please Try again later';
+              }
+            })() : (e.response?.data.toString().contains(':') ?? false) ? e.response?.data.toString().split(':').skip(1).join(':').trim() : e.response?.data.toString() : 'Something went wrong. Please Try again later'}");
     } catch (e) {
       _logger.e('Unexpected error on POST request to $urlServicesName: $e');
       rethrow;
@@ -149,7 +158,24 @@ class ApiService {
       return response;
     } on DioException catch (e) {
       _logger.e('DioError on PUT request to $urlServicesName: $e');
-      throw Exception("${e.response?.statusCode} - $e");
+      throw Exception(
+          "${e.response?.statusCode} - ${e.response?.data != null ? e.response?.data is Map<String, dynamic> ? (() {
+              final error = e.response?.data;
+
+              if (error != null) {
+                if (error.toString().toLowerCase().contains('timeout')) {
+                  return 'Something went wrong. Please Try again later';
+                }
+                return error;
+              } else if (error != null) {
+                if (error.toString().toLowerCase().contains('timeout')) {
+                  return 'Something went wrong. Please Try again later';
+                }
+                return error;
+              } else {
+                return 'Something went wrong. Please Try again later';
+              }
+            })() : (e.response?.data.toString().contains(':') ?? false) ? e.response?.data.toString().split(':').skip(1).join(':').trim() : e.response?.data.toString() : 'Something went wrong. Please Try again later'}");
     } catch (e) {
       _logger.e('Unexpected error on PUT request to $urlServicesName: $e');
       rethrow;

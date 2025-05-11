@@ -59,11 +59,30 @@ class _LoginPageState extends State<LoginPage> {
                 });
           }
 
+          if (state is GoogleLoginLoading) {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                });
+          }
+
+          if (state is GoogleLoginSuccess) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const NavigationPage()),
+              (Route<dynamic> route) => false,
+            );
+          }
+
           if (state is LoginSuccess) {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const NavigationPage()));
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const NavigationPage()),
+              (Route<dynamic> route) => false,
+            );
           }
 
           if (state is LoginFailed) {
@@ -244,7 +263,9 @@ class _LoginPageState extends State<LoginPage> {
                   height: 10,
                 ),
                 ServiceButton(
-                    onTap: () {},
+                    onTap: () {
+                      _cubit.googleLogin();
+                    },
                     text: 'Continue With Google',
                     color: Colors.white),
 

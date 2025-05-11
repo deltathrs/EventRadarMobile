@@ -137,11 +137,15 @@ class _EventDetailState extends State<EventDetail> {
                                       CategoryEvent(state.eventDetail.isOnline
                                           ? 'Online'
                                           : 'Offline'),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      CategoryEvent(
-                                          state.eventDetail.categories[0]),
+                                      const SizedBox(width: 5),
+                                      ...state.eventDetail.categories
+                                          .map((category) => Row(
+                                                children: [
+                                                  CategoryEvent(category),
+                                                  const SizedBox(width: 5),
+                                                ],
+                                              ))
+                                          .toList(),
                                     ],
                                   ),
                                   const SizedBox(
