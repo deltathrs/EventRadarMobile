@@ -34,6 +34,7 @@ dependencies:
   choice: ^2.3.2
   cupertino_icons: ^1.0.2
   dio: ^5.8.0+1
+  easy_stepper: ^0.8.5+1
   firebase_auth: ^4.17.8
   firebase_core: ^2.27.0
   firebase_messaging: ^14.9.4
@@ -45,6 +46,7 @@ dependencies:
   flutter_screenutil: ^5.9.3
   flutter_secure_storage: ^9.2.4
   flutter_spinkit: ^5.2.1
+  flutter_svg: ^2.1.0
   get_it: ^8.0.3
   google_fonts: ^6.2.1
   google_sign_in: ^6.2.2
@@ -54,6 +56,10 @@ dependencies:
   intl: ^0.19.0
   jwt_decoder: ^2.0.1
   logger: ^2.5.0
+  markdown_viewer:
+    git:
+      url: https://github.com/ogtushar/markdown_viewer
+      ref: fix-breaking-changes
   package_info_plus: ^8.3.0
   readmore: ^3.0.0
   shared_preferences: ^2.5.3
@@ -82,6 +88,7 @@ flutter:
     - asset/img/homepage/
     - asset/img/profile/
     - asset/img/search/
+    - asset/img/event_organizer/
     - asset/img/event/
     - url.env
 

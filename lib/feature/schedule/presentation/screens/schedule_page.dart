@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
+import 'package:markdown_viewer/markdown_viewer.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class SchedulePage extends StatefulWidget {
@@ -177,6 +179,11 @@ class _SchedulePageState extends State<SchedulePage> {
   }
 }
 
+String formatTime(String isoDate) {
+  DateTime dateTime = DateTime.parse(isoDate).toLocal();
+  return DateFormat.Hm().format(dateTime);
+}
+
 Widget eventBox(TicketDetailModel event) {
   return Stack(
     children: [
@@ -223,7 +230,7 @@ Widget eventBox(TicketDetailModel event) {
                     width: 5.w,
                   ),
                   Text(
-                    '1:00 PM - 2:30 PM',
+                    '${formatTime(event.datetime.toIso8601String())} - ${formatTime(event.endDatetime.toIso8601String())}',
                     style: GoogleFonts.lato(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
@@ -244,11 +251,14 @@ Widget eventBox(TicketDetailModel event) {
               SizedBox(
                 height: 34.h,
                 child: Text(
-                  event.eventDetail,
+                  event.eventDetail
+                      .replaceAll(RegExp(r'\[.*?\]\(.*?\)|[*_#>`~-]'), '')
+                      .trim(),
                   style: GoogleFonts.lato(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF585A66)),
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w400,
+                    color: const Color(0xFF585A66),
+                  ),
                 ),
               ),
               const SizedBox(

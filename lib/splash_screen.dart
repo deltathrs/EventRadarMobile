@@ -1,8 +1,8 @@
-import 'package:event_radar2/feature/authentication/data/data_model.dart';
 import 'package:event_radar2/feature/authentication/presentation/cubits/cubit/auth_cubit.dart';
 import 'package:event_radar2/feature/authentication/presentation/screen/login_screen.dart';
 import 'package:event_radar2/navigation_page.dart';
 import 'package:event_radar2/network/notification_service.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,7 +66,11 @@ class _SplashScreenState extends State<SplashScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('asset/img/splash/logo_splash.png'),
+            Image.asset(
+              'asset/img/splash/logo_splash.png',
+              width: 120.w,
+              height: 127.h,
+            ),
             const SizedBox(
               height: 10,
             ),

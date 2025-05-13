@@ -28,10 +28,13 @@ class EventRepository {
       final response = await apiService.postApiDataWithToken(
           "${dotenv.env['EVENTS']}", modelData);
 
-      List<dynamic> jsonData = response.data['data']['events'];
+      final events = response.data['data']?['events'];
+      if (events == null) {
+        return []; // Jika 'events' null, return list kosong
+      }
 
-      return jsonData
-          .map((item) => EventModel.fromJson(Map<String, dynamic>.from(item)))
+      return List<Map<String, dynamic>>.from(events)
+          .map((item) => EventModel.fromJson(item))
           .toList();
     } catch (e, stackTrace) {
       _logger.e('Error getEventList: $e', stackTrace: stackTrace);
@@ -59,10 +62,13 @@ class EventRepository {
       final response = await apiService.getApiData(dotenv.env['FAVOURITE']!);
 
       if (response.statusCode == 200) {
-        List<dynamic> jsonData = response.data['data'];
+        final events = response.data['data'];
+        if (events == null) {
+          return []; // Jika 'events' null, return list kosong
+        }
 
-        return jsonData
-            .map((item) => EventModel.fromJson(Map<String, dynamic>.from(item)))
+        return List<Map<String, dynamic>>.from(events)
+            .map((item) => EventModel.fromJson(item))
             .toList();
       }
       throw response.data;
@@ -100,11 +106,13 @@ class EventRepository {
     try {
       final response = await apiService.getApiData("${dotenv.env['TICKET']}");
 
-      List<dynamic> jsonData = response.data['data'];
+      final events = response.data['data'];
+      if (events == null) {
+        return []; // Jika 'events' null, return list kosong
+      }
 
-      return jsonData
-          .map((item) =>
-              TicketDetailModel.fromJson(Map<String, dynamic>.from(item)))
+      return List<Map<String, dynamic>>.from(events)
+          .map((item) => TicketDetailModel.fromJson(item))
           .toList();
     } catch (e, stackTrace) {
       _logger.e('Error getTicketDetailList: $e', stackTrace: stackTrace);

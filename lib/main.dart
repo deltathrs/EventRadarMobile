@@ -1,18 +1,19 @@
 import 'package:event_radar2/dependency_injection.dart';
-import 'package:event_radar2/feature/authentication/data/data_model.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'firebase_options.dart';
 import 'splash_screen.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await initializeDateFormatting('id_ID', null);
 
   // FirebaseMessaging messaging = FirebaseMessaging.instance;
   // UserStatus.deviceToken = await messaging.getToken();

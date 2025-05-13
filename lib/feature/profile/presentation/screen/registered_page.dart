@@ -1,3 +1,4 @@
+import 'package:event_radar2/feature/components/utils/empty_data_utils.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile/profile_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/widgets/ticket_box.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,10 @@ class _RegisteredPageState extends State<RegisteredPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        scrolledUnderElevation: 0,
         title: Text(
           'Registered Events',
           style: GoogleFonts.poppins(
@@ -35,15 +39,27 @@ class _RegisteredPageState extends State<RegisteredPage> {
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
           if (state is TicketListLoaded) {
-            return Expanded(
-                child: ListView.builder(
-                    itemCount: state.tickets.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.all(15.w),
-                        child: TicketBox(eventData: state.tickets[index]),
-                      );
-                    }));
+            if (state.tickets.isNotEmpty) {
+              return Expanded(
+                  child: ListView.builder(
+                      itemCount: state.tickets.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.all(15.w),
+                          child: TicketBox(eventData: state.tickets[index]),
+                        );
+                      }));
+            } else {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: EmptyDataUtils().emptyDataWithoutButton(
+                      "Your Registered Event is Empty",
+                      "You haven't registered for any events yet.",
+                      "asset/img/event/empty_data.jpg"),
+                ),
+              );
+            }
           }
           return Center(
             child: CircularProgressIndicator(),

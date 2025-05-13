@@ -1,5 +1,4 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:event_radar2/feature/home/data/ad_slider_model.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/ad_slider/ad_slider_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/homepage_eventcard.dart';
@@ -203,40 +202,44 @@ class _HomePageState extends State<HomePage> {
       bloc: cubit,
       builder: (context, state) {
         if (state is EventListLoaded) {
-          return SizedBox(
-            height: 310.h,
-            child: Expanded(
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: state.events.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BlocProvider(
-                                      create: (context) =>
-                                          GetIt.instance<EventDetailCubit>(),
-                                      child: EventDetail(
-                                        eventId: state.events[index].id,
-                                      ),
-                                    )));
-                      },
-                      child: HomepageEventCard(
-                        title: state.events[index].name,
-                        image:
-                            "$baseUrlImage${state.events[index].eventThumbnail}",
-                        eventDate: state.events[index].datetime,
-                        eventType:
-                            state.events[index].isOnline ? "Online" : "Offline",
-                        eventCategory: state.events[index].categories,
+          return Padding(
+            padding: EdgeInsets.only(left: 20.w),
+            child: SizedBox(
+              height: 310.h,
+              child: Expanded(
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: state.events.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5.w),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BlocProvider(
+                                        create: (context) =>
+                                            GetIt.instance<EventDetailCubit>(),
+                                        child: EventDetail(
+                                          eventId: state.events[index].id,
+                                        ),
+                                      )));
+                        },
+                        child: HomepageEventCard(
+                          title: state.events[index].name,
+                          image:
+                              "$baseUrlImage${state.events[index].eventThumbnail}",
+                          eventDate: state.events[index].datetime,
+                          eventType: state.events[index].isOnline
+                              ? "Online"
+                              : "Onsite",
+                          eventCategory: state.events[index].categories,
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           );

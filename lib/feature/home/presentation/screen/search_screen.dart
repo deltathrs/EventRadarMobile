@@ -1,12 +1,9 @@
-import 'package:event_radar2/feature/authentication/presentation/screen/login_screen.dart';
-import 'package:event_radar2/feature/components/utils/bottom_sheet_utils.dart';
 import 'package:event_radar2/feature/home/data/event_model.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/favourite_event/favourite_event_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/event_box.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/event_detail.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/events/events_cubit.dart';
-import 'package:event_radar2/feature/home/presentation/widgets/filter_bottom_sheet.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/filter_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,7 +1,8 @@
 import 'package:event_radar2/feature/home/presentation/cubits/ad_slider/ad_slider_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/events/events_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/screen/home_screen.dart';
-import 'package:event_radar2/feature/manage_event/presentation/screens/manage_event_page.dart';
+import 'package:event_radar2/feature/manage_event/presentation/cubits/event/event_cubit.dart';
+import 'package:event_radar2/feature/manage_event/presentation/screens/my_event_page.dart';
 import 'package:event_radar2/feature/notification/presentation/screens/notification_page.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile/profile_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/screen/profile.dart';
@@ -52,7 +53,10 @@ class _NavigationPage extends State<NavigationPage> {
         index: currentPageIndex,
         children: <Widget>[
           userRole == 'organizer'
-              ? ManageEventPage()
+              ? BlocProvider(
+                  create: (context) => GetIt.instance<EventCubit>(),
+                  child: MyEventPage(),
+                )
               : MultiBlocProvider(
                   providers: [
                     BlocProvider(
@@ -115,7 +119,7 @@ class _NavigationPage extends State<NavigationPage> {
           activeIcon: userRole == 'organizer'
               ? const Icon(Icons.manage_history_rounded)
               : const Icon(Icons.home_filled),
-          label: userRole == 'organizer' ? "Manage Event" : 'Home',
+          label: userRole == 'organizer' ? "Your Event" : 'Home',
         ),
         const BottomNavigationBarItem(
           icon: Icon(Icons.calendar_month_outlined),

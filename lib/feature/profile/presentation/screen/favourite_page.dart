@@ -1,3 +1,4 @@
+import 'package:event_radar2/feature/components/utils/empty_data_utils.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/favourite_event/favourite_event_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/event_box.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +24,10 @@ class _FavouritePageState extends State<FavouritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(
+        backgroundColor: Colors.white,
+        title: Text(  
           'Saved Events',
           style: GoogleFonts.poppins(
               fontSize: 22.sp,
@@ -35,18 +38,27 @@ class _FavouritePageState extends State<FavouritePage> {
       body: BlocBuilder<FavouriteEventCubit, FavouriteEventState>(
         builder: (context, state) {
           if (state is FavouriteEventLoaded) {
-            return Expanded(
-                child: ListView.builder(
-                    itemCount: state.favouriteList.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.all(15.w),
-                        child: EventBox(
-                          eventData: state.favouriteList[index],
-                          isFavoritePage: true,
-                        ),
-                      );
-                    }));
+            if (state.favouriteList.isNotEmpty) {
+              return Expanded(
+                  child: ListView.builder(
+                      itemCount: state.favouriteList.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.all(15.w),
+                          child: EventBox(
+                            eventData: state.favouriteList[index],
+                            isFavoritePage: true,
+                          ),
+                        );
+                      }));
+            } else {
+              return Center(
+                child: EmptyDataUtils().emptyDataWithoutButton(
+                    "Your Favourite Event is Empty",
+                    "Start adding events you love to keep them here",
+                    "asset/img/event/empty_data.jpg"),
+              );
+            }
           }
           return Center(
             child: CircularProgressIndicator(),

@@ -2,7 +2,6 @@
 //
 //     final ticketDetailModel = ticketDetailModelFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 List<TicketDetailModel> ticketDetailModelFromJson(String str) =>
@@ -17,6 +16,7 @@ class TicketDetailModel {
   String name;
   String eventDetail;
   DateTime datetime;
+  DateTime endDatetime;
   int maxParticipants;
   String location;
   bool isApproved;
@@ -32,6 +32,7 @@ class TicketDetailModel {
     required this.name,
     required this.eventDetail,
     required this.datetime,
+    required this.endDatetime,
     required this.maxParticipants,
     required this.location,
     required this.isApproved,
@@ -49,9 +50,10 @@ class TicketDetailModel {
         name: json["name"],
         eventDetail: json["event_detail"],
         datetime: DateTime.parse(json["datetime"]),
+        endDatetime: DateTime.parse(json["end_datetime"]),
         maxParticipants: json["max_participants"],
         location: json["location"],
-        isApproved: json["is_approved"] ?? true,
+        isApproved: json["is_approved"],
         isOnline: json["is_online"],
         organizerName: json["organizer_name"],
         organizerId: json["organizer_id"],
@@ -66,6 +68,7 @@ class TicketDetailModel {
         "name": name,
         "event_detail": eventDetail,
         "datetime": datetime.toIso8601String(),
+        "end_datetime": endDatetime.toIso8601String(),
         "max_participants": maxParticipants,
         "location": location,
         "is_approved": isApproved,

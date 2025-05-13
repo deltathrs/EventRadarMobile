@@ -1,5 +1,6 @@
 import 'package:event_radar2/feature/authentication/presentation/cubits/cubit/auth_cubit.dart';
 import 'package:event_radar2/feature/authentication/presentation/screen/login_screen.dart';
+import 'package:event_radar2/feature/components/utils/bottom_sheet_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,54 +67,30 @@ class _RegisterPageState extends State<RegisterPage> {
 
           if (state is RegisterSuccess) {
             Navigator.pop(context);
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  backgroundColor: Colors.white,
-                  title: Center(
-                    child: Text(
-                      state.message,
-                      style: const TextStyle(color: Colors.blue),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  actions: [
-                    Center(
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                        child: const Text(
-                          'OK',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            );
+            BottomSheetUtils.displayResultBottomSheet(
+                title: "Successfully Create User",
+                description:
+                    "User has been successfully created. Please login to check user",
+                image: "asset/img/event/success.jpg",
+                completion: "Okay",
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                context: context);
           }
 
           if (state is RegisterFailed) {
             Navigator.pop(context);
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    backgroundColor: Colors.white,
-                    title: Center(
-                        child: Text(
-                      state.error,
-                      style: TextStyle(
-                        color: Colors.blue,
-                      ),
-                      textAlign: TextAlign.center,
-                    )),
-                  );
-                });
+            BottomSheetUtils.displayResultBottomSheet(
+                title: "Failed to Register User",
+                description: state.error,
+                image: "asset/img/event/failed.jpg",
+                completion: "Try Again",
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                context: context);
           }
         },
         child: SingleChildScrollView(

@@ -6,6 +6,8 @@ import 'package:event_radar2/feature/home/presentation/cubits/events/events_cubi
 import 'package:event_radar2/feature/home/presentation/cubits/favourite_event/favourite_event_cubit.dart';
 import 'package:event_radar2/feature/home/repository/adslider_repository.dart';
 import 'package:event_radar2/feature/home/repository/event_repository.dart';
+import 'package:event_radar2/feature/manage_event/presentation/cubits/event/event_cubit.dart';
+import 'package:event_radar2/feature/manage_event/repository/manage_event_repository.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile/profile_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile_avatar/profile_avatar_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/save_profile/save_profile_cubit.dart';
@@ -44,6 +46,10 @@ class DependencyInjection {
     getIt.registerLazySingleton<ProfileRepository>(() => ProfileRepository(
         apiService: getIt<ApiService>(),
         secureStorageService: getIt<SecureStorageService>()));
+    getIt.registerLazySingleton<ManageEventRepository>(() =>
+        ManageEventRepository(
+            apiService: getIt<ApiService>(),
+            secureStorageService: getIt<SecureStorageService>()));
 
     //Register Cubit
     getIt.registerFactory<EventsCubit>(
@@ -63,5 +69,7 @@ class DependencyInjection {
         () => SaveProfileCubit(profileRepository: getIt<ProfileRepository>()));
     getIt.registerFactory<FavouriteEventCubit>(
         () => FavouriteEventCubit(eventRepository: getIt<EventRepository>()));
+    getIt.registerFactory<EventCubit>(() =>
+        EventCubit(manageEventRepository: getIt<ManageEventRepository>()));
   }
 }

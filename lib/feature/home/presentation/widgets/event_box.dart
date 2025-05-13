@@ -66,7 +66,9 @@ class _EventBoxState extends State<EventBox> {
                     children: [
                       Row(
                         children: [
-                          categoryEvent(widget.eventData.categories[0], false),
+                          categoryEvent(
+                              widget.eventData.isOnline ? 'Online' : 'Onsite',
+                              false),
                           SizedBox(
                             width: 5.w,
                           ),

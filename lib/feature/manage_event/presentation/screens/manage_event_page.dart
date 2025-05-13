@@ -1,4 +1,10 @@
+import 'package:event_radar2/feature/manage_event/presentation/cubits/handle_content_event/handle_content_event_cubit.dart';
+import 'package:event_radar2/feature/manage_event/presentation/widgets/content_visual_widget.dart';
+import 'package:event_radar2/feature/manage_event/presentation/widgets/event_detail_widget.dart';
+import 'package:event_radar2/feature/manage_event/presentation/widgets/manage_event_step_indicator_widget.dart';
+import 'package:event_radar2/feature/manage_event/presentation/widgets/ticket_setup_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -10,23 +16,60 @@ class ManageEventPage extends StatefulWidget {
 }
 
 class _ManageEventPageState extends State<ManageEventPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final HandleContentEventCubit _handleContentEventCubit =
+      HandleContentEventCubit();
+  late PageController _pageController;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+    return GestureDetector(
+      child: Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Colors.white,
-        scrolledUnderElevation: 0,
-        title: Text(
-          'My Events',
-          style: GoogleFonts.poppins(
-              fontSize: 32.sp,
-              fontWeight: FontWeight.w600,
-              color: Colors.black),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          scrolledUnderElevation: 0,
+          title: Text(
+            'Create Event',
+            style: GoogleFonts.poppins(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.black),
+          ),
         ),
-      ),
-      body: Center(
-        child: Text('Manage Event Page'),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15.w),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ManageEventStepIndicatorWidget(cubit: _handleContentEventCubit),
+                BlocListener<HandleContentEventCubit, HandleContentEventState>(
+                  listener: (context, state) {
+                    if (state is HandleContentEventPageUpdated) {
+                      _pageController.animateToPage(state.pageIndex,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut);
+                    }
+                  },
+                  child: Expanded(
+                      child: PageView.builder(itemBuilder: (context, index) {
+                    switch (index) {
+                      case 0:
+                        return EventDetailWidget();
+                      case 1:
+                        return ContentVisualWidget();
+                      case 2:
+                        return TicketSetupWidget();
+                    }
+                  })),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
