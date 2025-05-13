@@ -24,6 +24,7 @@ class NotificationService {
     // Retrieve the FCM token
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     String? token = await messaging.getToken();
+    print('Device Token: $token');
   }
 
   Future<void> _requestPermission() async {

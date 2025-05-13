@@ -15,10 +15,7 @@ void main() async {
 
   await initializeDateFormatting('id_ID', null);
 
-  // FirebaseMessaging messaging = FirebaseMessaging.instance;
-  // UserStatus.deviceToken = await messaging.getToken();
-
-  // print("FCM Token: ${UserStatus.deviceToken}");
+ 
   await dotenv.load(fileName: "url.env");
   DependencyInjection.getInstance.setupDI();
   runApp(const MyApp());

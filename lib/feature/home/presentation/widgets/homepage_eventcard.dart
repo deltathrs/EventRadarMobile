@@ -106,11 +106,11 @@ class HomepageEventCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: Image.network(
         image,
-        fit: BoxFit.fill,
+        fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) {
           return Image.asset(
             'asset/img/event/placeholder.jpg',
-            fit: BoxFit.fill,
+            fit: BoxFit.contain,
           );
         },
       ),

@@ -48,11 +48,11 @@ class _EventBoxState extends State<EventBox> {
                       height: 100.h,
                       child: Image.network(
                         "$baseUrlImage${widget.eventData.eventThumbnail}",
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Image.asset(
                             'asset/img/event/placeholder.jpg',
-                            fit: BoxFit.fill,
+                            fit: BoxFit.contain,
                           );
                         },
                       )),
