@@ -51,7 +51,7 @@ class TicketDetailModel {
         datetime: DateTime.parse(json["datetime"]),
         maxParticipants: json["max_participants"],
         location: json["location"],
-        isApproved: json["is_approved"],
+        isApproved: json["is_approved"] ?? true,
         isOnline: json["is_online"],
         organizerName: json["organizer_name"],
         organizerId: json["organizer_id"],

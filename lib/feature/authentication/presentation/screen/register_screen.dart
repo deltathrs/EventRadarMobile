@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/auth_textfield.dart';
 import '../widgets/sign_button.dart';
@@ -22,6 +23,9 @@ class _RegisterPageState extends State<RegisterPage> {
   final fullNameController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   bool? isAgree = false;
+  bool isEventOrganizer = false;
+  bool isPasswordDisable = true;
+  bool isConfirmPasswordDisable = true;
   final AuthCubit _cubit = GetIt.instance<AuthCubit>();
 
   void showErrorMessage(String message) {
@@ -78,10 +82,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     Center(
                       child: TextButton(
                         onPressed: () {
-                          Navigator.pop(context); // Tutup dialog
-                          Navigator.pop(
-                              context); // Kembali ke halaman sebelumnya
-                          //  Navigator.pushReplacement(context, Materi)
+                          Navigator.pop(context);
+                          Navigator.pop(context);
                         },
                         child: const Text(
                           'OK',
@@ -135,7 +137,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 20,
                   ),
                   Text(
-                    "Welcome Back,",
+                    "Let's get started",
                     style: TextStyle(
                         fontSize: 36.sp,
                         color: Colors.black,
@@ -143,7 +145,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         fontWeight: FontWeight.w600),
                   ),
                   Text(
-                    "sign in to continue",
+                    "create an account",
                     style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 20.sp,
@@ -254,10 +256,22 @@ class _RegisterPageState extends State<RegisterPage> {
                         AuthTextField(
                           controller: passwordController,
                           hintText: 'Password',
-                          obscureText: true,
+                          obscureText: isPasswordDisable,
                           prefixIcon:
                               Image.asset('asset/img/auth/key_icon.png'),
-                          suffixIcon: const Icon(Icons.remove_red_eye),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              isPasswordDisable
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                isPasswordDisable = !isPasswordDisable;
+                              });
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -295,13 +309,50 @@ class _RegisterPageState extends State<RegisterPage> {
                         AuthTextField(
                           controller: confirmPasswordController,
                           hintText: 'Re-enter Password',
-                          obscureText: true,
+                          obscureText: isConfirmPasswordDisable,
                           prefixIcon:
                               Image.asset('asset/img/auth/key_icon.png'),
-                          suffixIcon: const Icon(Icons.remove_red_eye),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              isConfirmPasswordDisable
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                isConfirmPasswordDisable =
+                                    !isConfirmPasswordDisable;
+                              });
+                            },
+                          ),
                         ),
                       ],
                     ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    children: [
+                      Switch(
+                          value: isEventOrganizer,
+                          onChanged: (value) {
+                            setState(() {
+                              isEventOrganizer = !isEventOrganizer;
+                            });
+                          }),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        'Register as Event Organizer',
+                        style: GoogleFonts.poppins(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black),
+                      )
+                    ],
                   ),
                   const SizedBox(
                     height: 15,
@@ -348,13 +399,16 @@ class _RegisterPageState extends State<RegisterPage> {
                   MyButton(
                     onTap: () {
                       if (isAgree == true) {
-                        _cubit.register(emailController.text,
-                            fullNameController.text, passwordController.text);
+                        _cubit.register(
+                            emailController.text,
+                            fullNameController.text,
+                            passwordController.text,
+                            isEventOrganizer);
                       } else {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return AlertDialog(
+                            return const AlertDialog(
                               backgroundColor: Colors.white,
                               title: Center(
                                 child: Text(

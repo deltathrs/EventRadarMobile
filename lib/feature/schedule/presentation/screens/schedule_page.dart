@@ -80,45 +80,51 @@ class _SchedulePageState extends State<SchedulePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TableCalendar(
-                    focusedDay: _focusedDay,
-                    selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                    // calendarFormat:,
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Color(0xFF89AFFF)),
+                        borderRadius: BorderRadius.circular(15.r)),
+                    child: TableCalendar(
+                      focusedDay: _focusedDay,
+                      selectedDayPredicate: (day) =>
+                          isSameDay(_selectedDay, day),
+                      // calendarFormat:,
 
-                    startingDayOfWeek: StartingDayOfWeek.monday,
-                    onDaySelected: _onDaySelected,
-                    eventLoader: _getTicketForDay,
-                    calendarStyle: CalendarStyle(
-                      outsideDaysVisible: false,
-                      defaultTextStyle: GoogleFonts.poppins(
-                          fontSize: 13.sp, fontWeight: FontWeight.w600),
-                      weekendTextStyle: GoogleFonts.poppins(
-                          fontSize: 13.sp, fontWeight: FontWeight.w600),
+                      startingDayOfWeek: StartingDayOfWeek.monday,
+                      onDaySelected: _onDaySelected,
+                      eventLoader: _getTicketForDay,
+                      calendarStyle: CalendarStyle(
+                        outsideDaysVisible: false,
+                        defaultTextStyle: GoogleFonts.poppins(
+                            fontSize: 13.sp, fontWeight: FontWeight.w600),
+                        weekendTextStyle: GoogleFonts.poppins(
+                            fontSize: 13.sp, fontWeight: FontWeight.w600),
+                      ),
+                      headerStyle: HeaderStyle(
+                        titleTextStyle: GoogleFonts.poppins(
+                            fontSize: 13.sp, fontWeight: FontWeight.w600),
+                        formatButtonTextStyle: GoogleFonts.poppins(
+                            fontSize: 13.sp, fontWeight: FontWeight.w600),
+                      ),
+                      daysOfWeekStyle: DaysOfWeekStyle(
+                        weekdayStyle: GoogleFonts.poppins(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF909090)),
+                        weekendStyle: GoogleFonts.poppins(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF909090)),
+                      ),
+                      // onFormatChanged: (format){
+                      //   if)
+                      // },
+                      onPageChanged: (focusedDay) {
+                        _focusedDay = focusedDay;
+                      },
+                      firstDay: DateTime.utc(2025),
+                      lastDay: DateTime.utc(2030),
                     ),
-                    headerStyle: HeaderStyle(
-                      titleTextStyle: GoogleFonts.poppins(
-                          fontSize: 13.sp, fontWeight: FontWeight.w600),
-                      formatButtonTextStyle: GoogleFonts.poppins(
-                          fontSize: 13.sp, fontWeight: FontWeight.w600),
-                    ),
-                    daysOfWeekStyle: DaysOfWeekStyle(
-                      weekdayStyle: GoogleFonts.poppins(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF909090)),
-                      weekendStyle: GoogleFonts.poppins(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF909090)),
-                    ),
-                    // onFormatChanged: (format){
-                    //   if)
-                    // },
-                    onPageChanged: (focusedDay) {
-                      _focusedDay = focusedDay;
-                    },
-                    firstDay: DateTime.utc(2025),
-                    lastDay: DateTime.utc(2030),
                   ),
                   SizedBox(
                     height: 10,

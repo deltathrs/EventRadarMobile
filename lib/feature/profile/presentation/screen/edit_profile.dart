@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:event_radar2/feature/authentication/data/data_model.dart';
+import 'package:event_radar2/feature/authentication/presentation/screen/login_screen.dart';
 import 'package:event_radar2/feature/components/utils/bottom_sheet_utils.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile/profile_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile_avatar/profile_avatar_cubit.dart';
@@ -8,9 +10,11 @@ import 'package:event_radar2/feature/profile/presentation/widgets/input_textfiel
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
@@ -222,6 +226,52 @@ class _EditProfileState extends State<EditProfile> {
                             label: "Domicile",
                             hint: "Jakarta",
                             controller: domicileController),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            FlutterSecureStorage secureStorage =
+                                FlutterSecureStorage();
+
+                            for (String key in prefs.getKeys()) {
+                              if (key != "onboarding") {
+                                prefs.remove(key);
+                              }
+                            }
+                            secureStorage.deleteAll();
+
+                            print(prefs.getBool('onboarding'));
+
+                            UserStatus.isLoggedIn = false;
+                            UserStatus.isExpired = null;
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()),
+                                (Route<dynamic> route) => false);
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.red),
+                                borderRadius: BorderRadius.circular(15.r)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Center(
+                                child: Text(
+                                  'Logout',
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.red),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   );

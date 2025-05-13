@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,8 +28,12 @@ class AuthRepository {
 
       if (response.statusCode == 200) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
+        Map<String, dynamic> decodedToken =
+            JwtDecoder.decode(response.data['data']['token']);
         secureStorageService
             .storeSessionToken(response.data['data']['token'] ?? "");
+
+        await secureStorageService.storeUserRole(decodedToken['role']);
 
         await prefs.setBool('isLoggedIn', true);
 
@@ -136,11 +141,12 @@ class AuthRepository {
   }
 
   Future<String> apiRegister(
-      String email, String fullName, String password) async {
+      String email, String fullName, String password, bool isRoleEO) async {
     final modelData = {
       'email': email,
       'fullname': fullName,
       'password': password,
+      'role': isRoleEO ? 'organizer' : 'regular',
     };
 
     try {

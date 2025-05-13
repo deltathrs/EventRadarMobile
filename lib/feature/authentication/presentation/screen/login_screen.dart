@@ -22,6 +22,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool isPasswordDisable = true;
   final AuthCubit _cubit = GetIt.instance<AuthCubit>();
 
   void showErrorMessage(String message) {
@@ -185,9 +186,21 @@ class _LoginPageState extends State<LoginPage> {
                       AuthTextField(
                         controller: passwordController,
                         hintText: 'Password',
-                        obscureText: true,
+                        obscureText: isPasswordDisable,
                         prefixIcon: Image.asset('asset/img/auth/key_icon.png'),
-                        suffixIcon: const Icon(Icons.remove_red_eye),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            isPasswordDisable
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: Colors.grey,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              isPasswordDisable = !isPasswordDisable;
+                            });
+                          },
+                        ),
                       ),
                     ],
                   ),

@@ -7,7 +7,7 @@ class AuthTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
   final Image? prefixIcon;
-  final Icon? suffixIcon;
+  final Widget? suffixIcon;
 
   AuthTextField({
     Key? key,

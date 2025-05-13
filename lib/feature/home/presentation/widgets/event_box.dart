@@ -75,7 +75,7 @@ class _EventBoxState extends State<EventBox> {
                       ),
                       const SizedBox(
                         height: 4,
-                      ), 
+                      ),
                       Flexible(
                         child: Text(
                           widget.eventData.name,
@@ -117,47 +117,50 @@ class _EventBoxState extends State<EventBox> {
             ),
           ),
         ),
-        BlocListener<FavouriteEventCubit, FavouriteEventState>(
-          listener: (context, state) {
-            if (state is AddToFavouriteFailed) {
-              setState(() {
-                isFavourite = false;
-              });
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
-              );
-            }
-          },
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: IconButton(
-                onPressed: () {
-                  setState(() {
-                    isFavourite = !isFavourite;
-                  });
-                  context
-                      .read<FavouriteEventCubit>()
-                      .addToFavourite(widget.eventData.id);
+        widget.isFavoritePage
+            ? SizedBox.shrink()
+            : BlocListener<FavouriteEventCubit, FavouriteEventState>(
+                listener: (context, state) {
+                  if (state is AddToFavouriteFailed) {
+                    setState(() {
+                      isFavourite = false;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(state.error)),
+                    );
+                  }
                 },
-                icon: Container(
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color(0xFFF1F1F1),
-                      border: Border.all(color: Color(0xFF6E6E6E))),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset(
-                      width: 15.w,
-                      height: 18.h,
-                      isFavourite
-                          ? "asset/img/event/wishlist_done.png"
-                          : "asset/img/event/wishlist.png",
-                      color: isFavourite ? Colors.blue : Color(0xFF6E6E6E),
-                    ),
-                  ),
-                )),
-          ),
-        )
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isFavourite = !isFavourite;
+                        });
+                        context
+                            .read<FavouriteEventCubit>()
+                            .addToFavourite(widget.eventData.id);
+                      },
+                      icon: Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xFFF1F1F1),
+                            border: Border.all(color: Color(0xFF6E6E6E))),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset(
+                            width: 15.w,
+                            height: 18.h,
+                            isFavourite
+                                ? "asset/img/event/wishlist_done.png"
+                                : "asset/img/event/wishlist.png",
+                            color:
+                                isFavourite ? Colors.blue : Color(0xFF6E6E6E),
+                          ),
+                        ),
+                      )),
+                ),
+              ),
       ],
     );
   }

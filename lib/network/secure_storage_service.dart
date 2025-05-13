@@ -12,6 +12,10 @@ class SecureStorageService {
     await _secureStorage.write(key: 'fcm_token', value: token);
   }
 
+  Future<void> storeUserRole(String role) async {
+    await _secureStorage.write(key: 'role', value: role);
+  }
+
   Future<void> storeUserId(String userId) async {
     await _secureStorage.write(key: "user_id", value: userId);
   }
@@ -29,10 +33,13 @@ class SecureStorageService {
     return await _secureStorage.read(key: 'session_token');
   }
 
+  Future<String?> getUserRole() async {
+    return await _secureStorage.read(key: 'role');
+  }
+
   Future<String?> getFCMToken() async {
     return await _secureStorage.read(key: 'fcm_token');
   }
-
 
   Future<String?> getUserId() async {
     return await _secureStorage.read(key: 'user_id');

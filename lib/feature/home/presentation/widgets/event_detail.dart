@@ -168,7 +168,8 @@ class _EventDetailState extends State<EventDetail> {
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  TimeAndCalendar(state.eventDetail.datetime),
+                                  TimeAndCalendar(state.eventDetail.datetime,
+                                      state.eventDetail.endDatetime),
                                   const SizedBox(
                                     height: 2,
                                   ),
@@ -694,7 +695,7 @@ class _EventDetailState extends State<EventDetail> {
     );
   }
 
-  TimeAndCalendar(DateTime date) {
+  TimeAndCalendar(DateTime startDate, DateTime endDate) {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Row(
@@ -710,7 +711,7 @@ class _EventDetailState extends State<EventDetail> {
                 width: 3,
               ),
               Text(
-                formatDate(date.toIso8601String()),
+                formatDate(startDate.toIso8601String()),
                 style: TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 11.sp,
@@ -729,7 +730,7 @@ class _EventDetailState extends State<EventDetail> {
                 width: 3,
               ),
               Text(
-                formatTime(date.toIso8601String()),
+                "${formatTime(startDate.toIso8601String())} - ${formatTime(endDate.toIso8601String())}",
                 style: TextStyle(
                     fontFamily: 'Poppins',
                     fontSize: 11.sp,

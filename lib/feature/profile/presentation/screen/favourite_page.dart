@@ -25,7 +25,7 @@ class _FavouritePageState extends State<FavouritePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Registered Events',
+          'Saved Events',
           style: GoogleFonts.poppins(
               fontSize: 22.sp,
               fontWeight: FontWeight.w600,
@@ -39,9 +39,12 @@ class _FavouritePageState extends State<FavouritePage> {
                 child: ListView.builder(
                     itemCount: state.favouriteList.length,
                     itemBuilder: (context, index) {
-                      return EventBox(
-                        eventData: state.favouriteList[index],
-                        isFavoritePage: true,
+                      return Padding(
+                        padding: EdgeInsets.all(15.w),
+                        child: EventBox(
+                          eventData: state.favouriteList[index],
+                          isFavoritePage: true,
+                        ),
                       );
                     }));
           }

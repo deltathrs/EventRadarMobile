@@ -29,11 +29,12 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> register(String email, String fullName, String password) async {
+  Future<void> register(String email, String fullName, String password,
+      bool isEventOrganizer) async {
     emit(RegisterLoading());
     try {
-      final message =
-          await authRepository.apiRegister(email, fullName, password);
+      final message = await authRepository.apiRegister(
+          email, fullName, password, isEventOrganizer);
       emit(RegisterSuccess(message));
     } catch (e) {
       emit(RegisterFailed(e.toString()));

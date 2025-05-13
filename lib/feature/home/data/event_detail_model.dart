@@ -16,6 +16,7 @@ class EventDetailModel {
   String name;
   String eventDetail;
   DateTime datetime;
+  DateTime endDatetime;
   int maxParticipants;
   String location;
   bool isApproved;
@@ -31,6 +32,7 @@ class EventDetailModel {
     required this.name,
     required this.eventDetail,
     required this.datetime,
+    required this.endDatetime,
     required this.maxParticipants,
     required this.location,
     required this.isApproved,
@@ -48,9 +50,10 @@ class EventDetailModel {
         name: json["name"],
         eventDetail: json["event_detail"],
         datetime: DateTime.parse(json["datetime"]),
+        endDatetime: DateTime.parse(json["end_datetime"]),
         maxParticipants: json["max_participants"],
         location: json["location"],
-        isApproved: json["is_approved"],
+        isApproved: json["is_approved"] ?? true,
         isOnline: json["is_online"],
         organizerName: json["organizer_name"],
         organizerId: json["organizer_id"],
@@ -65,6 +68,7 @@ class EventDetailModel {
         "name": name,
         "event_detail": eventDetail,
         "datetime": datetime.toIso8601String(),
+        "end_datetime": endDatetime.toIso8601String(),
         "max_participants": maxParticipants,
         "location": location,
         "is_approved": isApproved,

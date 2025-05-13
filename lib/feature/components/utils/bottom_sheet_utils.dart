@@ -107,8 +107,7 @@ class BottomSheetUtils {
                           width: 283.w,
                           child: Text(
                             description,
-                            style: TextStyle(
-                                fontFamily: 'Citroen',
+                            style: GoogleFonts.poppins(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.black),

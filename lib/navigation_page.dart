@@ -1,10 +1,12 @@
 import 'package:event_radar2/feature/home/presentation/cubits/ad_slider/ad_slider_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/events/events_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/screen/home_screen.dart';
+import 'package:event_radar2/feature/manage_event/presentation/screens/manage_event_page.dart';
 import 'package:event_radar2/feature/notification/presentation/screens/notification_page.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile/profile_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/screen/profile.dart';
 import 'package:event_radar2/feature/schedule/presentation/screens/schedule_page.dart';
+import 'package:event_radar2/network/secure_storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,6 +21,22 @@ class NavigationPage extends StatefulWidget {
 
 class _NavigationPage extends State<NavigationPage> {
   int currentPageIndex = 0;
+  String userRole = "";
+  final SecureStorageService secureStorageService = SecureStorageService();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initializeApp();
+  }
+
+  void initializeApp() async {
+    final role = await secureStorageService.getUserRole();
+    setState(() {
+      userRole = role ?? "";
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,17 +51,19 @@ class _NavigationPage extends State<NavigationPage> {
       child: IndexedStack(
         index: currentPageIndex,
         children: <Widget>[
-          MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (context) => GetIt.instance<EventsCubit>(),
-              ),
-              BlocProvider(
-                create: (context) => GetIt.instance<AdSliderCubit>(),
-              ),
-            ],
-            child: const HomePage(),
-          ),
+          userRole == 'organizer'
+              ? ManageEventPage()
+              : MultiBlocProvider(
+                  providers: [
+                    BlocProvider(
+                      create: (context) => GetIt.instance<EventsCubit>(),
+                    ),
+                    BlocProvider(
+                      create: (context) => GetIt.instance<AdSliderCubit>(),
+                    ),
+                  ],
+                  child: const HomePage(),
+                ),
           BlocProvider(
             create: (context) => GetIt.instance<ProfileCubit>(),
             child: const SchedulePage(),
@@ -87,23 +107,27 @@ class _NavigationPage extends State<NavigationPage> {
         });
       },
       currentIndex: currentIndex,
-      items: const <BottomNavigationBarItem>[
+      items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined),
-          activeIcon: Icon(Icons.home_filled),
-          label: 'Home',
+          icon: userRole == 'organizer'
+              ? Icon(Icons.manage_history)
+              : Icon(Icons.home_outlined),
+          activeIcon: userRole == 'organizer'
+              ? const Icon(Icons.manage_history_rounded)
+              : const Icon(Icons.home_filled),
+          label: userRole == 'organizer' ? "Manage Event" : 'Home',
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Icon(Icons.calendar_month_outlined),
           activeIcon: Icon(Icons.calendar_month),
           label: 'Schedule',
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Icon(Icons.notifications_outlined),
           activeIcon: Icon(Icons.notifications),
           label: 'Notifications',
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Icon(Icons.person_2_outlined),
           activeIcon: Icon(Icons.person_2_sharp),
           label: 'Profile',
