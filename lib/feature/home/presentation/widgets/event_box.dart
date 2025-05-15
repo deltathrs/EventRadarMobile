@@ -26,6 +26,12 @@ class _EventBoxState extends State<EventBox> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    isFavourite = widget.eventData.isLiked ?? false;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
@@ -156,8 +162,9 @@ class _EventBoxState extends State<EventBox> {
                             isFavourite
                                 ? "asset/img/event/wishlist_done.png"
                                 : "asset/img/event/wishlist.png",
-                            color:
-                                isFavourite ? Colors.blue : Color(0xFF6E6E6E),
+                            color: isFavourite
+                                ? Color(0xFF231FEA)
+                                : Color(0xFF6E6E6E),
                           ),
                         ),
                       )),

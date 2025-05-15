@@ -6,6 +6,7 @@ import 'package:event_radar2/feature/manage_event/presentation/screens/my_event_
 import 'package:event_radar2/feature/notification/presentation/screens/notification_page.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile/profile_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/screen/profile.dart';
+import 'package:event_radar2/feature/schedule/presentation/screens/schedule_eo_page.dart';
 import 'package:event_radar2/feature/schedule/presentation/screens/schedule_page.dart';
 import 'package:event_radar2/network/secure_storage_service.dart';
 import 'package:flutter/material.dart';
@@ -68,14 +69,21 @@ class _NavigationPage extends State<NavigationPage> {
                   ],
                   child: const HomePage(),
                 ),
-          BlocProvider(
-            create: (context) => GetIt.instance<ProfileCubit>(),
-            child: const SchedulePage(),
-          ),
+          userRole == 'organizer'
+              ? BlocProvider(
+                  create: (context) => GetIt.instance<EventCubit>(),
+                  child: ScheduleEoPage(),
+                )
+              : BlocProvider(
+                  create: (context) => GetIt.instance<ProfileCubit>(),
+                  child: const SchedulePage(),
+                ),
           const NotificationPage(),
           BlocProvider(
             create: (context) => GetIt.instance<ProfileCubit>(),
-            child: const ProfilePage(),
+            child: ProfilePage(
+              isEo: userRole == 'organizer' ? true : false,
+            ),
           ),
         ],
       ),

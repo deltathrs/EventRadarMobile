@@ -54,7 +54,7 @@ class _TicketBoxState extends State<TicketBox> {
                         height: 100.h,
                         child: Image.network(
                           "$baseUrlImage${widget.eventData.eventThumbnail}",
-                          fit: BoxFit.fill,
+                          fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             return Image.asset(
                               'asset/img/event/placeholder.jpg',

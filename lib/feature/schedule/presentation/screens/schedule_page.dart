@@ -60,120 +60,137 @@ class _SchedulePageState extends State<SchedulePage> {
               color: Colors.black),
         ),
       ),
-      body: BlocBuilder<ProfileCubit, ProfileState>(
-        builder: (context, state) {
-          if (state is TicketListLoaded) {
-            listTicket = {};
+      body: RefreshIndicator(
+        onRefresh: () => Future.sync(() {
+          context.read<ProfileCubit>().getTicketList();
+        }),
+        child: BlocBuilder<ProfileCubit, ProfileState>(
+          builder: (context, state) {
+            if (state is TicketListLoaded) {
+              listTicket = {};
 
-            for (var ticket in state.tickets) {
-              final date = DateTime(ticket.datetime.year, ticket.datetime.month,
-                  ticket.datetime.day);
+              for (var ticket in state.tickets) {
+                final date = DateTime(ticket.datetime.year,
+                    ticket.datetime.month, ticket.datetime.day);
 
-              if (listTicket[date] == null) {
-                listTicket[date] = [ticket];
-              } else {
-                listTicket[date]!.add(ticket);
+                if (listTicket[date] == null) {
+                  listTicket[date] = [ticket];
+                } else {
+                  listTicket[date]!.add(ticket);
+                }
               }
-            }
 
-            _selectedTicket.value = _getTicketForDay(_selectedDay!);
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF89AFFF)),
-                        borderRadius: BorderRadius.circular(15.r)),
-                    child: TableCalendar(
-                      focusedDay: _focusedDay,
-                      selectedDayPredicate: (day) =>
-                          isSameDay(_selectedDay, day),
-                      // calendarFormat:,
+              _selectedTicket.value = _getTicketForDay(_selectedDay!);
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Color(0xFF89AFFF)),
+                            borderRadius: BorderRadius.circular(15.r)),
+                        child: TableCalendar(
+                          focusedDay: _focusedDay,
+                          selectedDayPredicate: (day) =>
+                              isSameDay(_selectedDay, day),
+                          // calendarFormat:,
 
-                      startingDayOfWeek: StartingDayOfWeek.monday,
-                      onDaySelected: _onDaySelected,
-                      eventLoader: _getTicketForDay,
-                      calendarStyle: CalendarStyle(
-                        outsideDaysVisible: false,
-                        defaultTextStyle: GoogleFonts.poppins(
-                            fontSize: 13.sp, fontWeight: FontWeight.w600),
-                        weekendTextStyle: GoogleFonts.poppins(
-                            fontSize: 13.sp, fontWeight: FontWeight.w600),
-                      ),
-                      headerStyle: HeaderStyle(
-                        titleTextStyle: GoogleFonts.poppins(
-                            fontSize: 13.sp, fontWeight: FontWeight.w600),
-                        formatButtonTextStyle: GoogleFonts.poppins(
-                            fontSize: 13.sp, fontWeight: FontWeight.w600),
-                      ),
-                      daysOfWeekStyle: DaysOfWeekStyle(
-                        weekdayStyle: GoogleFonts.poppins(
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF909090)),
-                        weekendStyle: GoogleFonts.poppins(
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF909090)),
-                      ),
-                      // onFormatChanged: (format){
-                      //   if)
-                      // },
-                      onPageChanged: (focusedDay) {
-                        _focusedDay = focusedDay;
-                      },
-                      firstDay: DateTime.utc(2025),
-                      lastDay: DateTime.utc(2030),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Events',
-                    style: GoogleFonts.poppins(
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Expanded(
-                    child: ValueListenableBuilder<List<TicketDetailModel>>(
-                      valueListenable: _selectedTicket,
-                      builder: (context, value, _) {
-                        if (value.isNotEmpty) {
-                          return ListView.builder(
-                            itemCount: value.length,
-                            itemBuilder: (context, index) {
-                              return eventBox(value[index]);
-                            },
-                          );
-                        } else {
-                          return Center(
-                            child: Text(
-                              'Event Empty At this Date',
-                              style: GoogleFonts.poppins(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black),
+                          startingDayOfWeek: StartingDayOfWeek.monday,
+                          onDaySelected: _onDaySelected,
+                          eventLoader: _getTicketForDay,
+                          calendarStyle: CalendarStyle(
+                            outsideDaysVisible: false,
+                            selectedDecoration: BoxDecoration(
+                              color: Colors.blue, // Warna lingkaran
+                              shape: BoxShape.circle,
                             ),
-                          );
-                        }
-                      },
-                    ),
-                  )
-                ],
-              ),
+                            cellMargin: EdgeInsets.all(10.w),
+                            selectedTextStyle: GoogleFonts.poppins(
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white),
+                            defaultTextStyle: GoogleFonts.poppins(
+                                fontSize: 13.sp, fontWeight: FontWeight.w600),
+                            weekendTextStyle: GoogleFonts.poppins(
+                                fontSize: 13.sp, fontWeight: FontWeight.w600),
+                          ),
+                          headerStyle: HeaderStyle(
+                            titleTextStyle: GoogleFonts.poppins(
+                                fontSize: 13.sp, fontWeight: FontWeight.w600),
+                            formatButtonTextStyle: GoogleFonts.poppins(
+                                fontSize: 13.sp, fontWeight: FontWeight.w600),
+                          ),
+                          daysOfWeekStyle: DaysOfWeekStyle(
+                            weekdayStyle: GoogleFonts.poppins(
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF909090)),
+                            weekendStyle: GoogleFonts.poppins(
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF909090)),
+                          ),
+                          // onFormatChanged: (format){
+                          //   if)
+                          // },
+                          onPageChanged: (focusedDay) {
+                            _focusedDay = focusedDay;
+                          },
+                          firstDay: DateTime.utc(2025),
+                          lastDay: DateTime.utc(2030),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Events',
+                        style: GoogleFonts.poppins(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.4,
+                        child: ValueListenableBuilder<List<TicketDetailModel>>(
+                          valueListenable: _selectedTicket,
+                          builder: (context, value, _) {
+                            if (value.isNotEmpty) {
+                              return ListView.builder(
+                                itemCount: value.length,
+                                itemBuilder: (context, index) {
+                                  return eventBox(value[index]);
+                                },
+                              );
+                            } else {
+                              return Center(
+                                child: Text(
+                                  'Event Empty At this Date',
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }
+            return Center(
+              child: const CircularProgressIndicator(),
             );
-          }
-          return Center(
-            child: const CircularProgressIndicator(),
-          );
-        },
+          },
+        ),
       ),
     );
   }

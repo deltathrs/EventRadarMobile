@@ -19,13 +19,14 @@ class TicketDetailModel {
   DateTime endDatetime;
   int maxParticipants;
   String location;
-  bool isApproved;
+  String status;
   bool isOnline;
   String organizerName;
   String organizerId;
   String eventThumbnail;
   List<String> categories;
   List<Ticket> tickets;
+  bool? isApproved;
 
   TicketDetailModel({
     required this.id,
@@ -35,13 +36,14 @@ class TicketDetailModel {
     required this.endDatetime,
     required this.maxParticipants,
     required this.location,
-    required this.isApproved,
+    required this.status,
     required this.isOnline,
     required this.organizerName,
     required this.organizerId,
     required this.eventThumbnail,
     required this.categories,
     required this.tickets,
+    this.isApproved,
   });
 
   factory TicketDetailModel.fromJson(Map<String, dynamic> json) =>
@@ -53,7 +55,7 @@ class TicketDetailModel {
         endDatetime: DateTime.parse(json["end_datetime"]),
         maxParticipants: json["max_participants"],
         location: json["location"],
-        isApproved: json["is_approved"],
+        status: json["status"],
         isOnline: json["is_online"],
         organizerName: json["organizer_name"],
         organizerId: json["organizer_id"],
@@ -61,6 +63,7 @@ class TicketDetailModel {
         categories: List<String>.from(json["categories"].map((x) => x)),
         tickets:
             List<Ticket>.from(json["tickets"].map((x) => Ticket.fromJson(x))),
+        isApproved: json["is_approved"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -71,13 +74,14 @@ class TicketDetailModel {
         "end_datetime": endDatetime.toIso8601String(),
         "max_participants": maxParticipants,
         "location": location,
-        "is_approved": isApproved,
+        "status": status,
         "is_online": isOnline,
         "organizer_name": organizerName,
         "organizer_id": organizerId,
         "event_thumbnail": eventThumbnail,
         "categories": List<dynamic>.from(categories.map((x) => x)),
         "tickets": List<dynamic>.from(tickets.map((x) => x.toJson())),
+        "is_approved": isApproved,
       };
 }
 

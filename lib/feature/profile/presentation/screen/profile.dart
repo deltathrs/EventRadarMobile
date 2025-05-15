@@ -6,7 +6,6 @@ import 'package:event_radar2/feature/profile/presentation/screen/edit_profile.da
 import 'package:event_radar2/feature/profile/presentation/screen/favourite_page.dart';
 import 'package:event_radar2/feature/profile/presentation/screen/registered_page.dart';
 import 'package:event_radar2/feature/profile/presentation/widgets/custom_logo.dart';
-import 'package:event_radar2/feature/profile/presentation/screen/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -14,7 +13,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final bool isEo;
+  const ProfilePage({super.key, required this.isEo});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -126,64 +126,78 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(
                     height: 25,
                   ),
-                  Text(
-                    'My Events',
-                    style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 22.sp,
-                        color: const Color(0xFF4E4E55)),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BlocProvider(
-                                        create: (context) => GetIt.instance<
-                                            FavouriteEventCubit>(),
-                                        child: FavouritePage(),
-                                      )));
-                        },
-                        child: CustomLogoWidget(
-                            imagePath: 'asset/img/profile/saved_icon.png',
-                            text: 'Saved'),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BlocProvider(
-                                        create: (context) =>
-                                            GetIt.instance<ProfileCubit>(),
-                                        child: RegisteredPage(),
-                                      )));
-                        },
-                        child: CustomLogoWidget(
-                            imagePath: 'asset/img/profile/registered_icon.png',
-                            text: 'Registered'),
-                      ),
-                      const CustomLogoWidget(
-                          imagePath: 'asset/img/profile/finished_icon.png',
-                          text: 'Finished'),
-                      const CustomLogoWidget(
-                          imagePath: 'asset/img/profile/certificate_icon.png',
-                          text: 'Certificate'),
-                    ],
-                  )
+                  widget.isEo == false
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'My Events',
+                              style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 22.sp,
+                                  color: const Color(0xFF4E4E55)),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => BlocProvider(
+                                                  create: (context) =>
+                                                      GetIt.instance<
+                                                          FavouriteEventCubit>(),
+                                                  child: FavouritePage(),
+                                                )));
+                                  },
+                                  child: CustomLogoWidget(
+                                      imagePath:
+                                          'asset/img/profile/saved_icon.png',
+                                      text: 'Saved'),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => BlocProvider(
+                                                  create: (context) => GetIt
+                                                      .instance<ProfileCubit>(),
+                                                  child: RegisteredPage(),
+                                                )));
+                                  },
+                                  child: CustomLogoWidget(
+                                      imagePath:
+                                          'asset/img/profile/registered_icon.png',
+                                      text: 'Registered'),
+                                ),
+                                const CustomLogoWidget(
+                                    imagePath:
+                                        'asset/img/profile/finished_icon.png',
+                                    text: 'Finished'),
+                                const CustomLogoWidget(
+                                    imagePath:
+                                        'asset/img/profile/certificate_icon.png',
+                                    text: 'Certificate'),
+                              ],
+                            )
+                          ],
+                        )
+                      : SizedBox.shrink()
                 ],
               ),
             );
           }
-          return const Center(
-            child: CircularProgressIndicator(),
+          return const SizedBox.expand(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
           );
         },
       ),

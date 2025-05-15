@@ -64,6 +64,13 @@ class _SearchScreenState extends State<SearchScreen> {
               children: [
                 Expanded(
                   child: TextField(
+                    controller: searchController,
+                    onChanged: (value) {
+                      context.read<EventsCubit>().updateFilters(
+                          name: searchController.text,
+                          isOnline: isOnline,
+                          categories: filterList);
+                    },
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(vertical: 10.h),
                       prefixIcon: Icon(Icons.search),

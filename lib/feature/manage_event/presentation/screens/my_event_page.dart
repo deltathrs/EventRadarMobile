@@ -67,8 +67,8 @@ class _MyEventPageState extends State<MyEventPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: IconButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ManageEventPage()));
+          // Navigator.push(context,
+          //     MaterialPageRoute(builder: (context) => ManageEventPage()));
         },
         icon: Container(
           decoration: BoxDecoration(
