@@ -1,3 +1,4 @@
+import 'package:event_radar2/feature/authentication/data/data_model.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -24,6 +25,7 @@ class NotificationService {
     // Retrieve the FCM token
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     String? token = await messaging.getToken();
+    UserStatus.deviceToken = token;
     print('Device Token: $token');
   }
 

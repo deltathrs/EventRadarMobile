@@ -10,8 +10,10 @@ part 'profile_state.dart';
 class ProfileCubit extends Cubit<ProfileState> {
   final ProfileRepository profileRepository;
   final EventRepository eventRepository;
-  ProfileCubit({required this.profileRepository, required this.eventRepository})
-      : super(ProfileInitial());
+  ProfileCubit({
+    required this.profileRepository,
+    required this.eventRepository,
+  }) : super(ProfileInitial());
 
   Future<void> getProfile() async {
     emit(ProfileLoading());

@@ -40,4 +40,6 @@ class AuthCubit extends Cubit<AuthState> {
       emit(RegisterFailed(e.toString()));
     }
   }
+
+  
 }

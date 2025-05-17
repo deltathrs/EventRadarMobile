@@ -1,3 +1,4 @@
+import 'package:event_radar2/feature/components/utils/empty_data_utils.dart';
 import 'package:event_radar2/feature/home/data/event_model.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/favourite_event/favourite_event_cubit.dart';
@@ -93,7 +94,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   width: 5,
                 ),
                 FilterWidget(
-                    categories: filterList, onFilterApplied: _onFilterApplied),
+                    categories: filterList,
+                    isOnline: isOnline ?? false,
+                    onFilterApplied: _onFilterApplied),
               ],
             ),
           ),
@@ -156,32 +159,14 @@ class _SearchScreenState extends State<SearchScreen> {
             },
             noItemsFoundIndicatorBuilder: (context) {
               return Center(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    Text("No data found",
-                        style: GoogleFonts.inter(
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.w400,
-                        )),
-                    const SizedBox(height: 10),
-                  ],
-                ),
+                child: EmptyDataUtils().emptyDataWithoutButton(
+                    "No Data Found", "", "asset/img/event/empty_data.jpg"),
               );
             },
             firstPageErrorIndicatorBuilder: (context) {
               return Center(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    Text("Error loading data",
-                        style: GoogleFonts.inter(
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.w400,
-                        )),
-                    const SizedBox(height: 10),
-                  ],
-                ),
+                child: EmptyDataUtils().emptyDataWithoutButton(
+                    "Error Loading Data", "", "asset/img/event/empty_data.jpg"),
               );
             },
           )),

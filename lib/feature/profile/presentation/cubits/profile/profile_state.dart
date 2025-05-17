@@ -19,6 +19,8 @@ final class ProfileError extends ProfileState {
   ProfileError({required this.message});
 }
 
+
+
 final class TicketListLoading extends ProfileState {}
 
 final class TicketListLoaded extends ProfileState {

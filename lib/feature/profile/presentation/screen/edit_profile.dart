@@ -115,7 +115,7 @@ class _EditProfileState extends State<EditProfile> {
                 },
               ),
               BlocListener<SaveProfileCubit, SaveProfileState>(
-                listener: (context, state) {
+                listener: (context, state) async {
                   if (state is SaveProfileLoading) {
                     BottomSheetUtils.showLoadingDialog(context);
                   }
@@ -129,6 +129,46 @@ class _EditProfileState extends State<EditProfile> {
                     Navigator.pop(context);
                     BottomSheetUtils.displayResultBottomSheet(
                         title: "Edit Profile Failed",
+                        description: state.error,
+                        image: "asset/img/event/failed.jpg",
+                        completion: "Try Again",
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        context: context);
+                  }
+
+                  if (state is LogoutLoading) {
+                    BottomSheetUtils.showLoadingDialog(context);
+                  }
+
+                  if (state is LogoutSuccess) {
+                    Navigator.pop(context);
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    FlutterSecureStorage secureStorage = FlutterSecureStorage();
+
+                    for (String key in prefs.getKeys()) {
+                      if (key != "onboarding") {
+                        prefs.remove(key);
+                      }
+                    }
+                    secureStorage.deleteAll();
+
+                    print(prefs.getBool('onboarding'));
+
+                    UserStatus.isLoggedIn = false;
+                    UserStatus.isExpired = null;
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                        (Route<dynamic> route) => false);
+                  }
+
+                  if (state is LogoutFailed) {
+                    Navigator.pop(context);
+                    BottomSheetUtils.displayResultBottomSheet(
+                        title: "Failed to Register User",
                         description: state.error,
                         image: "asset/img/event/failed.jpg",
                         completion: "Try Again",
@@ -230,28 +270,8 @@ class _EditProfileState extends State<EditProfile> {
                           height: 10,
                         ),
                         GestureDetector(
-                          onTap: () async {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            FlutterSecureStorage secureStorage =
-                                FlutterSecureStorage();
-
-                            for (String key in prefs.getKeys()) {
-                              if (key != "onboarding") {
-                                prefs.remove(key);
-                              }
-                            }
-                            secureStorage.deleteAll();
-
-                            print(prefs.getBool('onboarding'));
-
-                            UserStatus.isLoggedIn = false;
-                            UserStatus.isExpired = null;
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginPage()),
-                                (Route<dynamic> route) => false);
+                          onTap: () {
+                            context.read<SaveProfileCubit>().logout();
                           },
                           child: Container(
                             width: double.infinity,

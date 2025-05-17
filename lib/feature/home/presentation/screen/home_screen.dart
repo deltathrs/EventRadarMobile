@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/ad_slider/ad_slider_cubit.dart';
+import 'package:event_radar2/feature/home/presentation/cubits/creator_list/creator_list_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/homepage_eventcard.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/homepage_speakers.dart';
@@ -26,6 +27,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     cubit.getEventList();
     context.read<AdSliderCubit>().getAdSliderList();
+    context.read<CreatorListCubit>().getEventOrganizer();
     super.initState();
   }
 
@@ -250,21 +252,31 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget homepageSpeakers() {
-    return SizedBox(
-      width: 400.w,
-      height: 100.h,
-      child: Expanded(
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: 4,
-          itemBuilder: (context, index) {
-            return HomepageProfile(
-              image: Image.asset('asset/img/homepage/speaker1.png'),
-              name: "John Doe $index",
-            );
-          },
-        ),
-      ),
+    return BlocBuilder<CreatorListCubit, CreatorListState>(
+      builder: (context, state) {
+        if (state is CreatorListLoaded) {
+          return SizedBox(
+            width: 400.w,
+            height: 100.h,
+            child: Expanded(
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: state.eoList.length,
+                itemBuilder: (context, index) {
+                  return HomepageProfile(
+                    image: Image.network(
+                        '$baseUrlImage${state.eoList[index].profile}'),
+                    name: state.eoList[index].fullname,
+                  );
+                },
+              ),
+            ),
+          );
+        }
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 

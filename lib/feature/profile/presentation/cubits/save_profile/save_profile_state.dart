@@ -18,3 +18,17 @@ final class SaveProfileFailed extends SaveProfileState {
 
   SaveProfileFailed({required this.error});
 }
+
+final class LogoutLoading extends SaveProfileState {}
+
+final class LogoutSuccess extends SaveProfileState {
+  final String message;
+
+  LogoutSuccess({required this.message});
+}
+
+final class LogoutFailed extends SaveProfileState {
+  final String error;
+
+  LogoutFailed({required this.error});
+}

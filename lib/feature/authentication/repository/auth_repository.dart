@@ -20,6 +20,7 @@ class AuthRepository {
     final modelData = {
       'email': email,
       'password': password,
+      'fcm_token': UserStatus.deviceToken,
     };
 
     try {
@@ -45,6 +46,23 @@ class AuthRepository {
       }
     } catch (e, stackTrace) {
       Logger().e('Error login: $e', stackTrace: stackTrace);
+      throw e;
+    }
+  }
+
+  Future<String> apiLogout() async {
+    final modelData = {'fcm_token': UserStatus.deviceToken};
+
+    try {
+      final response = await apiService.postApiDataWithToken(
+          dotenv.env['LOGOUT'] ?? "", modelData);
+
+      if (response.statusCode == 200) {
+        return response.data['data']['message'];
+      }
+      return response.data;
+    } catch (e, stackTrace) {
+      Logger().e('Error logout: $e', stackTrace: stackTrace);
       throw e;
     }
   }

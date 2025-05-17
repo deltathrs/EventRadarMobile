@@ -1,5 +1,6 @@
 import 'package:event_radar2/feature/home/data/event_detail_model.dart';
 import 'package:event_radar2/feature/home/data/event_model.dart';
+import 'package:event_radar2/feature/home/data/list_eo_model.dart';
 import 'package:event_radar2/feature/profile/data/ticket_detail_model.dart';
 import 'package:event_radar2/network/api_services.dart';
 import 'package:event_radar2/network/secure_storage_service.dart';
@@ -38,6 +39,27 @@ class EventRepository {
           .toList();
     } catch (e, stackTrace) {
       _logger.e('Error getEventList: $e', stackTrace: stackTrace);
+      throw e;
+    }
+  }
+
+  Future<List<ListEoModel>> getEventOrganizer() async {
+    try {
+      final response = await apiService.getApiData(dotenv.env['LIST_EO'] ?? "");
+
+      if (response.statusCode == 200) {
+        final eoList = response.data['data']['users'];
+        if (eoList == null) {
+          return [];
+        }
+
+        return List<Map<String, dynamic>>.from(eoList)
+            .map((item) => ListEoModel.fromJson(item))
+            .toList();
+      }
+      throw response.data;
+    } catch (e, stackTrace) {
+      Logger().e('Error in getEoList: $e', stackTrace: stackTrace);
       throw e;
     }
   }

@@ -1,4 +1,5 @@
 import 'package:event_radar2/feature/home/presentation/cubits/ad_slider/ad_slider_cubit.dart';
+import 'package:event_radar2/feature/home/presentation/cubits/creator_list/creator_list_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/events/events_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/screen/home_screen.dart';
 import 'package:event_radar2/feature/manage_event/presentation/cubits/event/event_cubit.dart';
@@ -65,6 +66,9 @@ class _NavigationPage extends State<NavigationPage> {
                     ),
                     BlocProvider(
                       create: (context) => GetIt.instance<AdSliderCubit>(),
+                    ),
+                    BlocProvider(
+                      create: (context) => GetIt.instance<CreatorListCubit>(),
                     ),
                   ],
                   child: const HomePage(),
