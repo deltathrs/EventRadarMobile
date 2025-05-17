@@ -32,12 +32,12 @@ class ListEoModel {
 
   factory ListEoModel.fromJson(Map<String, dynamic> json) => ListEoModel(
         id: json["id"],
-        fullname: json["fullname"],
-        email: json["email"],
-        domicile: json["domicile"],
-        phoneNumber: json["phone_number"],
-        roles: json["roles"],
-        profile: json["profile"],
+        fullname: json["fullname"] ?? "",
+        email: json["email"] ?? "",
+        domicile: json["domicile"] ?? "",
+        phoneNumber: json["phone_number"] ?? "",
+        roles: json["roles"] ?? "",
+        profile: json["profile"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {

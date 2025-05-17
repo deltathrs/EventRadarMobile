@@ -23,11 +23,12 @@ class HomepageProfile extends StatelessWidget {
           child: Column(
             children: [
               Container(
+                width: 59.w,
+                height: 59.h,
                 padding: const EdgeInsets.all(.5),
                 decoration: const BoxDecoration(
                     color: Colors.black, shape: BoxShape.circle),
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(50.r), child: image),
+                child: image,
               ),
               const SizedBox(height: 4),
               Text(overflow: TextOverflow.ellipsis, name),

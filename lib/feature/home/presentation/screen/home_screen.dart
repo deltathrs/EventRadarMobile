@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
             sectionTitle("Trending Events",
                 Image.asset('asset/img/homepage/fire_icon.png')),
             homepageEvents(),
-            sectionTitle("Popular Speakers",
+            sectionTitle("Event Creators",
                 Image.asset('asset/img/homepage/fire_icon.png')),
             homepageSpeakers(),
             sectionTitle("Most Followed Communities",
@@ -255,24 +255,28 @@ class _HomePageState extends State<HomePage> {
     return BlocBuilder<CreatorListCubit, CreatorListState>(
       builder: (context, state) {
         if (state is CreatorListLoaded) {
+          // Filter EO list yang profile-nya tidak kosong
+          final filteredEoList = state.eoList
+              .where((eo) => eo.profile != null && eo.profile.trim().isNotEmpty)
+              .toList();
+
           return SizedBox(
             width: 400.w,
             height: 100.h,
-            child: Expanded(
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: state.eoList.length,
-                itemBuilder: (context, index) {
-                  return HomepageProfile(
-                    image: Image.network(
-                        '$baseUrlImage${state.eoList[index].profile}'),
-                    name: state.eoList[index].fullname,
-                  );
-                },
-              ),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: filteredEoList.length,
+              itemBuilder: (context, index) {
+                return HomepageProfile(
+                  image: Image.network(
+                      '$baseUrlImage${filteredEoList[index].profile}'),
+                  name: filteredEoList[index].fullname,
+                );
+              },
             ),
           );
         }
+
         return const Center(
           child: CircularProgressIndicator(),
         );

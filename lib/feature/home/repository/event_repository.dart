@@ -48,7 +48,7 @@ class EventRepository {
       final response = await apiService.getApiData(dotenv.env['LIST_EO'] ?? "");
 
       if (response.statusCode == 200) {
-        final eoList = response.data['data']['users'];
+        final eoList = response.data['data']?['users'];
         if (eoList == null) {
           return [];
         }
