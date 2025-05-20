@@ -18,3 +18,17 @@ final class CreatorListFailed extends CreatorListState {
 
   CreatorListFailed({required this.error});
 }
+
+final class EoEventLoading extends CreatorListState {}
+
+final class EoEventLoaded extends CreatorListState {
+  final List<EoEventModel> events;
+
+  EoEventLoaded({required this.events});
+}
+
+final class EoEventFailed extends CreatorListState {
+  final String error;
+
+  EoEventFailed({required this.error});
+}

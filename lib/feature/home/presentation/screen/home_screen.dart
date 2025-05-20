@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/ad_slider/ad_slider_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/creator_list/creator_list_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
+import 'package:event_radar2/feature/home/presentation/screen/eo_detail_screen.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/homepage_eventcard.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/homepage_speakers.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/event_detail.dart';
@@ -267,10 +268,21 @@ class _HomePageState extends State<HomePage> {
               scrollDirection: Axis.horizontal,
               itemCount: filteredEoList.length,
               itemBuilder: (context, index) {
-                return HomepageProfile(
-                  image: Image.network(
-                      '$baseUrlImage${filteredEoList[index].profile}'),
-                  name: filteredEoList[index].fullname,
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EoDetailScreen(
+                                eoModel: filteredEoList[index],
+                                eoImage:
+                                    '$baseUrlImage${filteredEoList[index].profile}')));
+                  },
+                  child: HomepageProfile(
+                    image: Image.network(
+                        '$baseUrlImage${filteredEoList[index].profile}'),
+                    name: filteredEoList[index].fullname,
+                  ),
                 );
               },
             ),

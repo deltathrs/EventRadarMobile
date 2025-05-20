@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:event_radar2/feature/home/data/eo_event_model.dart';
 import 'package:event_radar2/feature/home/data/list_eo_model.dart';
 import 'package:event_radar2/feature/home/repository/event_repository.dart';
 import 'package:meta/meta.dart';
@@ -19,6 +20,18 @@ class CreatorListCubit extends Cubit<CreatorListState> {
       emit(CreatorListLoaded(eoList: result));
     } catch (e) {
       emit(CreatorListFailed(error: e.toString()));
+    }
+  }
+
+  Future<void> getEvents(String eoId) async {
+    emit(EoEventLoading());
+
+    try {
+      final result = await eventRepository.getEoEventList(eoId);
+
+      emit(EoEventLoaded(events: result));
+    } catch (e) {
+      emit(EoEventFailed(error: e.toString()));
     }
   }
 }

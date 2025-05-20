@@ -39,10 +39,9 @@ class HomepageEventCard extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(12.w),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            eventImage(image),
+            Center(child: eventImage(image)),
             SizedBox(
               height: 10,
             ),
@@ -56,17 +55,14 @@ class HomepageEventCard extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            SizedBox(
-              width: 120.w,
-              child: Text(
-                title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.poppins(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF231FEA)),
-              ),
+            Text(
+              title,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.poppins(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF231FEA)),
             ),
             SizedBox(
               height: 10,
