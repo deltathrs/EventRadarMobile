@@ -20,6 +20,34 @@ class _ManageEventPageState extends State<ManageEventPage> {
   final HandleContentEventCubit _handleContentEventCubit =
       HandleContentEventCubit();
   late PageController _pageController;
+  bool initializeAllPage = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _pageController = PageController(initialPage: 0);
+    init();
+  }
+
+  void init() async {
+    await Future.delayed(Duration(milliseconds: 500));
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _pageController.animateToPage(0,
+          duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
+      await _pageController.animateToPage(1,
+          duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
+      await _pageController.animateToPage(2,
+          duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
+      await _pageController.animateToPage(0,
+          duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
+
+      initializeAllPage = false;
+      debugPrint("initializeAllPage: $initializeAllPage");
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,36 +66,38 @@ class _ManageEventPageState extends State<ManageEventPage> {
                 color: Colors.black),
           ),
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15.w),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ManageEventStepIndicatorWidget(cubit: _handleContentEventCubit),
-                BlocListener<HandleContentEventCubit, HandleContentEventState>(
-                  listener: (context, state) {
-                    if (state is HandleContentEventPageUpdated) {
-                      _pageController.animateToPage(state.pageIndex,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut);
-                    }
-                  },
-                  child: Expanded(
-                      child: PageView.builder(itemBuilder: (context, index) {
-                    switch (index) {
-                      case 0:
-                        return EventDetailWidget();
-                      case 1:
-                        return ContentVisualWidget();
-                      case 2:
-                        return TicketSetupWidget();
-                    }
-                  })),
-                ),
-              ],
-            ),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ManageEventStepIndicatorWidget(cubit: _handleContentEventCubit),
+              BlocListener<HandleContentEventCubit, HandleContentEventState>(
+                listener: (context, state) {
+                  if (state is HandleContentEventPageUpdated) {
+                    _pageController.animateToPage(state.pageIndex,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut);
+                  }
+                },
+                child: Expanded(
+                    child: PageView.builder(
+                        controller: _pageController,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: 3,
+                        itemBuilder: (context, index) {
+                          switch (index) {
+                            case 0:
+                              return EventDetailWidget();
+                            case 1:
+                              return ContentVisualWidget();
+                            case 2:
+                              return TicketSetupWidget();
+                          }
+                        })),
+              ),
+            ],
           ),
         ),
       ),

@@ -1,9 +1,11 @@
 import 'package:event_radar2/feature/components/utils/empty_data_utils.dart';
 import 'package:event_radar2/feature/manage_event/presentation/cubits/event/event_cubit.dart';
+import 'package:event_radar2/feature/manage_event/presentation/cubits/handle_content_event/handle_content_event_cubit.dart';
 import 'package:event_radar2/feature/manage_event/presentation/screens/manage_event_page.dart';
 import 'package:event_radar2/feature/manage_event/presentation/widgets/eo_event_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -67,8 +69,13 @@ class _MyEventPageState extends State<MyEventPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: IconButton(
         onPressed: () {
-          // Navigator.push(context,
-          //     MaterialPageRoute(builder: (context) => ManageEventPage()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                        create: (context) => HandleContentEventCubit(),
+                        child: ManageEventPage(),
+                      )));
         },
         icon: Container(
           decoration: BoxDecoration(

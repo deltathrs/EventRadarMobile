@@ -39,11 +39,11 @@ class _EoDetailScreenState extends State<EoDetailScreen> {
                 height: 10,
               ),
               GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, // 2 item per baris
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
                   crossAxisSpacing: 10.0,
                   mainAxisSpacing: 10.0,
-                  childAspectRatio: 3 / 2, // sesuaikan rasio lebar:tinggi
+                  childAspectRatio: 3 / 2,
                 ),
                 itemCount: 4, // jumlah item
                 itemBuilder: (context, index) {
@@ -62,7 +62,7 @@ class _EoDetailScreenState extends State<EoDetailScreen> {
                               color:
                                   Colors.black.withOpacity(0.1), // shadow color
                               blurRadius: 5, // soften the shadow
-                              offset: Offset(0, 4), // move down (x, y)
+                              offset: const Offset(0, 4), // move down (x, y)
                               spreadRadius: 2, // extend the shadow
                             ),
                           ]),
@@ -169,12 +169,12 @@ class _EoDetailScreenState extends State<EoDetailScreen> {
             //   height: 5,
             // ),
             // Text(
-            //   widget.eoModel.email,
-            //   style: GoogleFonts.inter(
+            //  style: GoogleFonts.inter(
             //       fontSize: 12.sp,
             //       fontWeight: FontWeight.w500,
             //       color: Colors.black),
-            // )
+            // )    //   widget.eoModel.email,
+            //
           ],
         ),
       ),
