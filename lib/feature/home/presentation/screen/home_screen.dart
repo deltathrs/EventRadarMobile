@@ -273,10 +273,14 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => EoDetailScreen(
-                                eoModel: filteredEoList[index],
-                                eoImage:
-                                    '$baseUrlImage${filteredEoList[index].profile}')));
+                            builder: (context) => BlocProvider(
+                                  create: (context) =>
+                                      GetIt.instance<CreatorListCubit>(),
+                                  child: EoDetailScreen(
+                                      eoModel: filteredEoList[index],
+                                      eoImage:
+                                          '$baseUrlImage${filteredEoList[index].profile}'),
+                                )));
                   },
                   child: HomepageProfile(
                     image: Image.network(

@@ -68,34 +68,41 @@ class _ManageEventPageState extends State<ManageEventPage> {
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 15.w),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: Stack(
             children: [
-              ManageEventStepIndicatorWidget(cubit: _handleContentEventCubit),
-              BlocListener<HandleContentEventCubit, HandleContentEventState>(
-                listener: (context, state) {
-                  if (state is HandleContentEventPageUpdated) {
-                    _pageController.animateToPage(state.pageIndex,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut);
-                  }
-                },
-                child: Expanded(
-                    child: PageView.builder(
-                        controller: _pageController,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: 3,
-                        itemBuilder: (context, index) {
-                          switch (index) {
-                            case 0:
-                              return EventDetailWidget();
-                            case 1:
-                              return ContentVisualWidget();
-                            case 2:
-                              return TicketSetupWidget();
-                          }
-                        })),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ManageEventStepIndicatorWidget(
+                      cubit: _handleContentEventCubit),
+                  BlocListener<HandleContentEventCubit,
+                      HandleContentEventState>(
+                    bloc: _handleContentEventCubit,
+                    listener: (context, state) {
+                      if (state is HandleContentEventPageUpdated) {
+                        _pageController.animateToPage(state.pageIndex,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut);
+                      }
+                    },
+                    child: Expanded(
+                        child: PageView.builder(
+                            controller: _pageController,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: 3,
+                            itemBuilder: (context, index) {
+                              switch (index) {
+                                case 0:
+                                  return EventDetailWidget();
+                                case 1:
+                                  return ContentVisualWidget();
+                                case 2:
+                                  return TicketSetupWidget();
+                              }
+                            })),
+                  ),
+                ],
               ),
             ],
           ),
