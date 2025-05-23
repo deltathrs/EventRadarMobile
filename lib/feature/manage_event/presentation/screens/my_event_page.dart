@@ -1,6 +1,7 @@
 import 'package:event_radar2/feature/components/utils/empty_data_utils.dart';
 import 'package:event_radar2/feature/manage_event/presentation/cubits/event/event_cubit.dart';
 import 'package:event_radar2/feature/manage_event/presentation/cubits/handle_content_event/handle_content_event_cubit.dart';
+import 'package:event_radar2/feature/manage_event/presentation/cubits/manage_event/manage_event_cubit.dart';
 import 'package:event_radar2/feature/manage_event/presentation/screens/manage_event_page.dart';
 import 'package:event_radar2/feature/manage_event/presentation/widgets/eo_event_box.dart';
 import 'package:flutter/material.dart';
@@ -72,8 +73,16 @@ class _MyEventPageState extends State<MyEventPage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                        create: (context) => HandleContentEventCubit(),
+                  builder: (context) => MultiBlocProvider(
+                        providers: [
+                          BlocProvider(
+                            create: (context) => HandleContentEventCubit(),
+                          ),
+                          BlocProvider(
+                            create: (context) =>
+                                GetIt.instance<ManageEventCubit>(),
+                          ),
+                        ],
                         child: ManageEventPage(),
                       )));
         },

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:event_radar2/feature/components/utils/bottom_sheet_utils.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
+import 'package:event_radar2/feature/home/presentation/screen/payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -313,17 +314,41 @@ class _EventDetailState extends State<EventDetail> {
 
         if (state is EventDetailBuySuccess) {
           Navigator.pop(context);
-          BottomSheetUtils.displayResultBottomSheet(
-              title: "Successfully Buy Event",
-              description: "Event has been added to your collection list",
-              image: "asset/img/event/success.jpg",
-              completion: "Continue",
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-              context: context);
+          if (state.message.contains('already have this ticket')) {
+            BottomSheetUtils.displayResultBottomSheet(
+                title: "Failed to Buy Event",
+                description: state.message,
+                image: "asset/img/event/failed.jpg",
+                completion: "Back",
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                context: context);
+            return;
+          } else {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                          create: (context) =>
+                              GetIt.instance<EventDetailCubit>(),
+                          child: PaymentScreen(
+                            url: state.message,
+                            ticketId: ticketId,
+                          ),
+                        )));
+          }
+          // BottomSheetUtils.displayResultBottomSheet(
+          //     title: "Successfully Buy Event",
+          //     description: "Event has been added to your collection list",
+          //     image: "asset/img/event/success.jpg",
+          //     completion: "Continue",
+          //     onTap: () {
+          //       Navigator.pop(context);
+          //       Navigator.pop(context);
+          //       Navigator.pop(context);
+          //     },
+          //     context: context);
         }
         if (state is EventDetailBuyFailed) {
           Navigator.pop(context);

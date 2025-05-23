@@ -8,6 +8,7 @@ import 'package:event_radar2/feature/home/presentation/cubits/favourite_event/fa
 import 'package:event_radar2/feature/home/repository/adslider_repository.dart';
 import 'package:event_radar2/feature/home/repository/event_repository.dart';
 import 'package:event_radar2/feature/manage_event/presentation/cubits/event/event_cubit.dart';
+import 'package:event_radar2/feature/manage_event/presentation/cubits/manage_event/manage_event_cubit.dart';
 import 'package:event_radar2/feature/manage_event/repository/manage_event_repository.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile/profile_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile_avatar/profile_avatar_cubit.dart';
@@ -75,5 +76,7 @@ class DependencyInjection {
         EventCubit(manageEventRepository: getIt<ManageEventRepository>()));
     getIt.registerFactory<CreatorListCubit>(
         () => CreatorListCubit(eventRepository: getIt<EventRepository>()));
+    getIt.registerFactory<ManageEventCubit>(() => ManageEventCubit(
+        manageEventRepository: getIt<ManageEventRepository>()));
   }
 }

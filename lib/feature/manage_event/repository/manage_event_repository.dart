@@ -18,7 +18,7 @@ class ManageEventRepository {
 
       final events = response.data['data']?['events'];
       if (events == null) {
-        return []; // Jika 'events' null, return list kosong
+        return [];
       }
 
       return List<Map<String, dynamic>>.from(events)
@@ -26,7 +26,20 @@ class ManageEventRepository {
           .toList();
     } catch (e, stackTrace) {
       Logger().e('Error in getMyEvent: $e', stackTrace: stackTrace);
-      return []; // Saat error pun, return list kosong
+      throw e;
+    }
+  }
+
+  Future<List<String>> getEventCategory() async {
+    try {
+      final response =
+          await apiService.getApiData(dotenv.env['CATEGORY'] ?? "");
+
+      final List<String> categories = List<String>.from(response.data['data']);
+      return categories;
+    } catch (e, stackTrace) {
+      Logger().e('Error in getEventCategory: $e', stackTrace: stackTrace);
+      throw e;
     }
   }
 }

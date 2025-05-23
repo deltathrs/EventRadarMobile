@@ -144,10 +144,21 @@ class EventRepository {
       final response =
           await apiService.getApiData("${dotenv.env['BUY_TICKET']}/$ticketId");
 
-      return response.data['data']['message'];
+      final data = response.data['data'];
+      
+      if (data.containsKey('redirect_url')) {
+        return data['redirect_url'];
+      }
+
+      if (data.containsKey('message')) {
+        return data['message']; // misalnya: "Ticket already purchased"
+      }
+
+    
+      throw Exception('Unexpected response format');
     } catch (e, stackTrace) {
       _logger.e('Error buyEvent: $e', stackTrace: stackTrace);
-      throw e;
+      rethrow;
     }
   }
 
