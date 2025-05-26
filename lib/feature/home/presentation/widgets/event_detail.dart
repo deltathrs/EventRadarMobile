@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:event_radar2/feature/components/utils/bottom_sheet_utils.dart';
+import 'package:event_radar2/feature/components/utils/url_launcher_utils.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/screen/payment_screen.dart';
 import 'package:flutter/material.dart';
@@ -596,10 +597,16 @@ class _EventDetailState extends State<EventDetail> {
           ],
         ),
         const Spacer(),
-        Image.asset(
-          'asset/img/event_organizer/whatsapp.png',
-          width: 30.w,
-          height: 30.h,
+        GestureDetector(
+          onTap: () {
+            UrlLauncherUtils.launchURL(
+                actionType: 'whatsapp', value: '+6281234567890');
+          },
+          child: Image.asset(
+            'asset/img/event_organizer/whatsapp.png',
+            width: 30.w,
+            height: 30.h,
+          ),
         )
       ],
     );

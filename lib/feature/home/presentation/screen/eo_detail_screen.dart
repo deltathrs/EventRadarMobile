@@ -1,10 +1,14 @@
 import 'package:event_radar2/feature/home/data/list_eo_model.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/creator_list/creator_list_cubit.dart';
+import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
+import 'package:event_radar2/feature/home/presentation/widgets/event_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class EoDetailScreen extends StatefulWidget {
   final ListEoModel eoModel;
@@ -18,6 +22,16 @@ class EoDetailScreen extends StatefulWidget {
 
 class _EoDetailScreenState extends State<EoDetailScreen> {
   final String baseUrlImage = dotenv.env['BASE_URL']!;
+
+  String formatDate(String isoDate) {
+    DateTime dateTime = DateTime.parse(isoDate);
+    return DateFormat("d MMMM yyyy", "id").format(dateTime);
+  }
+
+  String formatTime(String isoDate) {
+    DateTime dateTime = DateTime.parse(isoDate).toLocal();
+    return DateFormat.Hm().format(dateTime);
+  }
 
   @override
   void initState() {
@@ -92,7 +106,7 @@ class _EoDetailScreenState extends State<EoDetailScreen> {
                 child: Column(
                   children: [
                     Expanded(
-                      flex: 2, // setengah dari tinggi
+                      flex: 2,
                       child: ClipRRect(
                         borderRadius: BorderRadius.vertical(
                           top: Radius.circular(22.r),
@@ -105,11 +119,12 @@ class _EoDetailScreenState extends State<EoDetailScreen> {
                       ),
                     ),
                     Expanded(
-                      flex: 1, // setengah lainnya untuk konten
+                      flex: 1,
                       child: Padding(
-                        padding: EdgeInsets.all(8),
+                        padding: EdgeInsets.all(8.w),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          // mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               state.events[index].name,
@@ -117,6 +132,76 @@ class _EoDetailScreenState extends State<EoDetailScreen> {
                                   fontSize: 11.sp,
                                   fontWeight: FontWeight.w600,
                                   color: Color(0xFF505050)),
+                            ),
+                            // Container(
+                            //   width: 50.w,
+                            //   decoration: BoxDecoration(
+                            //       color: Color(0xFF89AFFF),
+                            //       borderRadius: BorderRadius.circular(10.r)),
+                            //   child: Padding(
+                            //     padding: EdgeInsets.symmetric(vertical: 5.h),
+                            //     child: Center(
+                            //       child: Text(
+                            //           state.events[index].isOnline
+                            //               ? 'Online'
+                            //               : 'Onsite',
+                            //           style: GoogleFonts.inter(
+                            //               fontSize: 8.sp,
+                            //               fontWeight: FontWeight.w500,
+                            //               color: Colors.white)),
+                            //     ),
+                            //   ),
+                            // ),
+                            Text(
+                              formatDate(state.events[index].datetime
+                                  .toIso8601String()),
+                              style: GoogleFonts.inter(
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xFF505050)),
+                            ),
+                            Text(
+                              formatTime(state.events[index].datetime
+                                  .toIso8601String()),
+                              style: GoogleFonts.inter(
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xFF505050)),
+                            ),
+                            SizedBox(
+                              height: 8.h,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => BlocProvider(
+                                              create: (context) => GetIt
+                                                  .instance<EventDetailCubit>(),
+                                              child: EventDetail(
+                                                  eventId:
+                                                      state.events[index].id),
+                                            )));
+                              },
+                              child: Container(
+                                width: 116.w,
+                                decoration: BoxDecoration(
+                                    color: Color(0xFF231FEA),
+                                    borderRadius: BorderRadius.circular(15.r)),
+                                child: Padding(
+                                  padding: EdgeInsets.all(4.w),
+                                  child: Center(
+                                    child: Text(
+                                      'Checkout',
+                                      style: GoogleFonts.inter(
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ],
                         ),

@@ -50,41 +50,38 @@ class InputDropdownUtils<T> extends StatelessWidget {
         const SizedBox(height: 6),
         IgnorePointer(
           ignoring: isReadOnly,
-          child: Material(
-            elevation: 1,
-            child: DropdownButtonFormField<T>(
-              value: value,
-              onChanged: onChanged,
-              items: items,
-              validator: validator ??
-                  (isRequired
-                      ? (value) => value == null ? 'Required' : null
-                      : null),
-              style: GoogleFonts.poppins(
+          child: DropdownButtonFormField<T>(
+            value: value,
+            onChanged: onChanged,
+            items: items,
+            validator: validator ??
+                (isRequired
+                    ? (value) => value == null ? 'Required' : null
+                    : null),
+            style: GoogleFonts.poppins(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w400,
+              color: const Color(0xFF4E4E55),
+            ),
+            decoration: InputDecoration(
+              filled: isReadOnly,
+              fillColor: isReadOnly ? const Color(0xFFD9D9D9) : null,
+              hintText: hint,
+              hintStyle: GoogleFonts.poppins(
                 fontSize: 15.sp,
                 fontWeight: FontWeight.w400,
-                color: const Color(0xFF4E4E55),
+                color: isReadOnly ? const Color(0xFF4E4E55) : Colors.grey,
               ),
-              decoration: InputDecoration(
-                filled: isReadOnly,
-                fillColor: isReadOnly ? const Color(0xFFD9D9D9) : null,
-                hintText: hint,
-                hintStyle: GoogleFonts.poppins(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w400,
-                  color: isReadOnly ? const Color(0xFF4E4E55) : Colors.grey,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.r),
-                  borderSide: isReadOnly
-                      ? const BorderSide(color: Colors.transparent)
-                      : const BorderSide(color: Color(0xFF909090)),
-                ),
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.r),
+                borderSide: isReadOnly
+                    ? const BorderSide(color: Colors.transparent)
+                    : const BorderSide(color: Color(0xFF909090)),
               ),
-              icon: const Icon(Icons.arrow_drop_down),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
             ),
+            icon: const Icon(Icons.arrow_drop_down),
           ),
         ),
       ],
