@@ -185,9 +185,9 @@ class _EventDetailState extends State<EventDetail> {
                                     thickness: 1,
                                   ),
                                   OrganizerInfo(
-                                      'asset/img/event/email_logo.png',
+                                      "$baseUrlImage${state.eventOrganizer.profile}",
                                       state.eventDetail.organizerName,
-                                      'finances.accounting@gmail.com'),
+                                      state.eventOrganizer.email),
                                 ],
                               ),
                             ),
@@ -304,13 +304,7 @@ class _EventDetailState extends State<EventDetail> {
       bloc: eventTransaction,
       listener: (context, state) {
         if (state is EventDetailBuyLoading) {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              });
+          BottomSheetUtils.showLoadingDialog(context);
         }
 
         if (state is EventDetailBuySuccess) {
@@ -364,17 +358,19 @@ class _EventDetailState extends State<EventDetail> {
           //     context: context);
         }
         if (state is EventDetailBuyFailed) {
-          Navigator.pop(context);
+          // Navigator.pop(context);
+
           BottomSheetUtils.displayResultBottomSheet(
-              title: "Failed to Buy Event",
-              description: state.message,
-              image: "asset/img/event/failed.jpg",
-              completion: "Back",
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-              context: context);
+            title: "Failed to Buy Event",
+            description: state.message,
+            image: "asset/img/event/failed.jpg",
+            completion: "Back",
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            context: context,
+          );
         }
       },
       child: Stack(
@@ -566,7 +562,7 @@ class _EventDetailState extends State<EventDetail> {
             shape: BoxShape.circle,
           ),
           child: Center(
-            child: Image.asset(emailLogo),
+            child: Image.network(emailLogo),
           ),
         ),
         const SizedBox(

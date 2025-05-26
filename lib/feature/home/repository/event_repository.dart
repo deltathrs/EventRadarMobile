@@ -44,9 +44,13 @@ class EventRepository {
     }
   }
 
-  Future<List<ListEoModel>> getEventOrganizer() async {
+  Future<List<ListEoModel>> getEventOrganizer({String? id}) async {
     try {
-      final response = await apiService.getApiData(dotenv.env['LIST_EO'] ?? "");
+      final modelData = {
+        'id': id ?? '',
+      };
+      final response = await apiService.getApiData(dotenv.env['LIST_EO'] ?? "",
+          modelData: modelData);
 
       if (response.statusCode == 200) {
         final eoList = response.data['data']?['users'];
@@ -145,7 +149,7 @@ class EventRepository {
           await apiService.getApiData("${dotenv.env['BUY_TICKET']}/$ticketId");
 
       final data = response.data['data'];
-      
+
       if (data.containsKey('redirect_url')) {
         return data['redirect_url'];
       }
@@ -154,7 +158,6 @@ class EventRepository {
         return data['message']; // misalnya: "Ticket already purchased"
       }
 
-    
       throw Exception('Unexpected response format');
     } catch (e, stackTrace) {
       _logger.e('Error buyEvent: $e', stackTrace: stackTrace);

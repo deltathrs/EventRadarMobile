@@ -55,6 +55,8 @@ dependencies:
   infinite_scroll_pagination: 4.1.0
   intl: ^0.19.0
   jwt_decoder: ^2.0.1
+  dash_chat_2: ^0.0.21
+  chat_gpt_sdk: ^2.2.5
   logger: ^2.5.0
   markdown_viewer:
     git:

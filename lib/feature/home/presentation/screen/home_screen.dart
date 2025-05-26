@@ -2,6 +2,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/ad_slider/ad_slider_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/creator_list/creator_list_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
+import 'package:event_radar2/feature/home/presentation/cubits/favourite_event/favourite_event_cubit.dart';
+import 'package:event_radar2/feature/home/presentation/screen/chat_screen.dart';
 import 'package:event_radar2/feature/home/presentation/screen/eo_detail_screen.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/homepage_eventcard.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/homepage_speakers.dart';
@@ -110,6 +112,47 @@ class _HomePageState extends State<HomePage> {
             //     Image.asset('asset/img/homepage/fire_icon.png')),
             // homepageComunities(),
           ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ChatScreen(),
+            ),
+          );
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color(0xFF231FEA),
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.chat_bubble_outline,
+                  color: Colors.white,
+                  size: 24.sp,
+                ),
+                SizedBox(width: 8.w),
+                Text(
+                  'RadarBot',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14.sp,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -273,13 +316,21 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => BlocProvider(
-                                  create: (context) =>
-                                      GetIt.instance<CreatorListCubit>(),
+                            builder: (context) => MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider(
+                                      create: (context) =>
+                                          GetIt.instance<CreatorListCubit>(),
+                                    ),
+                                    BlocProvider(
+                                      create: (context) =>
+                                          GetIt.instance<FavouriteEventCubit>(),
+                                    ),
+                                  ],
                                   child: EoDetailScreen(
                                       eoModel: filteredEoList[index],
                                       eoImage:
-                                          '$baseUrlImage${filteredEoList[index].profile}'),
+                                          '//${filteredEoList[index].profile}'),
                                 )));
                   },
                   child: HomepageProfile(

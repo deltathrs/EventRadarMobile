@@ -9,8 +9,9 @@ final class EventDetailLoading extends EventDetailState {}
 
 final class EventDetailLoaded extends EventDetailState {
   final EventDetailModel eventDetail;
+  final ListEoModel eventOrganizer;
 
-  EventDetailLoaded({required this.eventDetail});
+  EventDetailLoaded({required this.eventDetail, required this.eventOrganizer});
 }
 
 final class EventDetailFailed extends EventDetailState {
