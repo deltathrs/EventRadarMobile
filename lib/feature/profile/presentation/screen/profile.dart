@@ -115,7 +115,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                         SaveProfileCubit>()),
                                           ],
                                           child: const EditProfile(),
-                                        )));
+                                        ))).then((value) {
+                              context.read<ProfileCubit>().getProfile();
+                            });
                           },
                           child: Icon(
                             Icons.edit,

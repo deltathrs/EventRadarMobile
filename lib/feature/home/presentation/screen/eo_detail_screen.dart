@@ -186,27 +186,7 @@ class _EoDetailScreenState extends State<EoDetailScreen> {
                   fontWeight: FontWeight.w600,
                   color: Colors.black),
             ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  color: Color(0xFF231FEA),
-                  borderRadius: BorderRadius.circular(30.r)),
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: Center(
-                  widthFactor: 1.0,
-                  child: Text(
-                    widget.eoModel.domicile,
-                    style: GoogleFonts.inter(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
+
             // SizedBox(
             //   height: 5,
             // ),

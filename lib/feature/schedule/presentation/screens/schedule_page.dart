@@ -93,6 +93,26 @@ class _SchedulePageState extends State<SchedulePage> {
                             borderRadius: BorderRadius.circular(15.r)),
                         child: TableCalendar(
                           focusedDay: _focusedDay,
+                          calendarBuilders: CalendarBuilders(
+                            markerBuilder: (context, date, events) {
+                              if (events.isNotEmpty) {
+                                return Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Container(
+                                    width: 10.w,
+                                    height: 10.h,
+                                    margin: EdgeInsets.only(bottom: 4.h),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.yellow,
+                                    ),
+                                  ),
+                                );
+                              }
+                              return SizedBox.shrink();
+                            },
+                          ),
+
                           selectedDayPredicate: (day) =>
                               isSameDay(_selectedDay, day),
                           // calendarFormat:,

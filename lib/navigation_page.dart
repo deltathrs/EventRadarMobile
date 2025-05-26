@@ -82,7 +82,6 @@ class _NavigationPage extends State<NavigationPage> {
                   create: (context) => GetIt.instance<ProfileCubit>(),
                   child: const SchedulePage(),
                 ),
-          const NotificationPage(),
           BlocProvider(
             create: (context) => GetIt.instance<ProfileCubit>(),
             child: ProfilePage(
@@ -137,11 +136,6 @@ class _NavigationPage extends State<NavigationPage> {
           icon: Icon(Icons.calendar_month_outlined),
           activeIcon: Icon(Icons.calendar_month),
           label: 'Schedule',
-        ),
-        const BottomNavigationBarItem(
-          icon: Icon(Icons.notifications_outlined),
-          activeIcon: Icon(Icons.notifications),
-          label: 'Notifications',
         ),
         const BottomNavigationBarItem(
           icon: Icon(Icons.person_2_outlined),

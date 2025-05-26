@@ -325,6 +325,18 @@ class _EventDetailState extends State<EventDetail> {
                 },
                 context: context);
             return;
+          } else if (state.message.contains('purchased successfully')) {
+            BottomSheetUtils.displayResultBottomSheet(
+                title: "Successfully Buy Event",
+                description: state.message,
+                image: "asset/img/event/success.jpg",
+                completion: "Back To Event List",
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                context: context);
           } else {
             Navigator.push(
                 context,

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:event_radar2/feature/authentication/data/data_model.dart';
 import 'package:event_radar2/feature/authentication/presentation/screen/login_screen.dart';
 import 'package:event_radar2/feature/components/utils/bottom_sheet_utils.dart';
+import 'package:event_radar2/feature/components/utils/input_dropdown_utils.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile/profile_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile_avatar/profile_avatar_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/save_profile/save_profile_cubit.dart';
@@ -28,6 +29,7 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController domicileController = TextEditingController();
+  String? selectedCity;
 
   final ImagePicker _picker = ImagePicker();
   File? _image;
@@ -75,7 +77,7 @@ class _EditProfileState extends State<EditProfile> {
                   context.read<SaveProfileCubit>().saveProfile(
                       nameController.text,
                       phoneController.text,
-                      domicileController.text);
+                      selectedCity ?? "");
                 },
                 icon: Text(
                   'SAVE',
@@ -190,8 +192,11 @@ class _EditProfileState extends State<EditProfile> {
                       TextEditingController(text: state.profile.fullname);
                   emailController =
                       TextEditingController(text: state.profile.email);
-                  domicileController =
-                      TextEditingController(text: state.profile.domicile);
+                  if (state.profile.domicile.isEmpty) {
+                    selectedCity = null;
+                  } else {
+                    selectedCity = state.profile.domicile;
+                  }
                   phoneController =
                       TextEditingController(text: state.profile.phoneNumber);
 
@@ -262,10 +267,29 @@ class _EditProfileState extends State<EditProfile> {
                         SizedBox(
                           height: 10,
                         ),
-                        InputTextfield(
-                            label: "Domicile",
-                            hint: "Jakarta",
-                            controller: domicileController),
+                        InputDropdownUtils<String>(
+                          label: 'Domicile',
+                          hint: 'Select domicile',
+                          isRequired: true,
+                          isReadOnly: false,
+                          value: selectedCity,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedCity = value!;
+                            });
+                          },
+                          items: [
+                            DropdownMenuItem(
+                                value: 'Jakarta', child: Text('Jakarta')),
+                            DropdownMenuItem(
+                                value: 'Jandung', child: Text('Bandung')),
+                          ],
+                        ),
+
+                        // InputTextfield(
+                        //     label: "Domicile",
+                        //     hint: "Jakarta",
+                        //     controller: domicileController),
                         SizedBox(
                           height: 10,
                         ),
