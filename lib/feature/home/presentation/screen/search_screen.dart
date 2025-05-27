@@ -1,6 +1,7 @@
 import 'package:event_radar2/feature/components/utils/empty_data_utils.dart';
 import 'package:event_radar2/feature/home/data/event_model.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
+import 'package:event_radar2/feature/home/presentation/cubits/event_transaction/event_transaction_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/favourite_event/favourite_event_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/event_box.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/event_detail.dart';
@@ -123,9 +124,17 @@ class _SearchScreenState extends State<SearchScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => BlocProvider(
-                                create: (context) =>
-                                    GetIt.instance<EventDetailCubit>(),
+                          builder: (context) => MultiBlocProvider(
+                                providers: [
+                                  BlocProvider(
+                                    create: (context) =>
+                                        GetIt.instance<EventDetailCubit>(),
+                                  ),
+                                  BlocProvider(
+                                    create: (context) =>
+                                        GetIt.instance<EventTransactionCubit>(),
+                                  ),
+                                ],
                                 child: EventDetail(
                                   eventId: item.id,
                                 ),

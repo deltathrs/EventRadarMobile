@@ -7,7 +7,7 @@ class BottomSheetUtils {
     return showDialog(
       context: context,
       barrierDismissible:
-          false, // biasanya loading dialog tidak bisa ditutup sembarangan
+          false, 
       builder: (context) {
         return PopScope(
           canPop: false,

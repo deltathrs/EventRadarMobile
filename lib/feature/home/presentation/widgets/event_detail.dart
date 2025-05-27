@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:event_radar2/feature/components/utils/bottom_sheet_utils.dart';
 import 'package:event_radar2/feature/components/utils/url_launcher_utils.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
+import 'package:event_radar2/feature/home/presentation/cubits/event_transaction/event_transaction_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/screen/payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +14,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:markdown_viewer/markdown_viewer.dart';
-import 'package:readmore/readmore.dart';
 
 class EventDetail extends StatefulWidget {
   final String eventId;
@@ -26,7 +26,8 @@ class EventDetail extends StatefulWidget {
 class _EventDetailState extends State<EventDetail> {
   final String baseUrlImage = dotenv.env['BASE_URL']!;
   final EventDetailCubit eventDetail = GetIt.instance<EventDetailCubit>();
-  final EventDetailCubit eventTransaction = GetIt.instance<EventDetailCubit>();
+  final EventTransactionCubit eventTransaction =
+      GetIt.instance<EventTransactionCubit>();
 
   @override
   void initState() {
@@ -187,7 +188,8 @@ class _EventDetailState extends State<EventDetail> {
                                   OrganizerInfo(
                                       "$baseUrlImage${state.eventOrganizer.profile}",
                                       state.eventDetail.organizerName,
-                                      state.eventOrganizer.email),
+                                      state.eventOrganizer.email,
+                                      state.eventOrganizer.phoneNumber),
                                 ],
                               ),
                             ),
@@ -300,14 +302,14 @@ class _EventDetailState extends State<EventDetail> {
 
   Widget eventTicket(Color outline, String title, double price, int slot,
       String date, String ticketId) {
-    return BlocListener<EventDetailCubit, EventDetailState>(
+    return BlocListener<EventTransactionCubit, EventTransactionState>(
       bloc: eventTransaction,
-      listener: (context, state) {
-        if (state is EventDetailBuyLoading) {
+      listener: (context, state) async {
+        if (state is EventTransactionLoading) {
           BottomSheetUtils.showLoadingDialog(context);
         }
 
-        if (state is EventDetailBuySuccess) {
+        if (state is EventTransactionLoaded) {
           Navigator.pop(context);
           if (state.message.contains('already have this ticket')) {
             BottomSheetUtils.displayResultBottomSheet(
@@ -317,9 +319,9 @@ class _EventDetailState extends State<EventDetail> {
                 completion: "Back",
                 onTap: () {
                   Navigator.pop(context);
+                  Navigator.pop(context);
                 },
                 context: context);
-            return;
           } else if (state.message.contains('purchased successfully')) {
             BottomSheetUtils.displayResultBottomSheet(
                 title: "Successfully Buy Event",
@@ -338,7 +340,7 @@ class _EventDetailState extends State<EventDetail> {
                 MaterialPageRoute(
                     builder: (context) => BlocProvider(
                           create: (context) =>
-                              GetIt.instance<EventDetailCubit>(),
+                              GetIt.instance<EventTransactionCubit>(),
                           child: PaymentScreen(
                             url: state.message,
                             ticketId: ticketId,
@@ -357,20 +359,21 @@ class _EventDetailState extends State<EventDetail> {
           //     },
           //     context: context);
         }
-        if (state is EventDetailBuyFailed) {
-          // Navigator.pop(context);
+        if (state is EventTransactionFailed) {
+          if (mounted) {
+            Navigator.pop(context);
 
-          BottomSheetUtils.displayResultBottomSheet(
-            title: "Failed to Buy Event",
-            description: state.message,
-            image: "asset/img/event/failed.jpg",
-            completion: "Back",
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            context: context,
-          );
+            BottomSheetUtils.displayResultBottomSheet(
+              title: "Failed to Buy Event",
+              description: state.error,
+              image: "asset/img/event/failed.jpg",
+              completion: "Back",
+              onTap: () {
+                Navigator.pop(context);
+              },
+              context: context,
+            );
+          }
         }
       },
       child: Stack(
@@ -540,7 +543,7 @@ class _EventDetailState extends State<EventDetail> {
                               child: const Iconify(
                                   '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 50 50"><path fill="#1a34ff" d="M25 42c-9.4 0-17-7.6-17-17S15.6 8 25 8s17 7.6 17 17s-7.6 17-17 17m0-32c-8.3 0-15 6.7-15 15s6.7 15 15 15s15-6.7 15-15s-6.7-15-15-15"/><path fill="#1a34ff" d="M16 24h18v2H16z"/><path fill="#1a34ff" d="M24 16h2v18h-2z"/></svg>'),
                             )
-                          : SizedBox.shrink(),
+                          : const SizedBox.shrink(),
                     ],
                   )
                 ],
@@ -552,7 +555,7 @@ class _EventDetailState extends State<EventDetail> {
     );
   }
 
-  OrganizerInfo(String emailLogo, String name, String email) {
+  OrganizerInfo(String emailLogo, String name, String email, String phone) {
     return Row(
       children: [
         Container(
@@ -595,8 +598,7 @@ class _EventDetailState extends State<EventDetail> {
         const Spacer(),
         GestureDetector(
           onTap: () {
-            UrlLauncherUtils.launchURL(
-                actionType: 'whatsapp', value: '+6281234567890');
+            UrlLauncherUtils.launchURL(actionType: 'whatsapp', value: phone);
           },
           child: Image.asset(
             'asset/img/event_organizer/whatsapp.png',

@@ -1,5 +1,6 @@
 import 'package:event_radar2/feature/authentication/presentation/cubits/cubit/auth_cubit.dart';
 import 'package:event_radar2/feature/authentication/presentation/screen/register_screen.dart';
+import 'package:event_radar2/feature/components/utils/bottom_sheet_utils.dart';
 import 'package:event_radar2/main.dart';
 import 'package:event_radar2/navigation_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -231,7 +232,21 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 MyButton(
                   onTap: () {
-                    _cubit.login(emailController.text, passwordController.text);
+                    if (emailController.text.isNotEmpty &&
+                        passwordController.text.isNotEmpty) {
+                      _cubit.login(
+                          emailController.text, passwordController.text);
+                    } else {
+                      BottomSheetUtils.displayResultBottomSheet(
+                          title: "Login Failed",
+                          description: "Please Fill All the required fields",
+                          image: 'asset/img/event/failed.jpg',
+                          completion: "Try Again",
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          context: context);
+                    }
                   },
                   text: 'Sign In',
                   color: Colors.blue,

@@ -1,7 +1,11 @@
 import 'dart:ui';
 
+import 'package:event_radar2/feature/components/utils/url_launcher_utils.dart';
+import 'package:event_radar2/feature/home/data/list_eo_model.dart';
 import 'package:event_radar2/feature/profile/data/ticket_detail_model.dart';
+import 'package:event_radar2/feature/profile/presentation/cubits/profile/profile_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,7 +15,9 @@ import 'package:markdown_viewer/markdown_viewer.dart';
 
 class TicketDetail extends StatefulWidget {
   final TicketDetailModel ticketDetailModel;
-  const TicketDetail({super.key, required this.ticketDetailModel});
+  final bool isFinished;
+  const TicketDetail(
+      {super.key, required this.ticketDetailModel, this.isFinished = false});
 
   @override
   State<TicketDetail> createState() => _TicketDetailState();
@@ -24,6 +30,9 @@ class _TicketDetailState extends State<TicketDetail> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    context
+        .read<ProfileCubit>()
+        .getEoData(widget.ticketDetailModel.organizerId);
   }
 
   String formatDate(String isoDate) {
@@ -50,226 +59,265 @@ class _TicketDetailState extends State<TicketDetail> {
                 fontWeight: FontWeight.w600),
           ),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 308.h,
-                width: double.infinity,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.network(
-                      "$baseUrlImage${widget.ticketDetailModel.eventThumbnail}",
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.asset(
-                          'asset/img/event/placeholder.jpg',
-                          fit: BoxFit.cover,
-                        );
-                      },
-                    ),
-                    ClipRRect(
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                        child: Container(
-                          color: Colors.grey.withOpacity(0.1),
-                          alignment: Alignment.center,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      left: (MediaQuery.of(context).size.width - 195.w) / 2.w,
-                      top: (308.h - 275.h) / 2.h,
-                      child: Image.network(
-                        "$baseUrlImage${widget.ticketDetailModel.eventThumbnail}",
-                        width: 195.w,
-                        height: 275.h,
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Image.asset(
-                            width: 195.w,
-                            height: 275.h,
-                            'asset/img/event/placeholder.jpg',
-                            fit: BoxFit.contain,
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 316.h,
-                width: double.infinity,
-                child: Stack(
-                  children: [
-                    Container(
-                      color: const Color(0xFFD3E1FF),
-                    ),
-                    Positioned.fill(
-                        child: Center(
-                      child: Container(
-                        width: 350.w,
-                        height: 300.h,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.r),
-                            color: Colors.white),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  const SizedBox(width: 5),
-                                  ...widget.ticketDetailModel.categories
-                                      .map((category) => Row(
-                                            children: [
-                                              CategoryEvent(category),
-                                              const SizedBox(width: 5),
-                                            ],
-                                          ))
-                                      .toList(),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                widget.ticketDetailModel.name,
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16.sp),
-                              ),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              const Divider(
-                                color: Color(0xFFC9C9C9),
-                                thickness: 1,
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              TimeAndCalendar(widget.ticketDetailModel.datetime,
-                                  widget.ticketDetailModel.endDatetime),
-                              const SizedBox(
-                                height: 2,
-                              ),
-                              LocationSession(widget.ticketDetailModel.isOnline
-                                  ? 'Online'
-                                  : widget.ticketDetailModel.location),
-                              const SizedBox(
-                                height: 2,
-                              ),
-                              const Divider(
-                                color: Color(0xFFC9C9C9),
-                                thickness: 1,
-                              ),
-                              OrganizerInfo(
-                                  'asset/img/event/email_logo.png',
-                                  widget.ticketDetailModel.organizerName,
-                                  'finances.accounting@gmail.com'),
-                            ],
-                          ),
-                        ),
-                      ),
-                    )),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
+        body: BlocBuilder<ProfileCubit, ProfileState>(
+          builder: (context, state) {
+            if (state is EoDataLoaded) {
+              return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'About',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14.sp,
+                    SizedBox(
+                      height: 308.h,
+                      width: double.infinity,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          Image.network(
+                            "$baseUrlImage${widget.ticketDetailModel.eventThumbnail}",
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.asset(
+                                'asset/img/event/placeholder.jpg',
+                                fit: BoxFit.cover,
+                              );
+                            },
+                          ),
+                          ClipRRect(
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                              child: Container(
+                                color: Colors.grey.withOpacity(0.1),
+                                alignment: Alignment.center,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: (MediaQuery.of(context).size.width - 195.w) /
+                                2.w,
+                            top: (308.h - 275.h) / 2.h,
+                            child: Image.network(
+                              "$baseUrlImage${widget.ticketDetailModel.eventThumbnail}",
+                              width: 195.w,
+                              height: 275.h,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.asset(
+                                  width: 195.w,
+                                  height: 275.h,
+                                  'asset/img/event/placeholder.jpg',
+                                  fit: BoxFit.contain,
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: MarkdownViewer(
-                        widget.ticketDetailModel.eventDetail,
-                        styleSheet: MarkdownStyle(
-                          paragraph: GoogleFonts.poppins(fontSize: 13.sp),
-                          headline1: GoogleFonts.poppins(
-                              fontSize: 13.sp, fontWeight: FontWeight.bold),
-                          headline2: GoogleFonts.poppins(
-                              fontSize: 13.sp, fontWeight: FontWeight.bold),
-                          headline3: GoogleFonts.poppins(
-                              fontSize: 13.sp, fontWeight: FontWeight.bold),
-                          strongEmphasis: GoogleFonts.poppins(
-                              fontSize: 13.sp, fontWeight: FontWeight.w600),
-                          emphasis: GoogleFonts.poppins(
-                              fontSize: 13.sp, fontStyle: FontStyle.italic),
-                          listItem: GoogleFonts.poppins(fontSize: 13.sp),
-                          blockquote: GoogleFonts.poppins(
-                              fontSize: 13.sp, fontStyle: FontStyle.italic),
-                          codeSpan: GoogleFonts.poppins(
-                              fontSize: 13.sp,
-                              backgroundColor: Colors.grey[200]),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Text(
-                      'Attendance Ticket',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14.sp,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
                     ),
                     SizedBox(
-                      height: 400.h,
-                      child: ListView.builder(
-                          itemCount: widget.ticketDetailModel.tickets.length,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: EdgeInsets.only(bottom: 10.h),
-                              child: eventTicket(
-                                  widget.ticketDetailModel.tickets[index]
-                                              .ticketType ==
-                                          "Standard Ticket"
-                                      ? const Color(0xFF505050)
-                                      : const Color(0xFF0022BA),
-                                  widget.ticketDetailModel.tickets[index]
-                                      .ticketType,
-                                  widget.ticketDetailModel.tickets[index].price,
-                                  widget.ticketDetailModel.tickets[index]
-                                      .ticketLimit,
-                                  formatDate(widget.ticketDetailModel
-                                      .tickets[index].registrationEnd
-                                      .toIso8601String()),
-                                  widget.ticketDetailModel.tickets[index].id),
-                            );
-                          }),
+                      height: 316.h,
+                      width: double.infinity,
+                      child: Stack(
+                        children: [
+                          Container(
+                            color: const Color(0xFFD3E1FF),
+                          ),
+                          Positioned.fill(
+                              child: Center(
+                            child: Container(
+                              width: 350.w,
+                              height: 300.h,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20.r),
+                                  color: Colors.white),
+                              child: Padding(
+                                padding: const EdgeInsets.all(15),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const SizedBox(width: 5),
+                                        ...widget.ticketDetailModel.categories
+                                            .map((category) => Row(
+                                                  children: [
+                                                    CategoryEvent(category),
+                                                    const SizedBox(width: 5),
+                                                  ],
+                                                ))
+                                            .toList(),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      widget.ticketDetailModel.name,
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16.sp),
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    const Divider(
+                                      color: Color(0xFFC9C9C9),
+                                      thickness: 1,
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    TimeAndCalendar(
+                                        widget.ticketDetailModel.datetime,
+                                        widget.ticketDetailModel.endDatetime),
+                                    const SizedBox(
+                                      height: 2,
+                                    ),
+                                    LocationSession(widget
+                                            .ticketDetailModel.isOnline
+                                        ? 'Online'
+                                        : widget.ticketDetailModel.location),
+                                    const SizedBox(
+                                      height: 2,
+                                    ),
+                                    const Divider(
+                                      color: Color(0xFFC9C9C9),
+                                      thickness: 1,
+                                    ),
+                                    OrganizerInfo(
+                                        "$baseUrlImage${state.eoModel.profile}",
+                                        widget.ticketDetailModel.organizerName,
+                                        state.eoModel.email,
+                                        state.eoModel.phoneNumber),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )),
+                        ],
+                      ),
                     ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'About',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14.sp,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: MarkdownViewer(
+                              widget.ticketDetailModel.eventDetail,
+                              styleSheet: MarkdownStyle(
+                                paragraph: GoogleFonts.poppins(fontSize: 13.sp),
+                                headline1: GoogleFonts.poppins(
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.bold),
+                                headline2: GoogleFonts.poppins(
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.bold),
+                                headline3: GoogleFonts.poppins(
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.bold),
+                                strongEmphasis: GoogleFonts.poppins(
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w600),
+                                emphasis: GoogleFonts.poppins(
+                                    fontSize: 13.sp,
+                                    fontStyle: FontStyle.italic),
+                                listItem: GoogleFonts.poppins(fontSize: 13.sp),
+                                blockquote: GoogleFonts.poppins(
+                                    fontSize: 13.sp,
+                                    fontStyle: FontStyle.italic),
+                                codeSpan: GoogleFonts.poppins(
+                                    fontSize: 13.sp,
+                                    backgroundColor: Colors.grey[200]),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          widget.isFinished
+                              ? const SizedBox()
+                              : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Attendance Ticket',
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14.sp,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    SizedBox(
+                                      height: 400.h,
+                                      child: ListView.builder(
+                                          itemCount: widget
+                                              .ticketDetailModel.tickets.length,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemBuilder: (context, index) {
+                                            return Padding(
+                                              padding:
+                                                  EdgeInsets.only(bottom: 10.h),
+                                              child: eventTicket(
+                                                  widget
+                                                              .ticketDetailModel
+                                                              .tickets[index]
+                                                              .ticketType ==
+                                                          "Standard Ticket"
+                                                      ? const Color(0xFF505050)
+                                                      : const Color(0xFF0022BA),
+                                                  widget
+                                                      .ticketDetailModel
+                                                      .tickets[index]
+                                                      .ticketType,
+                                                  widget.ticketDetailModel
+                                                      .tickets[index].price,
+                                                  widget
+                                                      .ticketDetailModel
+                                                      .tickets[index]
+                                                      .ticketLimit,
+                                                  formatDate(widget
+                                                      .ticketDetailModel
+                                                      .tickets[index]
+                                                      .registrationEnd
+                                                      .toIso8601String()),
+                                                  widget.ticketDetailModel
+                                                      .tickets[index].id),
+                                            );
+                                          }),
+                                    ),
+                                  ],
+                                ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
-              )
-            ],
-          ),
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          },
         ));
   }
 
@@ -484,15 +532,7 @@ class _TicketDetailState extends State<TicketDetail> {
     );
   }
 
-  // Container ine(double widthLine) {
-  //   return Container(
-  //     height: 1,
-  //     width: widthLine,
-  //     color: const Color(0xFFC9C9C9),
-  //   );
-  // }
-
-  OrganizerInfo(String email_logo, String name, String email) {
+  OrganizerInfo(String emailLogo, String name, String email, String phone) {
     return Row(
       children: [
         Container(
@@ -502,7 +542,7 @@ class _TicketDetailState extends State<TicketDetail> {
             shape: BoxShape.circle,
           ),
           child: Center(
-            child: Image.asset(email_logo),
+            child: Image.network(emailLogo),
           ),
         ),
         const SizedBox(
@@ -533,10 +573,15 @@ class _TicketDetailState extends State<TicketDetail> {
           ],
         ),
         const Spacer(),
-        Image.asset(
-          'asset/img/event_organizer/whatsapp.png',
-          width: 30.w,
-          height: 30.h,
+        GestureDetector(
+          onTap: () {
+            UrlLauncherUtils.launchURL(actionType: 'whatsapp', value: phone);
+          },
+          child: Image.asset(
+            'asset/img/event_organizer/whatsapp.png',
+            width: 30.w,
+            height: 30.h,
+          ),
         )
       ],
     );

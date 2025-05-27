@@ -46,7 +46,9 @@ class _RegisteredPageState extends State<RegisteredPage> {
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: EdgeInsets.all(15.w),
-                          child: TicketBox(eventData: state.tickets[index]),
+                          child: TicketBox(
+                            eventData: state.tickets[index],
+                          ),
                         );
                       }));
             } else {

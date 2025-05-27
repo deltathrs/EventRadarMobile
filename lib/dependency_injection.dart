@@ -3,6 +3,7 @@ import 'package:event_radar2/feature/authentication/repository/auth_repository.d
 import 'package:event_radar2/feature/home/presentation/cubits/ad_slider/ad_slider_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/creator_list/creator_list_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
+import 'package:event_radar2/feature/home/presentation/cubits/event_transaction/event_transaction_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/events/events_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/favourite_event/favourite_event_cubit.dart';
 import 'package:event_radar2/feature/home/repository/adslider_repository.dart';
@@ -78,5 +79,7 @@ class DependencyInjection {
         () => CreatorListCubit(eventRepository: getIt<EventRepository>()));
     getIt.registerFactory<ManageEventCubit>(() => ManageEventCubit(
         manageEventRepository: getIt<ManageEventRepository>()));
+    getIt.registerFactory<EventTransactionCubit>(
+        () => EventTransactionCubit(eventRepository: getIt<EventRepository>()));
   }
 }

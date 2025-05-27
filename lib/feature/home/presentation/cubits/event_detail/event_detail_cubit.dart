@@ -24,13 +24,5 @@ class EventDetailCubit extends Cubit<EventDetailState> {
     }
   }
 
-  Future<void> buyEvent(String ticketId) async {
-    emit(EventDetailBuyLoading());
-    try {
-      final String message = await eventRepository.buyEvent(ticketId);
-      emit(EventDetailBuySuccess(message: message));
-    } catch (e) {
-      emit(EventDetailBuyFailed(message: e.toString()));
-    }
-  }
+  
 }

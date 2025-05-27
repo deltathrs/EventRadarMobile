@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/ad_slider/ad_slider_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/creator_list/creator_list_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
+import 'package:event_radar2/feature/home/presentation/cubits/event_transaction/event_transaction_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/favourite_event/favourite_event_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/screen/chat_screen.dart';
 import 'package:event_radar2/feature/home/presentation/screen/eo_detail_screen.dart';
@@ -264,9 +265,17 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => BlocProvider(
-                                        create: (context) =>
-                                            GetIt.instance<EventDetailCubit>(),
+                                  builder: (context) => MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider(
+                                            create: (context) => GetIt.instance<
+                                                EventDetailCubit>(),
+                                          ),
+                                          BlocProvider(
+                                            create: (context) => GetIt.instance<
+                                                EventTransactionCubit>(),
+                                          ),
+                                        ],
                                         child: EventDetail(
                                           eventId: state.events[index].id,
                                         ),

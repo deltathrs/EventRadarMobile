@@ -165,9 +165,13 @@ class EventRepository {
     }
   }
 
-  Future<List<TicketDetailModel>> getTicketDetailList() async {
+  Future<List<TicketDetailModel>> getTicketDetailList({String? status}) async {
     try {
-      final response = await apiService.getApiData("${dotenv.env['TICKET']}");
+      final modelData = {
+        'status': status ?? "",
+      };
+      final response = await apiService.getApiData("${dotenv.env['TICKET']}",
+          modelData: modelData);
 
       final events = response.data['data'];
       if (events == null) {

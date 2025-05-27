@@ -4,6 +4,7 @@ import 'package:event_radar2/feature/profile/presentation/cubits/profile_avatar/
 import 'package:event_radar2/feature/profile/presentation/cubits/save_profile/save_profile_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/screen/edit_profile.dart';
 import 'package:event_radar2/feature/profile/presentation/screen/favourite_page.dart';
+import 'package:event_radar2/feature/profile/presentation/screen/finished_page.dart';
 import 'package:event_radar2/feature/profile/presentation/screen/registered_page.dart';
 import 'package:event_radar2/feature/profile/presentation/widgets/custom_logo.dart';
 import 'package:flutter/material.dart';
@@ -179,10 +180,22 @@ class _ProfilePageState extends State<ProfilePage> {
                                           'asset/img/profile/registered_icon.png',
                                       text: 'Registered'),
                                 ),
-                                const CustomLogoWidget(
-                                    imagePath:
-                                        'asset/img/profile/finished_icon.png',
-                                    text: 'Finished'),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => BlocProvider(
+                                                  create: (context) => GetIt
+                                                      .instance<ProfileCubit>(),
+                                                  child: FinishedPage(),
+                                                )));
+                                  },
+                                  child: const CustomLogoWidget(
+                                      imagePath:
+                                          'asset/img/profile/finished_icon.png',
+                                      text: 'Finished'),
+                                ),
                                 const CustomLogoWidget(
                                     imagePath:
                                         'asset/img/profile/certificate_icon.png',

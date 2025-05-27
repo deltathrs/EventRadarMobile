@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:event_radar2/feature/home/data/list_eo_model.dart';
 import 'package:event_radar2/feature/home/repository/event_repository.dart';
 import 'package:event_radar2/feature/profile/data/profile_model.dart';
 import 'package:event_radar2/feature/profile/data/ticket_detail_model.dart';
@@ -25,15 +26,28 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  Future<void> getTicketList() async {
+  Future<void> getTicketList({String? status}) async {
     emit(TicketListLoading());
 
     try {
-      final result = await eventRepository.getTicketDetailList();
+      final result =
+          await eventRepository.getTicketDetailList(status: status ?? "");
+      final eoResult = await eventRepository.getEventOrganizer();
 
-      emit(TicketListLoaded(tickets: result));
+      emit(TicketListLoaded(tickets: result, eoModel: eoResult));
     } catch (e) {
       emit(TicketListFailed(message: e.toString()));
+    }
+  }
+
+  Future<void> getEoData(String eoId) async {
+    emit(EoDataLoading());
+
+    try {
+      final eoModel = await eventRepository.getEventOrganizer(id: eoId);
+      emit(EoDataLoaded(eoModel: eoModel[0]));
+    } catch (e) {
+      emit(EoDataFailed(message: e.toString()));
     }
   }
 }
