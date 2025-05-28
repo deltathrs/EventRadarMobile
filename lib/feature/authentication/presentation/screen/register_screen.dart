@@ -307,30 +307,30 @@ class _RegisterPageState extends State<RegisterPage> {
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Switch(
-                          value: isEventOrganizer,
-                          onChanged: (value) {
-                            setState(() {
-                              isEventOrganizer = !isEventOrganizer;
-                            });
-                          }),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        'Register as Event Organizer',
-                        style: GoogleFonts.poppins(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black),
-                      )
-                    ],
-                  ),
+                  // const SizedBox(
+                  //   height: 15,
+                  // ),
+                  // Row(
+                  //   children: [
+                  //     Switch(
+                  //         value: isEventOrganizer,
+                  //         onChanged: (value) {
+                  //           setState(() {
+                  //             isEventOrganizer = !isEventOrganizer;
+                  //           });
+                  //         }),
+                  //     SizedBox(
+                  //       width: 5,
+                  //     ),
+                  //     Text(
+                  //       'Register as Event Organizer',
+                  //       style: GoogleFonts.poppins(
+                  //           fontSize: 14.sp,
+                  //           fontWeight: FontWeight.w500,
+                  //           color: Colors.black),
+                  //     )
+                  //   ],
+                  // ),
                   const SizedBox(
                     height: 15,
                   ),
@@ -375,30 +375,66 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   MyButton(
                     onTap: () {
-                      if (isAgree == true) {
-                        _cubit.register(
-                            emailController.text,
-                            fullNameController.text,
-                            passwordController.text,
-                            isEventOrganizer);
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return const AlertDialog(
-                              backgroundColor: Colors.white,
-                              title: Center(
-                                child: Text(
-                                  "Please agree to the terms and conditions",
-                                  style: TextStyle(
-                                    color: Colors.blue,
+                      if (emailController.text.isNotEmpty &&
+                          passwordController.text.isNotEmpty &&
+                          confirmPasswordController.text.isNotEmpty &&
+                          fullNameController.text.isNotEmpty) {
+                        if (passwordController.text ==
+                            confirmPasswordController.text) {
+                          if (isAgree == true) {
+                            _cubit.register(
+                                emailController.text,
+                                fullNameController.text,
+                                passwordController.text,
+                                isEventOrganizer);
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const AlertDialog(
+                                  backgroundColor: Colors.white,
+                                  title: Center(
+                                    child: Text(
+                                      "Please agree to the terms and conditions",
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
+                                );
+                              },
                             );
-                          },
-                        );
+                          }
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const AlertDialog(
+                                backgroundColor: Colors.white,
+                                title: Center(
+                                  child: Text(
+                                    "Passwords does not match",
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      } else {
+                        BottomSheetUtils.displayResultBottomSheet(
+                            title: "Sign Up Failed",
+                            description: "Please Fill All the required fields",
+                            image: 'asset/img/event/failed.jpg',
+                            completion: "Try Again",
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            context: context);
                       }
                     },
                     text: 'Sign Up',

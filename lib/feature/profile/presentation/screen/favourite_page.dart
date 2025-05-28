@@ -44,43 +44,41 @@ class _FavouritePageState extends State<FavouritePage> {
         builder: (context, state) {
           if (state is FavouriteEventLoaded) {
             if (state.favouriteList.isNotEmpty) {
-              return Expanded(
-                  child: ListView.builder(
-                      itemCount: state.favouriteList.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: EdgeInsets.all(15.w),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MultiBlocProvider(
-                                            providers: [
-                                              BlocProvider(
-                                                create: (context) =>
-                                                    GetIt.instance<
-                                                        EventDetailCubit>(),
-                                              ),
-                                              BlocProvider(
-                                                create: (context) =>
-                                                    GetIt.instance<
-                                                        EventTransactionCubit>(),
-                                              ),
-                                            ],
-                                            child: EventDetail(
-                                              eventId:
-                                                  state.favouriteList[index].id,
-                                            ),
-                                          )));
-                            },
-                            child: EventBox(
-                              eventData: state.favouriteList[index],
-                              isFavoritePage: true,
-                            ),
-                          ),
-                        );
-                      }));
+              return ListView.builder(
+                  itemCount: state.favouriteList.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15.w, vertical: 8.h),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider(
+                                            create: (context) => GetIt.instance<
+                                                EventDetailCubit>(),
+                                          ),
+                                          BlocProvider(
+                                            create: (context) => GetIt.instance<
+                                                EventTransactionCubit>(),
+                                          ),
+                                        ],
+                                        child: EventDetail(
+                                          eventId:
+                                              state.favouriteList[index].id,
+                                        ),
+                                      )));
+                        },
+                        child: EventBox(
+                          eventData: state.favouriteList[index],
+                          isFavoritePage: true,
+                        ),
+                      ),
+                    );
+                  });
             } else {
               return Center(
                 child: EmptyDataUtils().emptyDataWithoutButton(

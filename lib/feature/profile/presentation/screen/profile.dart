@@ -2,6 +2,7 @@ import 'package:event_radar2/feature/home/presentation/cubits/favourite_event/fa
 import 'package:event_radar2/feature/profile/presentation/cubits/profile/profile_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile_avatar/profile_avatar_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/save_profile/save_profile_cubit.dart';
+import 'package:event_radar2/feature/profile/presentation/screen/certificate_page.dart';
 import 'package:event_radar2/feature/profile/presentation/screen/edit_profile.dart';
 import 'package:event_radar2/feature/profile/presentation/screen/favourite_page.dart';
 import 'package:event_radar2/feature/profile/presentation/screen/finished_page.dart';
@@ -196,10 +197,19 @@ class _ProfilePageState extends State<ProfilePage> {
                                           'asset/img/profile/finished_icon.png',
                                       text: 'Finished'),
                                 ),
-                                const CustomLogoWidget(
-                                    imagePath:
-                                        'asset/img/profile/certificate_icon.png',
-                                    text: 'Certificate'),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CertificatePage()));
+                                  },
+                                  child: const CustomLogoWidget(
+                                      imagePath:
+                                          'asset/img/profile/certificate_icon.png',
+                                      text: 'Certificate'),
+                                ),
                               ],
                             )
                           ],

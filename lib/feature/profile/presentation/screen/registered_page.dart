@@ -41,17 +41,17 @@ class _RegisteredPageState extends State<RegisteredPage> {
         builder: (context, state) {
           if (state is TicketListLoaded) {
             if (state.tickets.isNotEmpty) {
-              return Expanded(
-                  child: ListView.builder(
-                      itemCount: state.tickets.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: EdgeInsets.all(15.w),
-                          child: TicketBox(
-                            eventData: state.tickets[index],
-                          ),
-                        );
-                      }));
+              return ListView.builder(
+                  itemCount: state.tickets.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15.w, vertical: 8.h),
+                      child: TicketBox(
+                        eventData: state.tickets[index],
+                      ),
+                    );
+                  });
             } else {
               return Padding(
                 padding: const EdgeInsets.all(8.0),

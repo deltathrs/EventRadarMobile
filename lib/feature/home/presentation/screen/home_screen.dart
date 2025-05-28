@@ -105,10 +105,11 @@ class _HomePageState extends State<HomePage> {
           children: [
             carousel(),
             sectionTitle("Trending Events",
-                Image.asset('asset/img/homepage/fire_icon.png')),
+                image: Image.asset('asset/img/homepage/fire_icon.png')),
             homepageEvents(),
-            sectionTitle("Event Creators",
-                Image.asset('asset/img/homepage/fire_icon.png')),
+            sectionTitle(
+              "Event Creators",
+            ),
             homepageSpeakers(),
             // sectionTitle("Most Followed Communities",
             //     Image.asset('asset/img/homepage/fire_icon.png')),
@@ -116,47 +117,47 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const ChatScreen(),
-            ),
-          );
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: Color(0xFF231FEA),
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.chat_bubble_outline,
-                  color: Colors.white,
-                  size: 24.sp,
-                ),
-                SizedBox(width: 8.w),
-                Text(
-                  'RadarBot',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14.sp,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      // floatingActionButton: GestureDetector(
+      //   onTap: () {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => const ChatScreen(),
+      //       ),
+      //     );
+      //   },
+      //   child: Container(
+      //     decoration: BoxDecoration(
+      //       color: Color(0xFF231FEA),
+      //       borderRadius: BorderRadius.circular(12.r),
+      //     ),
+      //     child: Padding(
+      //       padding: const EdgeInsets.all(8.0),
+      //       child: Row(
+      //         mainAxisSize: MainAxisSize.min,
+      //         mainAxisAlignment: MainAxisAlignment.center,
+      //         children: [
+      //           Icon(
+      //             Icons.chat_bubble_outline,
+      //             color: Colors.white,
+      //             size: 24.sp,
+      //           ),
+      //           SizedBox(width: 8.w),
+      //           Text(
+      //             'RadarBot',
+      //             style: TextStyle(
+      //               fontFamily: 'Poppins',
+      //               fontWeight: FontWeight.w600,
+      //               fontSize: 14.sp,
+      //               color: Colors.white,
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //   ),
+      // ),
     );
   }
 
@@ -406,7 +407,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget sectionTitle(String text, Image image) {
+  Widget sectionTitle(String text, {Image? image}) {
     return Padding(
       padding: EdgeInsets.only(top: 20.h, left: 22.w, bottom: 20.h),
       child: Row(
@@ -420,7 +421,7 @@ class _HomePageState extends State<HomePage> {
               color: Colors.black,
             ),
           ),
-          image,
+          image ?? SizedBox.shrink(),
         ],
       ),
     );
