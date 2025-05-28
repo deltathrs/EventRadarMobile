@@ -16,6 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -175,8 +176,8 @@ class _HomePageState extends State<HomePage> {
                           (item) => Image.network(
                             "$baseUrlImage${item.image}",
                             fit: BoxFit.fill,
-                            width: 430,
-                            height: 196,
+                            width: 430.w,
+                            height: 196.h,
                           ),
                         )
                         .toList(),
@@ -220,7 +221,18 @@ class _HomePageState extends State<HomePage> {
             ],
           );
         }
-        return const Center(child: CircularProgressIndicator());
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            width: double.infinity,
+            height: 196.h,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+          ),
+        );
       },
     );
   }
@@ -229,17 +241,15 @@ class _HomePageState extends State<HomePage> {
     return SizedBox(
       width: 400.w,
       height: 100.h,
-      child: Expanded(
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: 4,
-          itemBuilder: (context, index) {
-            return HomepageProfile(
-              image: Image.asset('asset/img/homepage/comunity1.png'),
-              name: "John Doe $index",
-            );
-          },
-        ),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: 4,
+        itemBuilder: (context, index) {
+          return HomepageProfile(
+            image: Image.asset('asset/img/homepage/comunity1.png'),
+            name: "John Doe $index",
+          );
+        },
       ),
     );
   }
@@ -253,53 +263,72 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.only(left: 20.w),
             child: SizedBox(
               height: 310.h,
-              child: Expanded(
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: state.events.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MultiBlocProvider(
-                                        providers: [
-                                          BlocProvider(
-                                            create: (context) => GetIt.instance<
-                                                EventDetailCubit>(),
-                                          ),
-                                          BlocProvider(
-                                            create: (context) => GetIt.instance<
-                                                EventTransactionCubit>(),
-                                          ),
-                                        ],
-                                        child: EventDetail(
-                                          eventId: state.events[index].id,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: state.events.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MultiBlocProvider(
+                                      providers: [
+                                        BlocProvider(
+                                          create: (context) => GetIt.instance<
+                                              EventDetailCubit>(),
                                         ),
-                                      )));
-                        },
-                        child: HomepageEventCard(
-                          title: state.events[index].name,
-                          image:
-                              "$baseUrlImage${state.events[index].eventThumbnail}",
-                          eventDate: state.events[index].datetime,
-                          eventType: state.events[index].isOnline
-                              ? "Online"
-                              : "Onsite",
-                          eventCategory: state.events[index].categories,
-                        ),
+                                        BlocProvider(
+                                          create: (context) => GetIt.instance<
+                                              EventTransactionCubit>(),
+                                        ),
+                                      ],
+                                      child: EventDetail(
+                                        eventId: state.events[index].id,
+                                      ),
+                                    )));
+                      },
+                      child: HomepageEventCard(
+                        title: state.events[index].name,
+                        image:
+                            "$baseUrlImage${state.events[index].eventThumbnail}",
+                        eventDate: state.events[index].datetime,
+                        eventType:
+                            state.events[index].isOnline ? "Online" : "Onsite",
+                        eventCategory: state.events[index].categories,
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ),
           );
         }
-        return const Center(child: CircularProgressIndicator());
+        return SizedBox(
+          height: 200.h,
+          child: ListView.builder(
+              itemCount: 3,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      width: 175.w,
+                      height: 226.h,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                    ),
+                  ),
+                );
+              }),
+        );
       },
     );
   }
@@ -309,9 +338,8 @@ class _HomePageState extends State<HomePage> {
       builder: (context, state) {
         if (state is CreatorListLoaded) {
           // Filter EO list yang profile-nya tidak kosong
-          final filteredEoList = state.eoList
-              .where((eo) => eo.profile != null && eo.profile.trim().isNotEmpty)
-              .toList();
+          final filteredEoList =
+              state.eoList.where((eo) => eo.profile.trim().isNotEmpty).toList();
 
           return SizedBox(
             width: 400.w,
@@ -353,8 +381,26 @@ class _HomePageState extends State<HomePage> {
           );
         }
 
-        return const Center(
-          child: CircularProgressIndicator(),
+        return SizedBox(
+          height: 100.h,
+          child: ListView.builder(
+              itemCount: 3,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                  child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: 59.w,
+                        height: 59.h,
+                        padding: const EdgeInsets.all(.5),
+                        decoration: const BoxDecoration(
+                            color: Colors.black, shape: BoxShape.circle),
+                      )),
+                );
+              }),
         );
       },
     );

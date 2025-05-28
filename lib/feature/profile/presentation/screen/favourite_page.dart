@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shimmer/shimmer.dart';
 
 class FavouritePage extends StatefulWidget {
   const FavouritePage({Key? key}) : super(key: key);
@@ -89,8 +90,27 @@ class _FavouritePageState extends State<FavouritePage> {
               );
             }
           }
-          return Center(
-            child: CircularProgressIndicator(),
+          return SizedBox(
+            height: 500.h,
+            child: ListView.builder(
+                itemCount: 3,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: 388.w,
+                        height: 141.h,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                      ),
+                    ),
+                  );
+                }),
           );
         },
       ),

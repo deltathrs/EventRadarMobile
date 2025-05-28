@@ -117,8 +117,8 @@ class _EventDetailState extends State<EventDetail> {
                     ),
                   ),
                   SizedBox(
-                    height: 316.h,
                     width: double.infinity,
+                    height: 356.h,
                     child: Stack(
                       children: [
                         Container(
@@ -128,13 +128,14 @@ class _EventDetailState extends State<EventDetail> {
                             child: Center(
                           child: Container(
                             width: 350.w,
-                            height: 300.h,
+                            // height: 300.h,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20.r),
                                 color: Colors.white),
                             child: Padding(
                               padding: const EdgeInsets.all(15),
                               child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
@@ -370,6 +371,7 @@ class _EventDetailState extends State<EventDetail> {
               completion: "Back",
               onTap: () {
                 Navigator.pop(context);
+                Navigator.pop(context);
               },
               context: context,
             );
@@ -380,7 +382,7 @@ class _EventDetailState extends State<EventDetail> {
         children: [
           Container(
             width: 344.w,
-            height: 145.h,
+            height: 155.h,
             decoration: BoxDecoration(
               border: Border.all(color: outline),
               borderRadius: BorderRadius.circular(15.r),
@@ -536,11 +538,11 @@ class _EventDetailState extends State<EventDetail> {
                               ],
                             ),
                       slot > 0
-                          ? GestureDetector(
-                              onTap: () {
+                          ? IconButton(
+                              onPressed: () {
                                 eventTransaction.buyEvent(ticketId);
                               },
-                              child: const Iconify(
+                              icon: const Iconify(
                                   '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 50 50"><path fill="#1a34ff" d="M25 42c-9.4 0-17-7.6-17-17S15.6 8 25 8s17 7.6 17 17s-7.6 17-17 17m0-32c-8.3 0-15 6.7-15 15s6.7 15 15 15s15-6.7 15-15s-6.7-15-15-15"/><path fill="#1a34ff" d="M16 24h18v2H16z"/><path fill="#1a34ff" d="M24 16h2v18h-2z"/></svg>'),
                             )
                           : const SizedBox.shrink(),
