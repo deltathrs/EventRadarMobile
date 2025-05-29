@@ -19,6 +19,7 @@ class ProfileDataModel {
   String domicile;
   String phoneNumber;
   String profile;
+  String profileGoogle;
 
   ProfileDataModel({
     required this.id,
@@ -28,6 +29,7 @@ class ProfileDataModel {
     required this.domicile,
     required this.phoneNumber,
     required this.profile,
+    required this.profileGoogle,
   });
 
   factory ProfileDataModel.fromJson(Map<String, dynamic> json) =>
@@ -39,6 +41,7 @@ class ProfileDataModel {
         domicile: json['domicile'] ?? "",
         phoneNumber: json['phone_number'] ?? "",
         profile: json['profile'] ?? "",
+        profileGoogle: json['profile_google'] ?? "",
       );
 
   Map<String, dynamic> toJson() => {

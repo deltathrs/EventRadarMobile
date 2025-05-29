@@ -10,7 +10,7 @@ class EventTransactionCubit extends Cubit<EventTransactionState> {
       : super(EventTransactionInitial());
 
   Future<void> buyEvent(String ticketId) async {
-    emit(EventTransactionLoading());
+    emit(EventTransactionLoading(ticketId: ticketId));
     try {
       final String message = await eventRepository.buyEvent(ticketId);
       emit(EventTransactionLoaded(message: message));

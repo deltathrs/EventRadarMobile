@@ -84,7 +84,9 @@ class _RegisterPageState extends State<RegisterPage> {
             Navigator.pop(context);
             BottomSheetUtils.displayResultBottomSheet(
                 title: "Failed to Register User",
-                description: state.error,
+                description: state.error.contains("-")
+                    ? state.error.split("-").last.trim()
+                    : state.error,
                 image: "asset/img/event/failed.jpg",
                 completion: "Try Again",
                 onTap: () {

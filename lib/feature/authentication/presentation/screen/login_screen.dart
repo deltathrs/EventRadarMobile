@@ -89,21 +89,17 @@ class _LoginPageState extends State<LoginPage> {
 
           if (state is LoginFailed) {
             Navigator.pop(context);
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    backgroundColor: Colors.white,
-                    title: Center(
-                        child: Text(
-                      state.error,
-                      style: TextStyle(
-                        color: Colors.blue,
-                      ),
-                      textAlign: TextAlign.center,
-                    )),
-                  );
-                });
+            BottomSheetUtils.displayResultBottomSheet(
+                title: "Login Failed",
+                description: state.error.contains("-")
+                    ? state.error.split("-").last.trim()
+                    : state.error,
+                image: 'asset/img/event/failed.jpg',
+                completion: "Try Again",
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                context: context);
           }
         },
         child: SingleChildScrollView(
@@ -206,27 +202,7 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 5,
-                ),
-                //forgot password?
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        "Forgot Password?",
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 13.sp,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+
                 const SizedBox(
                   height: 20,
                 ),

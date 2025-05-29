@@ -48,6 +48,7 @@ class _TicketDetailState extends State<TicketDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
           scrolledUnderElevation: 0,
@@ -674,7 +675,7 @@ class _TicketDetailState extends State<TicketDetail> {
           style: TextStyle(
               fontFamily: 'Poppins',
               fontWeight: FontWeight.w600,
-              fontSize: 10.sp,
+              fontSize: 9.sp,
               color: const Color(0xFF888888)),
         ),
       ),

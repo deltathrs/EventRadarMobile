@@ -173,14 +173,20 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: CarouselSlider(
                     items: state.adSliderList
-                        .map(
-                          (item) => Image.network(
-                            "$baseUrlImage${item.image}",
-                            fit: BoxFit.fill,
-                            width: 430.w,
-                            height: 196.h,
-                          ),
-                        )
+                        .map((item) => Image.network(
+                              "$baseUrlImage${item.image}",
+                              width: 430.w,
+                              height: 196.h,
+                              fit: BoxFit.fill,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.asset(
+                                  'asset/img/event/placeholder.jpg',
+                                  width: 430.w,
+                                  height: 196.h,
+                                  fit: BoxFit.fill,
+                                );
+                              },
+                            ))
                         .toList(),
                     carouselController: carouselController,
                     options: CarouselOptions(

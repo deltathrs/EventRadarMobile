@@ -1,6 +1,7 @@
 import 'package:event_radar2/dependency_injection.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'firebase_options.dart';
@@ -15,7 +16,6 @@ void main() async {
 
   await initializeDateFormatting('id_ID', null);
 
- 
   await dotenv.load(fileName: "url.env");
   DependencyInjection.getInstance.setupDI();
   runApp(const MyApp());
@@ -26,6 +26,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return const ScreenUtilInit(
       designSize: Size(375, 812),
       ensureScreenSize: true,

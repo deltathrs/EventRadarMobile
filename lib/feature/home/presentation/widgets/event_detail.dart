@@ -5,6 +5,7 @@ import 'package:event_radar2/feature/components/utils/url_launcher_utils.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_transaction/event_transaction_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/screen/payment_screen.dart';
+import 'package:event_radar2/navigation_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -49,6 +50,7 @@ class _EventDetailState extends State<EventDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
@@ -258,7 +260,7 @@ class _EventDetailState extends State<EventDetail> {
                           height: 10,
                         ),
                         SizedBox(
-                          height: 400.h,
+                          height: 600.h,
                           child: ListView.builder(
                               itemCount: state.eventDetail.tickets.length,
                               physics: const NeverScrollableScrollPhysics(),
@@ -307,6 +309,7 @@ class _EventDetailState extends State<EventDetail> {
       bloc: eventTransaction,
       listener: (context, state) async {
         if (state is EventTransactionLoading) {
+          ticketId = state.ticketId;
           BottomSheetUtils.showLoadingDialog(context);
         }
 
@@ -330,22 +333,21 @@ class _EventDetailState extends State<EventDetail> {
                 image: "asset/img/event/success.jpg",
                 completion: "Back To Event List",
                 onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  Navigator.pop(context);
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => NavigationPage()),
+                    (route) => false,
+                  );
                 },
                 context: context);
           } else {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                          create: (context) =>
-                              GetIt.instance<EventTransactionCubit>(),
-                          child: PaymentScreen(
-                            url: state.message,
-                            ticketId: ticketId,
-                          ),
+                    builder: (context) => PaymentScreen(
+                          cubit: eventTransaction,
+                          url: state.message,
+                          ticketId: ticketId,
                         )));
           }
           // BottomSheetUtils.displayResultBottomSheet(
@@ -366,7 +368,9 @@ class _EventDetailState extends State<EventDetail> {
 
             BottomSheetUtils.displayResultBottomSheet(
               title: "Failed to Buy Event",
-              description: state.error,
+              description: state.error.contains("-")
+                  ? state.error.split("-").last.trim()
+                  : state.error,
               image: "asset/img/event/failed.jpg",
               completion: "Back",
               onTap: () {
@@ -699,7 +703,7 @@ class _EventDetailState extends State<EventDetail> {
           style: TextStyle(
               fontFamily: 'Poppins',
               fontWeight: FontWeight.w600,
-              fontSize: 10.sp,
+              fontSize: 9.sp,
               color: const Color(0xFF888888)),
         ),
       ),

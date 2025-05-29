@@ -134,7 +134,10 @@ class _EventBoxState extends State<EventBox> {
                       isFavourite = false;
                     });
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.error)),
+                      SnackBar(
+                          content: Text(state.error.contains("-")
+                              ? state.error.split("-").last.trim()
+                              : state.error)),
                     );
                   }
                 },

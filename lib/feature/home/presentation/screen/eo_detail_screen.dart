@@ -1,4 +1,5 @@
 import 'package:event_radar2/feature/components/utils/empty_data_utils.dart';
+import 'package:event_radar2/feature/components/utils/url_launcher_utils.dart';
 import 'package:event_radar2/feature/home/data/list_eo_model.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/creator_list/creator_list_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/event_box_eo.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shimmer/shimmer.dart';
 
 class EoDetailScreen extends StatefulWidget {
   final ListEoModel eoModel;
@@ -77,18 +79,38 @@ class _EoDetailScreenState extends State<EoDetailScreen> {
               mainAxisSpacing: 10.0,
               childAspectRatio: 3 / 5,
             ),
-
             itemCount: state.events.length,
             itemBuilder: (context, index) {
               return EventBoxEo(event: state.events[index]);
             },
             shrinkWrap: true,
-            physics:
-                const NeverScrollableScrollPhysics(), // opsional, jika dalam Column
+            physics: const NeverScrollableScrollPhysics(),
           );
         }
-        return const Center(
-          child: CircularProgressIndicator(),
+        return GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10.0,
+            mainAxisSpacing: 10.0,
+            childAspectRatio: 3 / 3,
+          ),
+
+          itemCount: 4,
+          itemBuilder: (context, index) {
+            return Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+              ),
+            );
+          },
+          shrinkWrap: true,
+          physics:
+              const NeverScrollableScrollPhysics(), // opsional, jika dalam Column
         );
       },
     );
@@ -125,10 +147,17 @@ class _EoDetailScreenState extends State<EoDetailScreen> {
                   backgroundImage: NetworkImage(widget.eoImage),
                   radius: 32.r,
                 ),
-                Image.asset(
-                  'asset/img/event_organizer/whatsapp.png',
-                  width: 30.w,
-                  height: 30.h,
+                GestureDetector(
+                  onTap: () {
+                    UrlLauncherUtils.launchURL(
+                        actionType: 'whatsapp',
+                        value: widget.eoModel.phoneNumber);
+                  },
+                  child: Image.asset(
+                    'asset/img/event_organizer/whatsapp.png',
+                    width: 30.w,
+                    height: 30.h,
+                  ),
                 )
               ],
             ),

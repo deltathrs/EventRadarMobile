@@ -63,7 +63,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       CircleAvatar(
                         radius: 30.r,
                         backgroundImage: NetworkImage(
-                            "$baseUrlImage${state.profile.profile}"),
+                          state.profile.profileGoogle.isNotEmpty
+                              ? state.profile.profileGoogle
+                              : "$baseUrlImage${state.profile.profile}",
+                        ),
                       ),
                       SizedBox(
                         width: 8.w,

@@ -9,9 +9,14 @@ import 'package:lottie/lottie.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PaymentScreen extends StatefulWidget {
+  final EventTransactionCubit cubit;
   final String url;
   final String ticketId;
-  const PaymentScreen({Key? key, required this.url, required this.ticketId})
+  const PaymentScreen(
+      {Key? key,
+      required this.cubit,
+      required this.url,
+      required this.ticketId})
       : super(key: key);
 
   @override
@@ -48,6 +53,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           ),
         ),
         body: BlocListener<EventTransactionCubit, EventTransactionState>(
+          bloc: widget.cubit,
           listener: (context, state) {
             if (state is EventTransactionLoading) {
               BottomSheetUtils.showLoadingDialog(context);
@@ -63,9 +69,28 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     image: "asset/img/event/success.jpg",
                     completion: "Go To Event List",
                     onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                      // Navigator.pop(context);
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NavigationPage()),
+                        (route) => false,
+                      );
+                    },
+                    context: context);
+              } else if (state.message.contains('already have this ticket')) {
+                BottomSheetUtils.displayResultBottomSheet(
+                    title: "Payment Success",
+                    description:
+                        "Congratulations you have finished your transaction",
+                    image: "asset/img/event/success.jpg",
+                    completion: "Go To Event List",
+                    onTap: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NavigationPage()),
+                        (route) => false,
+                      );
                     },
                     context: context);
               } else {
@@ -76,6 +101,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     image: "asset/img/event/failed.jpg",
                     completion: "Try Again",
                     onTap: () {
+                      Navigator.pop(context);
                       Navigator.pop(context);
                       UrlLauncherUtils.launchURL(
                           actionType: 'browser', value: widget.url);
@@ -88,10 +114,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
               Navigator.pop(context);
               BottomSheetUtils.displayResultBottomSheet(
                   title: "Payment Failed",
-                  description: state.error,
+                  description: state.error.contains("-")
+                      ? state.error.split("-").last.trim()
+                      : state.error,
                   image: "asset/img/event/failed.jpg",
                   completion: "Try Again",
                   onTap: () {
+                    Navigator.pop(context);
                     Navigator.pop(context);
                     UrlLauncherUtils.launchURL(
                         actionType: 'browser', value: widget.url);
@@ -107,9 +136,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   alignment: Alignment.center),
               GestureDetector(
                 onTap: () {
-                  context
-                      .read<EventTransactionCubit>()
-                      .buyEvent(widget.ticketId);
+                  widget.cubit.buyEvent(widget.ticketId);
                 },
                 child: Container(
                   width: 300.w,

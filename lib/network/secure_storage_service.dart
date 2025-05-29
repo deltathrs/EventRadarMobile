@@ -8,6 +8,10 @@ class SecureStorageService {
     await _secureStorage.write(key: 'session_token', value: token);
   }
 
+  Future<void> storeSessionExp(String sessionExp) async {
+    await _secureStorage.write(key: "session_exp", value: sessionExp);
+  }
+
   Future<void> storeFCMToken(String token) async {
     await _secureStorage.write(key: 'fcm_token', value: token);
   }
@@ -39,6 +43,17 @@ class SecureStorageService {
 
   Future<String?> getFCMToken() async {
     return await _secureStorage.read(key: 'fcm_token');
+  }
+
+  Future<DateTime?> getSessionExp() async {
+    String? sessionExp = await _secureStorage.read(key: "session_exp");
+
+    if (sessionExp != null) {
+      final int expTimestamp = int.tryParse(sessionExp) ?? 0;
+      return DateTime.fromMillisecondsSinceEpoch(expTimestamp * 1000);
+    }
+
+    return null;
   }
 
   Future<String?> getUserId() async {

@@ -106,7 +106,9 @@ class _EditProfileState extends State<EditProfile> {
                     Navigator.pop(context);
                     BottomSheetUtils.displayResultBottomSheet(
                         title: "Edit Profile Failed",
-                        description: state.error,
+                        description: state.error.contains("-")
+                            ? state.error.split("-").last.trim()
+                            : state.error,
                         image: "asset/img/event/failed.jpg",
                         completion: "Try Again",
                         onTap: () {
@@ -131,7 +133,9 @@ class _EditProfileState extends State<EditProfile> {
                     Navigator.pop(context);
                     BottomSheetUtils.displayResultBottomSheet(
                         title: "Edit Profile Failed",
-                        description: state.error,
+                        description: state.error.contains("-")
+                            ? state.error.split("-").last.trim()
+                            : state.error,
                         image: "asset/img/event/failed.jpg",
                         completion: "Try Again",
                         onTap: () {
@@ -171,7 +175,9 @@ class _EditProfileState extends State<EditProfile> {
                     Navigator.pop(context);
                     BottomSheetUtils.displayResultBottomSheet(
                         title: "Failed to Register User",
-                        description: state.error,
+                        description: state.error.contains("-")
+                            ? state.error.split("-").last.trim()
+                            : state.error,
                         image: "asset/img/event/failed.jpg",
                         completion: "Try Again",
                         onTap: () {
@@ -210,7 +216,10 @@ class _EditProfileState extends State<EditProfile> {
                           children: [
                             CircleAvatar(
                               backgroundImage: NetworkImage(
-                                  "$baseUrlImage${state.profile.profile}"),
+                                state.profile.profileGoogle.isNotEmpty
+                                    ? state.profile.profileGoogle
+                                    : "$baseUrlImage${state.profile.profile}",
+                              ),
                               onBackgroundImageError: (_, __) {
                                 AssetImage(
                                     'assets/img/common/placeholder_avatar.jpeg');
@@ -282,7 +291,15 @@ class _EditProfileState extends State<EditProfile> {
                             DropdownMenuItem(
                                 value: 'Jakarta', child: Text('Jakarta')),
                             DropdownMenuItem(
-                                value: 'Jandung', child: Text('Bandung')),
+                                value: 'Bandung', child: Text('Bandung')),
+                            DropdownMenuItem(
+                                value: 'Surabaya', child: Text('Surabaya')),
+                            DropdownMenuItem(
+                                value: 'Medan', child: Text('Medan')),
+                            DropdownMenuItem(
+                                value: 'Semarang', child: Text('Semarang')),
+                            DropdownMenuItem(
+                                value: 'Yogyakarta', child: Text('Yogyakarta')),
                           ],
                         ),
 

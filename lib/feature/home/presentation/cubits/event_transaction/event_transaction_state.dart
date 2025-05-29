@@ -5,7 +5,11 @@ sealed class EventTransactionState {}
 
 final class EventTransactionInitial extends EventTransactionState {}
 
-final class EventTransactionLoading extends EventTransactionState {}
+final class EventTransactionLoading extends EventTransactionState {
+  final String ticketId;
+
+  EventTransactionLoading({required this.ticketId});
+}
 
 final class EventTransactionLoaded extends EventTransactionState {
   final String message;
