@@ -112,6 +112,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
             if (state is EventTransactionFailed) {
               Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pop(context);
+
               BottomSheetUtils.displayResultBottomSheet(
                   title: "Payment Failed",
                   description: state.error.contains("-")
@@ -121,7 +124,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   completion: "Try Again",
                   onTap: () {
                     Navigator.pop(context);
-                    Navigator.pop(context);
+
                     UrlLauncherUtils.launchURL(
                         actionType: 'browser', value: widget.url);
                   },

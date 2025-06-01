@@ -1,7 +1,5 @@
 import 'package:event_radar2/feature/authentication/presentation/cubits/cubit/auth_cubit.dart';
-import 'package:event_radar2/feature/authentication/presentation/screen/login_screen.dart';
 import 'package:event_radar2/feature/components/utils/bottom_sheet_utils.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -309,30 +307,30 @@ class _RegisterPageState extends State<RegisterPage> {
                       ],
                     ),
                   ),
-                  // const SizedBox(
-                  //   height: 15,
-                  // ),
-                  // Row(
-                  //   children: [
-                  //     Switch(
-                  //         value: isEventOrganizer,
-                  //         onChanged: (value) {
-                  //           setState(() {
-                  //             isEventOrganizer = !isEventOrganizer;
-                  //           });
-                  //         }),
-                  //     SizedBox(
-                  //       width: 5,
-                  //     ),
-                  //     Text(
-                  //       'Register as Event Organizer',
-                  //       style: GoogleFonts.poppins(
-                  //           fontSize: 14.sp,
-                  //           fontWeight: FontWeight.w500,
-                  //           color: Colors.black),
-                  //     )
-                  //   ],
-                  // ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    children: [
+                      Switch(
+                          value: isEventOrganizer,
+                          onChanged: (value) {
+                            setState(() {
+                              isEventOrganizer = !isEventOrganizer;
+                            });
+                          }),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        'Register as Event Organizer',
+                        style: GoogleFonts.poppins(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black),
+                      )
+                    ],
+                  ),
                   const SizedBox(
                     height: 15,
                   ),

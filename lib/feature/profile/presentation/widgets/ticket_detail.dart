@@ -115,7 +115,7 @@ class _TicketDetailState extends State<TicketDetail> {
                       ),
                     ),
                     SizedBox(
-                      height: 316.h,
+                      height: 356.h,
                       width: double.infinity,
                       child: Stack(
                         children: [
@@ -126,7 +126,6 @@ class _TicketDetailState extends State<TicketDetail> {
                               child: Center(
                             child: Container(
                               width: 350.w,
-                              height: 300.h,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20.r),
                                   color: Colors.white),
@@ -135,18 +134,15 @@ class _TicketDetailState extends State<TicketDetail> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      children: [
-                                        const SizedBox(width: 5),
-                                        ...widget.ticketDetailModel.categories
-                                            .map((category) => Row(
-                                                  children: [
-                                                    CategoryEvent(category),
-                                                    const SizedBox(width: 5),
-                                                  ],
-                                                ))
-                                            .toList(),
-                                      ],
+                                    Wrap(
+                                      spacing: 5, // jarak horizontal antar item
+                                      runSpacing:
+                                          5, // jarak vertikal jika ter-wrap ke baris baru
+                                      children: widget
+                                          .ticketDetailModel.categories
+                                          .map<Widget>((category) =>
+                                              CategoryEvent(category))
+                                          .toList(),
                                     ),
                                     const SizedBox(
                                       height: 20,

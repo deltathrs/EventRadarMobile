@@ -38,7 +38,7 @@ class CustomLogoWidget extends StatelessWidget {
               text,
               style: TextStyle(
                 fontFamily: 'Poppins',
-                fontSize: 12.sp,
+                fontSize: 11.sp,
                 fontWeight: FontWeight.w500,
                 color: const Color(0xFF4E4E55),
               ),

@@ -1,6 +1,11 @@
+import 'package:event_radar2/feature/components/utils/date_textfield_utils.dart';
+import 'package:event_radar2/feature/components/utils/input_dropdown_utils.dart';
 import 'package:event_radar2/feature/components/utils/input_multiple_utils.dart';
 import 'package:event_radar2/feature/components/utils/input_textfield_utils.dart';
+import 'package:event_radar2/feature/components/utils/input_time_field_utils.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+
 import 'package:flutter/material.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 
@@ -15,7 +20,13 @@ class EventDetailWidget extends StatefulWidget {
 
 class _EventDetailWidgetState extends State<EventDetailWidget> {
   final TextEditingController titleController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
   final categoryController = MultiSelectController<String>();
+  final TextEditingController locationController = TextEditingController();
+  final TextEditingController startTimeController = TextEditingController();
+  final TextEditingController endTimeController = TextEditingController();
+
+  String? selectedEventType;
   List<DropdownItem<String>> items = [];
 
   @override
@@ -55,6 +66,56 @@ class _EventDetailWidgetState extends State<EventDetailWidget> {
             label: 'Category',
             controller: categoryController,
             items: items,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          InputDropdownUtils(
+            label: 'Event Type',
+            hint: 'Online',
+            value: selectedEventType,
+            onChanged: (value) {
+              setState(() {
+                selectedEventType = value!;
+              });
+            },
+            items: [
+              DropdownMenuItem(value: 'Online', child: Text('Online')),
+              DropdownMenuItem(value: 'Offline', child: Text('Offline')),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          BuildDatePickerTextFieldBox(
+              label: 'Event Date',
+              hint: 'Input event date',
+              controller: dateController),
+          SizedBox(
+            height: 10,
+          ),
+          selectedEventType == 'Offline'
+              ? InputTextfieldUtils(
+                  label: "Location",
+                  hint: "Input your event location",
+                  isRequired: true,
+                  controller: locationController)
+              : Container(),
+          SizedBox(
+            height: 10,
+          ),
+          InputTimeFieldUtils(
+            label: "Start Time",
+            controller: startTimeController,
+            isRequired: true,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          InputTimeFieldUtils(
+            label: "End Time",
+            controller: endTimeController,
+            isRequired: true,
           ),
 
           // MultiDropdown<String>(

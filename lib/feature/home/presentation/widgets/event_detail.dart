@@ -322,8 +322,11 @@ class _EventDetailState extends State<EventDetail> {
                 image: "asset/img/event/failed.jpg",
                 completion: "Back",
                 onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => NavigationPage()),
+                    (route) => false,
+                  );
                 },
                 context: context);
           } else if (state.message.contains('purchased successfully')) {
@@ -374,8 +377,11 @@ class _EventDetailState extends State<EventDetail> {
               image: "asset/img/event/failed.jpg",
               completion: "Back",
               onTap: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => NavigationPage()),
+                  (route) => false,
+                );
               },
               context: context,
             );

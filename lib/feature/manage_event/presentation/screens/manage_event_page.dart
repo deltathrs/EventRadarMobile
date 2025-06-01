@@ -3,6 +3,7 @@ import 'package:event_radar2/feature/manage_event/presentation/cubits/handle_con
 import 'package:event_radar2/feature/manage_event/presentation/cubits/manage_event/manage_event_cubit.dart';
 import 'package:event_radar2/feature/manage_event/presentation/widgets/content_visual_widget.dart';
 import 'package:event_radar2/feature/manage_event/presentation/widgets/event_detail_widget.dart';
+import 'package:event_radar2/feature/manage_event/presentation/widgets/manage_event_form_button_widget.dart';
 import 'package:event_radar2/feature/manage_event/presentation/widgets/manage_event_step_indicator_widget.dart';
 import 'package:event_radar2/feature/manage_event/presentation/widgets/ticket_setup_widget.dart';
 import 'package:flutter/material.dart';
@@ -149,6 +150,10 @@ class _ManageEventPageState extends State<ManageEventPage> {
                                       return TicketSetupWidget();
                                   }
                                 })),
+                      ),
+                      ManageEventFormButtonWidget(
+                        cubit: _handleContentEventCubit,
+                        manageEventCubit: _cubit,
                       ),
                     ],
                   ),

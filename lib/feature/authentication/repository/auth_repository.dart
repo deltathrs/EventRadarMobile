@@ -152,12 +152,12 @@ class AuthRepository {
       if (response.statusCode == 200) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         Map<String, dynamic> decodedToken =
-            JwtDecoder.decode(response.data['data']['token']);
-        secureStorageService
-            .storeSessionToken(response.data['data']['token'] ?? "");
+            JwtDecoder.decode(response.data['token']);
+        secureStorageService.storeSessionToken(response.data['token'] ?? "");
 
         await secureStorageService.storeUserRole(decodedToken['role']);
-        await secureStorageService.storeSessionExp(decodedToken['exp']);
+        await secureStorageService
+            .storeSessionExp(decodedToken['exp'].toString());
 
         await prefs.setBool('isLoggedIn', true);
 

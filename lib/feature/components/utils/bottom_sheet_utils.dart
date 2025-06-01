@@ -6,14 +6,10 @@ class BottomSheetUtils {
   static Future<void> showLoadingDialog(BuildContext context) {
     return showDialog(
       context: context,
-      barrierDismissible:
-          false, 
+      barrierDismissible: false,
       builder: (context) {
-        return PopScope(
-          canPop: false,
-          child: const Center(
-            child: CircularProgressIndicator(),
-          ),
+        return const Center(
+          child: CircularProgressIndicator(),
         );
       },
     );
