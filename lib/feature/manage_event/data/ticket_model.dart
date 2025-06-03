@@ -5,5 +5,6 @@ class TicketInputModel {
   TextEditingController priceController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
   TextEditingController dateController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 }

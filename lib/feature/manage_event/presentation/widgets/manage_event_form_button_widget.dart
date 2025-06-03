@@ -165,9 +165,9 @@ class _ManageEventFormButtonWidgetState
                                 });
 
                                 await Future.delayed(Duration(seconds: 2));
-                                print(
-                                    widget.contentVisualInputModel.controller);
-                                print(widget.eventDetailInputModel);
+                                // print(
+                                //     widget.contentVisualInputModel.controller);
+                                // print(widget.eventDetailInputModel);
 
                                 setState(() {
                                   isLoading = false;

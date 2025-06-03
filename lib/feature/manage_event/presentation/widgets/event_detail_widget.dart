@@ -151,6 +151,11 @@ class EventDetailWidgetState extends State<EventDetailWidget> {
             ),
             InputTimeFieldUtils(
               label: "Start Time",
+              eventDate:
+                  widget.eventDetailInputModel.dateController.text.isNotEmpty
+                      ? DateTime.parse(
+                          widget.eventDetailInputModel.dateController.text)
+                      : DateTime(0),
               controller: widget.eventDetailInputModel.startTimeController,
               isRequired: true,
               validator: (value) => _validateRequired(value, 'Start Time'),
@@ -160,6 +165,11 @@ class EventDetailWidgetState extends State<EventDetailWidget> {
             ),
             InputTimeFieldUtils(
               label: "End Time",
+              eventDate:
+                  widget.eventDetailInputModel.dateController.text.isNotEmpty
+                      ? DateTime.parse(
+                          widget.eventDetailInputModel.dateController.text)
+                      : DateTime(0),
               controller: widget.eventDetailInputModel.endTimeController,
               isRequired: true,
               validator: (value) => _validateRequired(value, 'End Time'),

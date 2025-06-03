@@ -6,12 +6,14 @@ class InputTimeFieldUtils extends StatelessWidget {
   final String label;
   final bool isRequired;
   final bool isReadOnly;
+  final DateTime eventDate;
   final TextEditingController controller;
   final FormFieldValidator<String>? validator;
 
   const InputTimeFieldUtils({
     super.key,
     required this.label,
+    required this.eventDate,
     this.isRequired = false,
     this.isReadOnly = false,
     required this.controller,
@@ -19,9 +21,18 @@ class InputTimeFieldUtils extends StatelessWidget {
   });
 
   Future<void> _selectTime(BuildContext context) async {
+    if (eventDate == DateTime(0)) {
+      // Show dialog/snackbar if date is invalid
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select the event date first.")),
+      );
+      return;
+    }
+    final TimeOfDay initialTime = TimeOfDay.fromDateTime(eventDate);
+
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialTime: initialTime,
     );
     if (picked != null) {
       final formattedTime = picked.format(context);

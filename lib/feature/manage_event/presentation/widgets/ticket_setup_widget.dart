@@ -87,6 +87,15 @@ class TicketSetupWidgetState extends State<TicketSetupWidget> {
                           ),
                           SizedBox(height: 10),
                           InputTextfieldUtils(
+                            label: 'Ticket Description',
+                            hint: 'Input ticket description',
+                            controller: ticket.descriptionController,
+                            validator: (val) => val == null || val.isEmpty
+                                ? 'Ticket description is required'
+                                : null,
+                          ),
+                          SizedBox(height: 10),
+                          InputTextfieldUtils(
                             label: 'Ticket Price',
                             hint: 'Input ticket price',
                             isPriceFormat: true,
