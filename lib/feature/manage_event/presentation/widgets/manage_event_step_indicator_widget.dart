@@ -97,7 +97,7 @@ class _ManageEventStepIndicatorWidgetState
             customStep: ClipRRect(
               borderRadius: BorderRadius.circular(15),
               child: Opacity(
-                opacity: pageIndex >= 0 ? 1 : 0.3,
+                opacity: pageIndex >= 1 ? 1 : 0.3,
                 child: IconButton(
                   padding: EdgeInsets.zero,
                   icon: Image.asset(
@@ -126,14 +126,43 @@ class _ManageEventStepIndicatorWidgetState
             customStep: ClipRRect(
               borderRadius: BorderRadius.circular(15),
               child: Opacity(
-                opacity: pageIndex >= 0 ? 1 : 0.3,
+                opacity: pageIndex >= 2 ? 1 : 0.3,
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  icon: Image.asset(
+                      "asset/img/event_organizer/content_visual_icon.png",
+                      width: 20.w,
+                      height: 20.h,
+                      color: pageIndex >= 2
+                          ? Color.fromARGB(255, 21, 112, 239)
+                          : Colors.grey),
+                  onPressed: () {},
+                ),
+              ),
+            ),
+            customTitle: Text(
+              'Description',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                  fontSize: 12.sp,
+                  color: pageIndex >= 2
+                      ? Color.fromARGB(255, 21, 112, 239)
+                      : Colors.grey,
+                  fontWeight: FontWeight.w500),
+            ),
+          ),
+          EasyStep(
+            customStep: ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Opacity(
+                opacity: pageIndex >= 3 ? 1 : 0.3,
                 child: IconButton(
                   padding: EdgeInsets.zero,
                   icon: Image.asset(
                     "asset/img/event_organizer/ticket_icon.png",
                     width: 20.w,
                     height: 20.h,
-                    color: pageIndex >= 2
+                    color: pageIndex >= 3
                         ? Color.fromARGB(255, 21, 112, 239)
                         : Colors.grey,
                   ),
@@ -146,7 +175,7 @@ class _ManageEventStepIndicatorWidgetState
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                   fontSize: 12.sp,
-                  color: pageIndex >= 2
+                  color: pageIndex >= 3
                       ? Color.fromARGB(255, 21, 112, 239)
                       : Colors.grey,
                   fontWeight: FontWeight.w500),

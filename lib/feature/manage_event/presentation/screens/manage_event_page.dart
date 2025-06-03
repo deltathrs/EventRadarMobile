@@ -1,11 +1,16 @@
 import 'package:event_radar2/feature/components/utils/bottom_sheet_utils.dart';
+import 'package:event_radar2/feature/manage_event/data/content_visual_input_model.dart';
+import 'package:event_radar2/feature/manage_event/data/event_detail_input_model.dart';
+import 'package:event_radar2/feature/manage_event/data/ticket_model.dart';
 import 'package:event_radar2/feature/manage_event/presentation/cubits/handle_content_event/handle_content_event_cubit.dart';
 import 'package:event_radar2/feature/manage_event/presentation/cubits/manage_event/manage_event_cubit.dart';
 import 'package:event_radar2/feature/manage_event/presentation/widgets/content_visual_widget.dart';
+import 'package:event_radar2/feature/manage_event/presentation/widgets/description_widget.dart';
 import 'package:event_radar2/feature/manage_event/presentation/widgets/event_detail_widget.dart';
 import 'package:event_radar2/feature/manage_event/presentation/widgets/manage_event_form_button_widget.dart';
 import 'package:event_radar2/feature/manage_event/presentation/widgets/manage_event_step_indicator_widget.dart';
 import 'package:event_radar2/feature/manage_event/presentation/widgets/ticket_setup_widget.dart';
+import 'package:event_radar2/feature/schedule/data/event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -23,8 +28,20 @@ class _ManageEventPageState extends State<ManageEventPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final HandleContentEventCubit _handleContentEventCubit =
       HandleContentEventCubit();
-  final ManageEventCubit _cubit =
-      GetIt.instance<ManageEventCubit>(); // Initialize the ManageEventCubit
+
+  List<TicketInputModel> ticketList = [];
+
+  final GlobalKey<EventDetailWidgetState> eventDetailKey =
+      GlobalKey<EventDetailWidgetState>();
+
+  final GlobalKey<ContentVisualWidgetState> contentVisualKey =
+      GlobalKey<ContentVisualWidgetState>();
+
+  final GlobalKey<TicketSetupWidgetState> ticketSetupKey = GlobalKey();
+
+  final ManageEventCubit _cubit = GetIt.instance<ManageEventCubit>();
+  late EventDetailInputModel eventDetailInputModel;
+  late ContentVisualInputModel contentVisualInputModel;
   late PageController _pageController;
   List<String> items = [];
   bool initializeAllPage = true;
@@ -34,10 +51,13 @@ class _ManageEventPageState extends State<ManageEventPage> {
     // TODO: implement initState
     super.initState();
     _pageController = PageController(initialPage: 0);
+    eventDetailInputModel = EventDetailInputModel();
+    contentVisualInputModel = ContentVisualInputModel();
     init();
   }
 
   void init() async {
+    debugPrint("initializeAllPage: $initializeAllPage");
     await _cubit.getEventCategory();
     await Future.delayed(Duration(milliseconds: 500));
 
@@ -47,6 +67,8 @@ class _ManageEventPageState extends State<ManageEventPage> {
       await _pageController.animateToPage(1,
           duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
       await _pageController.animateToPage(2,
+          duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
+      await _pageController.animateToPage(3,
           duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
       await _pageController.animateToPage(0,
           duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
@@ -101,6 +123,7 @@ class _ManageEventPageState extends State<ManageEventPage> {
           }
           return Scaffold(
             key: _scaffoldKey,
+            resizeToAvoidBottomInset: true,
             backgroundColor: Colors.white,
             appBar: AppBar(
               backgroundColor: Colors.white,
@@ -137,23 +160,46 @@ class _ManageEventPageState extends State<ManageEventPage> {
                             child: PageView.builder(
                                 controller: _pageController,
                                 physics: const NeverScrollableScrollPhysics(),
-                                itemCount: 3,
+                                itemCount: 4,
                                 itemBuilder: (context, index) {
                                   switch (index) {
                                     case 0:
                                       return EventDetailWidget(
+                                        key: eventDetailKey,
+                                        eventDetailInputModel:
+                                            eventDetailInputModel,
                                         categories: items,
                                       );
                                     case 1:
-                                      return ContentVisualWidget();
+                                      return ContentVisualWidget(
+                                        key: contentVisualKey,
+                                        contentVisualInputModel:
+                                            contentVisualInputModel,
+                                      );
                                     case 2:
-                                      return TicketSetupWidget();
+                                      return DescriptionWidget(
+                                        contentVisualInputModel:
+                                            contentVisualInputModel,
+                                      );
+                                    case 3:
+                                      return TicketSetupWidget(
+                                        key: ticketSetupKey,
+                                        onTicketListChanged: (tickets) {
+                                          ticketList = tickets;
+                                        },
+                                      );
                                   }
                                 })),
                       ),
                       ManageEventFormButtonWidget(
                         cubit: _handleContentEventCubit,
                         manageEventCubit: _cubit,
+                        eventDetailKey: eventDetailKey,
+                        tickets: ticketList,
+                        eventDetailInputModel: eventDetailInputModel,
+                        contentVisualInputModel: contentVisualInputModel,
+                        ticketSetupKey: ticketSetupKey,
+                        contentVisualKey: contentVisualKey,
                       ),
                     ],
                   ),

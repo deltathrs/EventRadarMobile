@@ -1,14 +1,36 @@
+import 'package:event_radar2/feature/manage_event/data/content_visual_input_model.dart';
+import 'package:event_radar2/feature/manage_event/data/event_detail_input_model.dart';
+import 'package:event_radar2/feature/manage_event/data/ticket_model.dart';
 import 'package:event_radar2/feature/manage_event/presentation/cubits/handle_content_event/handle_content_event_cubit.dart';
 import 'package:event_radar2/feature/manage_event/presentation/cubits/manage_event/manage_event_cubit.dart';
+import 'package:event_radar2/feature/manage_event/presentation/widgets/content_visual_widget.dart';
+import 'package:event_radar2/feature/manage_event/presentation/widgets/event_detail_widget.dart';
+import 'package:event_radar2/feature/manage_event/presentation/widgets/ticket_setup_widget.dart';
 import 'package:flutter/material.dart';
+// import 'package:event_radar2/feature/manage_event/presentation/widgets/event_detail_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ManageEventFormButtonWidget extends StatefulWidget {
   final HandleContentEventCubit cubit;
   final ManageEventCubit manageEventCubit;
+  final GlobalKey<EventDetailWidgetState> eventDetailKey;
+  final GlobalKey<ContentVisualWidgetState> contentVisualKey;
+  final GlobalKey<TicketSetupWidgetState> ticketSetupKey;
+  final List<TicketInputModel> tickets;
+  final EventDetailInputModel eventDetailInputModel;
+  final ContentVisualInputModel contentVisualInputModel;
+
   const ManageEventFormButtonWidget(
-      {Key? key, required this.cubit, required this.manageEventCubit})
+      {Key? key,
+      required this.cubit,
+      required this.manageEventCubit,
+      required this.eventDetailKey,
+      required this.contentVisualKey,
+      required this.ticketSetupKey,
+      required this.eventDetailInputModel,
+      required this.contentVisualInputModel,
+      required this.tickets})
       : super(key: key);
 
   @override
@@ -113,31 +135,69 @@ class _ManageEventFormButtonWidgetState
                           flex: 2,
                           child: GestureDetector(
                             onTap: () async {
-                              setState(() {
+                              if (pageIndex == 0) {
+                                final formState =
+                                    widget.eventDetailKey.currentState;
+                                if (formState == null ||
+                                    !formState.validateForm()) {
+                                  return;
+                                } else {
+                                  widget.cubit.nextPage();
+                                }
+                              } else if (pageIndex == 1) {
+                                final formState =
+                                    widget.contentVisualKey.currentState;
+                                if (formState == null ||
+                                    !formState.validateForm()) {
+                                  return;
+                                } else {
+                                  widget.cubit.nextPage();
+                                }
+                              } else if (pageIndex == 3) {
+                                bool allValid = widget
+                                        .ticketSetupKey.currentState
+                                        ?.validateAllForms() ??
+                                    false;
+                                if (!allValid) return;
+
+                                setState(() {
+                                  isLoading = true;
+                                });
+
+                                await Future.delayed(Duration(seconds: 2));
+                                print(
+                                    widget.contentVisualInputModel.controller);
+                                print(widget.eventDetailInputModel);
+
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              } else {
                                 widget.cubit.nextPage();
-                              });
+                              }
                             },
                             child: Container(
                               padding: EdgeInsets.all(10),
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                color:
-                                    pageIndex == 2 ? Colors.blue : Colors.white,
-                                border: pageIndex == 2
+                                color: pageIndex == 3
+                                    ? Color(0xFF231EAF)
+                                    : Colors.white,
+                                border: pageIndex == 3
                                     ? Border.all(color: Colors.transparent)
                                     : Border.all(
-                                        color: Colors.blue,
+                                        color: Color(0xFF231EAF),
                                         width: 0.5,
                                       ),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: isLoading == false
                                   ? Text(
-                                      pageIndex == 2 ? "Submit" : "Next",
+                                      pageIndex == 3 ? "Submit" : "Next",
                                       style: GoogleFonts.inter(
-                                        color: pageIndex == 2
+                                        color: pageIndex == 3
                                             ? Colors.white
-                                            : Color.fromARGB(255, 21, 112, 239),
+                                            : Color(0xFF231EAF),
                                         fontWeight: FontWeight.w600,
                                       ),
                                     )

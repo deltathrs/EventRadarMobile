@@ -14,7 +14,7 @@ class HandleContentEventCubit extends Cubit<HandleContentEventState> {
   }
 
   void nextPage() {
-    if (pageIndex < 3 - 1) {
+    if (pageIndex < 4 - 1) {
       emit(HandleContentEventPageUpdated(pageIndex: pageIndex + 1));
     }
   }

@@ -11,6 +11,8 @@ class BuildDatePickerTextFieldBox extends StatefulWidget {
   final String hint;
   final TextEditingController controller;
   final TextEditingController? time;
+  final String? Function(String?)? validator;
+
   final TextEditingController? location;
 
   final bool isEmpty;
@@ -24,6 +26,7 @@ class BuildDatePickerTextFieldBox extends StatefulWidget {
     this.isRequired = false,
     required this.controller,
     this.isEmpty = false,
+    this.validator,
   });
 
   @override
@@ -84,6 +87,7 @@ class _BuildDatePickerTextFieldBoxState
               }),
             );
           },
+          validator: widget.validator,
           style: GoogleFonts.poppins(
             fontSize: 15.sp,
             fontWeight: FontWeight.w400,

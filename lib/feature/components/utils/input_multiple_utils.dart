@@ -10,6 +10,7 @@ class InputMultiDropdownUtils extends StatelessWidget {
   final bool enabled;
   final MultiSelectController<String> controller;
   final List<DropdownItem<String>> items;
+  final String? Function(List<DropdownItem<String>>?)? validator;
   final void Function(List<String>)? onSelectionChange;
 
   const InputMultiDropdownUtils({
@@ -20,6 +21,7 @@ class InputMultiDropdownUtils extends StatelessWidget {
     this.enabled = true,
     this.isRequired = false,
     this.onSelectionChange,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -101,12 +103,7 @@ class InputMultiDropdownUtils extends StatelessWidget {
             selectedIcon: const Icon(Icons.check_box, color: Colors.blue),
             disabledIcon: Icon(Icons.lock, color: Colors.grey.shade300),
           ),
-          validator: (value) {
-            if (isRequired && (value == null || value.isEmpty)) {
-              return 'Please select at least one $label';
-            }
-            return null;
-          },
+          validator: validator,
           onSelectionChange: (selectedItems) {
             debugPrint("OnSelectionChange: $selectedItems");
           },
