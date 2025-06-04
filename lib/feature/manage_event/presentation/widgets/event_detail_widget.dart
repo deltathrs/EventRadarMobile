@@ -71,6 +71,10 @@ class EventDetailWidgetState extends State<EventDetailWidget> {
     widget.eventDetailInputModel.items = widget.categories
         .map((category) => DropdownItem(label: category, value: category))
         .toList();
+
+    widget.eventDetailInputModel.dateController.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -126,6 +130,19 @@ class EventDetailWidgetState extends State<EventDetailWidget> {
               isRequired: true,
               controller: widget.eventDetailInputModel.dateController,
               validator: (value) => _validateRequired(value, 'Event Date'),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            InputTextfieldUtils(
+              label: 'Max Participants',
+              hint: 'Input max participants',
+              isRequired: true,
+              keyboardType: TextInputType.number,
+              controller:
+                  widget.eventDetailInputModel.maxParticipantsController,
+              validator: (value) =>
+                  _validateRequired(value, 'Max Participants'),
             ),
             SizedBox(
               height: 10,

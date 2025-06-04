@@ -6,12 +6,14 @@ class EventDetailInputModel {
   final TextEditingController dateController = TextEditingController();
   final categoryController = MultiSelectController<String>();
   final TextEditingController locationController = TextEditingController();
+  final TextEditingController maxParticipantsController =
+      TextEditingController();
   final TextEditingController linkController = TextEditingController();
 
   final TextEditingController startTimeController = TextEditingController();
   final TextEditingController endTimeController = TextEditingController();
 
-   String? selectedEventType;
+  String? selectedEventType;
   // final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   List<DropdownItem<String>> items = [];
 }

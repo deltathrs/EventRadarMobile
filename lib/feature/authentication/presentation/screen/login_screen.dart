@@ -79,6 +79,10 @@ class _LoginPageState extends State<LoginPage> {
             );
           }
 
+          if (state is GoogleLoginFailed) {
+            Navigator.pop(context);
+          }
+
           if (state is LoginSuccess) {
             Navigator.pushAndRemoveUntil(
               context,

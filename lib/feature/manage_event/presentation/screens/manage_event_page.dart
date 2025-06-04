@@ -29,7 +29,7 @@ class _ManageEventPageState extends State<ManageEventPage> {
   final HandleContentEventCubit _handleContentEventCubit =
       HandleContentEventCubit();
 
-  List<TicketInputModel> ticketList = [];
+  late List<TicketInputModel> ticketList;
 
   final GlobalKey<EventDetailWidgetState> eventDetailKey =
       GlobalKey<EventDetailWidgetState>();
@@ -53,6 +53,7 @@ class _ManageEventPageState extends State<ManageEventPage> {
     _pageController = PageController(initialPage: 0);
     eventDetailInputModel = EventDetailInputModel();
     contentVisualInputModel = ContentVisualInputModel();
+    ticketList = List<TicketInputModel>.empty(growable: true);
     init();
   }
 
@@ -75,8 +76,8 @@ class _ManageEventPageState extends State<ManageEventPage> {
 
       initializeAllPage = false;
       debugPrint("initializeAllPage: $initializeAllPage");
-      setState(() {});
     });
+    setState(() {});
   }
 
   @override

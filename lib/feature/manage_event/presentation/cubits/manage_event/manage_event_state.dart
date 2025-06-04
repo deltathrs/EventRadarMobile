@@ -20,3 +20,17 @@ final class ManageEventError extends ManageEventState {
 
   ManageEventError({required this.message});
 }
+
+final class SaveEventLoading extends ManageEventState {}
+
+final class SaveEventSuccess extends ManageEventState {
+  final String message;
+
+  SaveEventSuccess({required this.message});
+}
+
+final class SaveEventError extends ManageEventState {
+  final String error;
+
+  SaveEventError({required this.error});
+}

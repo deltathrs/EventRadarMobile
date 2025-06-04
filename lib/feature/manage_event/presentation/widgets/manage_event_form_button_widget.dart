@@ -1,3 +1,4 @@
+import 'package:event_radar2/feature/components/utils/bottom_sheet_utils.dart';
 import 'package:event_radar2/feature/manage_event/data/content_visual_input_model.dart';
 import 'package:event_radar2/feature/manage_event/data/event_detail_input_model.dart';
 import 'package:event_radar2/feature/manage_event/data/ticket_model.dart';
@@ -57,7 +58,43 @@ class _ManageEventFormButtonWidgetState
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ManageEventCubit, ManageEventState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is SaveEventLoading) {
+          setState(() {
+            isLoading = true;
+          });
+        }
+        if (state is SaveEventSuccess) {
+          setState(() {
+            isLoading = false;
+          });
+          BottomSheetUtils.displayResultBottomSheet(
+              title: 'Successfully Create Event',
+              description: state.message,
+              image: 'asset/img/event/success.jpg',
+              completion: 'Back to My Events',
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              context: context);
+        }
+
+        if (state is SaveEventError) {
+          setState(() {
+            isLoading = false;
+          });
+          BottomSheetUtils.displayResultBottomSheet(
+              title: 'Create Event Error',
+              description: state.error,
+              image: 'asset/img/event/failed.jpg',
+              completion: 'Try Again',
+              onTap: () {
+                Navigator.pop(context);
+              },
+              context: context);
+        }
+      },
       builder: (context, state) {
         return Container(
           child: BlocListener<HandleContentEventCubit, HandleContentEventState>(
@@ -160,18 +197,11 @@ class _ManageEventFormButtonWidgetState
                                     false;
                                 if (!allValid) return;
 
-                                setState(() {
-                                  isLoading = true;
-                                });
-
-                                await Future.delayed(Duration(seconds: 2));
-                                // print(
-                                //     widget.contentVisualInputModel.controller);
-                                // print(widget.eventDetailInputModel);
-
-                                setState(() {
-                                  isLoading = false;
-                                });
+                                context.read<ManageEventCubit>().createEvent(
+                                      widget.eventDetailInputModel,
+                                      widget.contentVisualInputModel,
+                                      widget.tickets,
+                                    );
                               } else {
                                 widget.cubit.nextPage();
                               }
