@@ -5,7 +5,6 @@ import 'package:event_radar2/feature/components/utils/input_textfield_utils.dart
 import 'package:event_radar2/feature/components/utils/input_time_field_utils.dart';
 import 'package:event_radar2/feature/manage_event/data/event_detail_input_model.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import 'package:flutter/material.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
@@ -13,9 +12,11 @@ import 'package:multi_dropdown/multi_dropdown.dart';
 class EventDetailWidget extends StatefulWidget {
   final List<String> categories;
   EventDetailInputModel eventDetailInputModel;
-  EventDetailWidget(
-      {Key? key, required this.categories, required this.eventDetailInputModel})
-      : super(key: key);
+  EventDetailWidget({
+    Key? key,
+    required this.categories,
+    required this.eventDetailInputModel,
+  }) : super(key: key);
 
   @override
   EventDetailWidgetState createState() => EventDetailWidgetState();
@@ -85,6 +86,9 @@ class EventDetailWidgetState extends State<EventDetailWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SizedBox(
+              height: 10,
+            ),
             InputTextfieldUtils(
               label: "Event Title",
               hint: "Input your event title",

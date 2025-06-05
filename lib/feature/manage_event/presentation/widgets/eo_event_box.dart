@@ -41,7 +41,7 @@ class _EoEventBoxState extends State<EoEventBox> {
                   height: 100.h,
                   child: Image.network(
                     "$baseUrlImage${widget.eventData.eventThumbnail}",
-                    fit: BoxFit.fill,
+                    fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Image.asset(
                         'asset/img/event/placeholder.jpg',
@@ -58,12 +58,18 @@ class _EoEventBoxState extends State<EoEventBox> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      categoryEvent(widget.eventData.categories[0], false),
-                      SizedBox(
-                        width: 5.w,
+                      Row(
+                        children: [
+                          categoryEvent(widget.eventData.categories[0], false),
+                          SizedBox(
+                            width: 5.w,
+                          ),
+                          categoryEvent(widget.eventData.categories[1], true),
+                        ],
                       ),
-                      categoryEvent(widget.eventData.categories[1], true),
+                      Container(decoration: BoxDecoration(color: Colors.green,borderRadius: BorderRadius.circular(15.r)),child: Center(child: Text(widget.eventData.),),)
                     ],
                   ),
                   const SizedBox(

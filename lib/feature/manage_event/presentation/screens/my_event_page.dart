@@ -1,4 +1,5 @@
 import 'package:event_radar2/feature/components/utils/empty_data_utils.dart';
+import 'package:event_radar2/feature/home/presentation/widgets/event_detail.dart';
 import 'package:event_radar2/feature/manage_event/presentation/cubits/event/event_cubit.dart';
 import 'package:event_radar2/feature/manage_event/presentation/cubits/handle_content_event/handle_content_event_cubit.dart';
 import 'package:event_radar2/feature/manage_event/presentation/cubits/manage_event/manage_event_cubit.dart';
@@ -50,7 +51,18 @@ class _MyEventPageState extends State<MyEventPage> {
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: EdgeInsets.all(15.w),
-                          child: EoEventBox(eventData: state.myEvents[index]),
+                          child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => EventDetail(
+                                              eventId: state.myEvents[index].id,
+                                              isEo: true,
+                                            )));
+                              },
+                              child:
+                                  EoEventBox(eventData: state.myEvents[index])),
                         );
                       }));
             } else {
@@ -83,7 +95,9 @@ class _MyEventPageState extends State<MyEventPage> {
                                 GetIt.instance<ManageEventCubit>(),
                           ),
                         ],
-                        child: ManageEventPage(),
+                        child: ManageEventPage(
+                          isCreateNew: true,
+                        ),
                       )));
         },
         icon: Container(

@@ -6,8 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TicketSetupWidget extends StatefulWidget {
+  final List<TicketInputModel> ticketList;
   final void Function(List<TicketInputModel>) onTicketListChanged;
-  const TicketSetupWidget({Key? key, required this.onTicketListChanged})
+  const TicketSetupWidget(
+      {Key? key, required this.onTicketListChanged, required this.ticketList})
       : super(key: key);
 
   @override
@@ -15,13 +17,9 @@ class TicketSetupWidget extends StatefulWidget {
 }
 
 class TicketSetupWidgetState extends State<TicketSetupWidget> {
-  List<TicketInputModel> tickets = [
-    TicketInputModel(),
-  ];
-
   bool validateAllForms() {
     bool isValid = true;
-    for (var ticket in tickets) {
+    for (var ticket in widget.ticketList) {
       if (!(ticket.formKey.currentState?.validate() ?? false)) {
         isValid = false;
       }
@@ -31,23 +29,27 @@ class TicketSetupWidgetState extends State<TicketSetupWidget> {
 
   void _addTicket() {
     setState(() {
-      tickets.add(TicketInputModel());
+      widget.ticketList.add(TicketInputModel());
     });
-    widget.onTicketListChanged(tickets);
+    widget.onTicketListChanged(widget.ticketList);
   }
 
   void _removeTicket(int index) {
     setState(() {
-      tickets.removeAt(index);
+      widget.ticketList.removeAt(index);
     });
-    widget.onTicketListChanged(tickets);
+    widget.onTicketListChanged(widget.ticketList);
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    widget.onTicketListChanged(tickets);
+    if (widget.ticketList.isEmpty) {
+      widget.ticketList.add(TicketInputModel());
+    }
+
+    widget.onTicketListChanged(widget.ticketList);
   }
 
   @override
@@ -58,10 +60,10 @@ class TicketSetupWidgetState extends State<TicketSetupWidget> {
         children: [
           ListView.builder(
               shrinkWrap: true,
-              itemCount: tickets.length,
+              itemCount: widget.ticketList.length,
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
-                final ticket = tickets[index];
+                final ticket = widget.ticketList[index];
                 return Form(
                   key: ticket.formKey,
                   child: Card(
@@ -122,7 +124,7 @@ class TicketSetupWidgetState extends State<TicketSetupWidget> {
                                 ? 'Registration deadline is required'
                                 : null,
                           ),
-                          if (tickets.length > 1)
+                          if (widget.ticketList.length > 1)
                             Align(
                               alignment: Alignment.centerRight,
                               child: IconButton(

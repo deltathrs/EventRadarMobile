@@ -97,8 +97,8 @@ class ManageEventRepository {
       final modelData = {
         "name": eventDetail.titleController.text,
         "event_detail": content.controller.document.toPlainText(),
-        "event_datetime": eventDateTime.toUtc().toIso8601String(),
-        "event_end_datetime": eventEndDateTime.toUtc().toIso8601String(),
+        "datetime": eventDateTime.toUtc().toIso8601String(),
+        "end_datetime": eventEndDateTime.toUtc().toIso8601String(),
         "max_participants":
             int.parse(eventDetail.maxParticipantsController.text),
         "location": eventDetail.locationController.text,
@@ -109,6 +109,9 @@ class ManageEventRepository {
             .toList(),
         "tickets": ticketsJsonList,
       };
+
+      Logger().i('modelData: ${jsonEncode(modelData)}');
+      Logger().i('Thumbnail path: ${content.userImage?.path}');
 
       // FormData with JSON string
       final formData = FormData.fromMap({

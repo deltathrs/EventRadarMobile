@@ -47,11 +47,11 @@ class MyEventModel {
         datetime: DateTime.parse(json["datetime"]),
         endDatetime: DateTime.parse(json["end_datetime"]),
         maxParticipants: json["max_participants"],
-        location: json["location"],
+        location: json["location"] ?? "Online",
         isOnline: json["is_online"],
         organizerName: json["organizer_name"],
         organizerId: json["organizer_id"],
-        eventThumbnail: json["event_thumbnail"],
+        eventThumbnail: json["event_thumbnail"] ?? "",
         categories: List<String>.from(json["categories"].map((x) => x)),
       );
 

@@ -8,6 +8,7 @@ class EventDetailInputModel {
   final TextEditingController locationController = TextEditingController();
   final TextEditingController maxParticipantsController =
       TextEditingController();
+  String? selectedEventStatus;
   final TextEditingController linkController = TextEditingController();
 
   final TextEditingController startTimeController = TextEditingController();

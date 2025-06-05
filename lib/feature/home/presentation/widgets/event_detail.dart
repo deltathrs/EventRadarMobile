@@ -2,9 +2,13 @@ import 'dart:ui';
 
 import 'package:event_radar2/feature/components/utils/bottom_sheet_utils.dart';
 import 'package:event_radar2/feature/components/utils/url_launcher_utils.dart';
+import 'package:event_radar2/feature/home/data/event_detail_model.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_transaction/event_transaction_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/screen/payment_screen.dart';
+import 'package:event_radar2/feature/manage_event/presentation/cubits/handle_content_event/handle_content_event_cubit.dart';
+import 'package:event_radar2/feature/manage_event/presentation/cubits/manage_event/manage_event_cubit.dart';
+import 'package:event_radar2/feature/manage_event/presentation/screens/manage_event_page.dart';
 import 'package:event_radar2/navigation_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,12 +17,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/icons8.dart';
 import 'package:intl/intl.dart';
 import 'package:markdown_viewer/markdown_viewer.dart';
 
 class EventDetail extends StatefulWidget {
   final String eventId;
-  const EventDetail({super.key, required this.eventId});
+  final bool isEo;
+  const EventDetail({super.key, required this.eventId, this.isEo = false});
 
   @override
   State<EventDetail> createState() => _EventDetailState();
@@ -27,6 +33,7 @@ class EventDetail extends StatefulWidget {
 class _EventDetailState extends State<EventDetail> {
   final String baseUrlImage = dotenv.env['BASE_URL']!;
   final EventDetailCubit eventDetail = GetIt.instance<EventDetailCubit>();
+  late EventDetailModel eventDetailModel;
   final EventTransactionCubit eventTransaction =
       GetIt.instance<EventTransactionCubit>();
 
@@ -62,11 +69,64 @@ class _EventDetailState extends State<EventDetail> {
               fontWeight: FontWeight.w600),
         ),
       ),
+      bottomNavigationBar: widget.isEo
+          ? Container(
+              height: 90.h,
+              width: double.infinity,
+              color: Colors.white,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider(
+                                      create: (context) =>
+                                          HandleContentEventCubit(),
+                                    ),
+                                    BlocProvider(
+                                      create: (context) =>
+                                          GetIt.instance<ManageEventCubit>(),
+                                    ),
+                                  ],
+                                  child: ManageEventPage(
+                                    isCreateNew: false,
+                                    eventDetail: eventDetailModel,
+                                  ),
+                                )));
+                  },
+                  icon: Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xFF231EAF),
+                      borderRadius: BorderRadius.circular(15.r),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 10.h, horizontal: 15.w),
+                      child: Center(
+                        child: Text(
+                          'Edit Event',
+                          style: GoogleFonts.poppins(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )
+          : null,
       body: BlocConsumer<EventDetailCubit, EventDetailState>(
         bloc: eventDetail,
         listener: (context, state) {},
         builder: (context, state) {
           if (state is EventDetailLoaded) {
+            eventDetailModel = state.eventDetail;
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,32 +319,29 @@ class _EventDetailState extends State<EventDetail> {
                         const SizedBox(
                           height: 10,
                         ),
-                        SizedBox(
-                          height: 600.h,
-                          child: ListView.builder(
-                              itemCount: state.eventDetail.tickets.length,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: EdgeInsets.only(bottom: 10.h),
-                                  child: eventTicket(
-                                      state.eventDetail.tickets[index]
-                                                  .ticketType ==
-                                              "Standard Ticket"
-                                          ? const Color(0xFF505050)
-                                          : const Color(0xFF0022BA),
-                                      state.eventDetail.tickets[index]
-                                          .ticketType,
-                                      state.eventDetail.tickets[index].price,
-                                      state.eventDetail.tickets[index]
-                                          .ticketLimit,
-                                      formatDate(state.eventDetail
-                                          .tickets[index].registrationEnd
-                                          .toIso8601String()),
-                                      state.eventDetail.tickets[index].id),
-                                );
-                              }),
-                        ),
+                        ListView.builder(
+                            itemCount: state.eventDetail.tickets.length,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: EdgeInsets.only(bottom: 10.h),
+                                child: eventTicket(
+                                    state.eventDetail.tickets[index]
+                                                .ticketType ==
+                                            "Standard Ticket"
+                                        ? const Color(0xFF505050)
+                                        : const Color(0xFF0022BA),
+                                    state.eventDetail.tickets[index].ticketType,
+                                    state.eventDetail.tickets[index].price,
+                                    state
+                                        .eventDetail.tickets[index].ticketLimit,
+                                    formatDate(state.eventDetail.tickets[index]
+                                        .registrationEnd
+                                        .toIso8601String()),
+                                    state.eventDetail.tickets[index].id),
+                              );
+                            }),
                       ],
                     ),
                   )
@@ -392,7 +449,7 @@ class _EventDetailState extends State<EventDetail> {
         children: [
           Container(
             width: 344.w,
-            height: 155.h,
+            height: 170.h,
             decoration: BoxDecoration(
               border: Border.all(color: outline),
               borderRadius: BorderRadius.circular(15.r),
@@ -547,7 +604,7 @@ class _EventDetailState extends State<EventDetail> {
                                 )
                               ],
                             ),
-                      slot > 0
+                      !widget.isEo && slot > 0
                           ? IconButton(
                               onPressed: () {
                                 eventTransaction.buyEvent(ticketId);

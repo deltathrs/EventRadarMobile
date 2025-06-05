@@ -7,6 +7,7 @@ import 'package:event_radar2/feature/manage_event/presentation/cubits/manage_eve
 import 'package:event_radar2/feature/manage_event/presentation/widgets/content_visual_widget.dart';
 import 'package:event_radar2/feature/manage_event/presentation/widgets/event_detail_widget.dart';
 import 'package:event_radar2/feature/manage_event/presentation/widgets/ticket_setup_widget.dart';
+import 'package:event_radar2/navigation_page.dart';
 import 'package:flutter/material.dart';
 // import 'package:event_radar2/feature/manage_event/presentation/widgets/event_detail_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -74,8 +75,12 @@ class _ManageEventFormButtonWidgetState
               image: 'asset/img/event/success.jpg',
               completion: 'Back to My Events',
               onTap: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const NavigationPage()),
+                  (Route<dynamic> route) => false,
+                );
               },
               context: context);
         }

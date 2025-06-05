@@ -226,7 +226,7 @@ Widget eventBox(TicketDetailModel event) {
     children: [
       Container(
         width: 378.w,
-        height: 129.h,
+        height: 145.h,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.blue),
           borderRadius: BorderRadius.circular(15.r),
@@ -291,6 +291,7 @@ Widget eventBox(TicketDetailModel event) {
                   event.eventDetail
                       .replaceAll(RegExp(r'\[.*?\]\(.*?\)|[*_#>`~-]'), '')
                       .trim(),
+                  overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.lato(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w400,

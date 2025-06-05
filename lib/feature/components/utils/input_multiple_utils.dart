@@ -8,6 +8,7 @@ class InputMultiDropdownUtils extends StatelessWidget {
   final String label;
   final bool isRequired;
   final bool enabled;
+
   final MultiSelectController<String> controller;
   final List<DropdownItem<String>> items;
   final String? Function(List<DropdownItem<String>>?)? validator;

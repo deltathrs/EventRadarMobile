@@ -71,8 +71,8 @@ class _ScheduleEoPageState extends State<ScheduleEoPage> {
               listEvent = {};
 
               for (var event in state.myEvents) {
-                final date = DateTime(event.datetime.year,
-                    event.datetime.month, event.datetime.day);
+                final date = DateTime(event.datetime.year, event.datetime.month,
+                    event.datetime.day);
 
                 if (listEvent[date] == null) {
                   listEvent[date] = [event];
@@ -165,7 +165,11 @@ class _ScheduleEoPageState extends State<ScheduleEoPage> {
                               return ListView.builder(
                                 itemCount: value.length,
                                 itemBuilder: (context, index) {
-                                  return eventBox(value[index]);
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 10),
+                                    child: eventBox(value[index]),
+                                  );
                                 },
                               );
                             } else {
@@ -207,7 +211,7 @@ Widget eventBox(MyEventModel event) {
     children: [
       Container(
         width: 378.w,
-        height: 129.h,
+        height: 145.h,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.blue),
           borderRadius: BorderRadius.circular(15.r),
@@ -272,6 +276,7 @@ Widget eventBox(MyEventModel event) {
                   event.eventDetail
                       .replaceAll(RegExp(r'\[.*?\]\(.*?\)|[*_#>`~-]'), '')
                       .trim(),
+                  overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.lato(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
@@ -280,7 +285,7 @@ Widget eventBox(MyEventModel event) {
                 ),
               ),
               const SizedBox(
-                height: 10,
+                height: 5,
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
