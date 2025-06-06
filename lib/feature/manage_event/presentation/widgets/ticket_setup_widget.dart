@@ -69,6 +69,7 @@ class TicketSetupWidgetState extends State<TicketSetupWidget> {
                   child: Card(
                     margin: const EdgeInsets.only(bottom: 15),
                     elevation: 3,
+                    color: Colors.white,
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Column(

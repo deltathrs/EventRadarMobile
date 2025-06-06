@@ -146,8 +146,9 @@ class AuthRepository {
 
   Future<String> googleLogin() async {
     try {
+      final modelData = {'fcm_token': UserStatus.deviceToken};
       final response = await apiService.postApiDataWithToken(
-          dotenv.env['LOGIN_GOOGLE']!, null);
+          dotenv.env['LOGIN_GOOGLE']!, modelData);
 
       if (response.statusCode == 200) {
         SharedPreferences prefs = await SharedPreferences.getInstance();

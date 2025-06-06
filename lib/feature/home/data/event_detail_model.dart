@@ -48,7 +48,7 @@ class EventDetailModel {
       EventDetailModel(
         id: json["id"],
         name: json["name"],
-        eventDetail: json["event_detail"],
+        eventDetail: json["event_detail"] ?? "",
         datetime: DateTime.parse(json["datetime"]),
         endDatetime: DateTime.parse(json["end_datetime"]),
         maxParticipants: json["max_participants"],
@@ -59,8 +59,9 @@ class EventDetailModel {
         organizerId: json["organizer_id"],
         eventThumbnail: json["event_thumbnail"] ?? "",
         categories: List<String>.from(json["categories"].map((x) => x)),
-        tickets:
-            List<Ticket>.from(json["tickets"].map((x) => Ticket.fromJson(x))),
+        tickets: List<Ticket>.from(
+          (json["tickets"] ?? []).map((x) => Ticket.fromJson(x)),
+        ),
       );
 
   Map<String, dynamic> toJson() => {

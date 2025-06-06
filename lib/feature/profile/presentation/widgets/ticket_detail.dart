@@ -135,9 +135,9 @@ class _TicketDetailState extends State<TicketDetail> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Wrap(
-                                      spacing: 5, // jarak horizontal antar item
+                                      spacing: 5, 
                                       runSpacing:
-                                          5, // jarak vertikal jika ter-wrap ke baris baru
+                                          5, 
                                       children: widget
                                           .ticketDetailModel.categories
                                           .map<Widget>((category) =>

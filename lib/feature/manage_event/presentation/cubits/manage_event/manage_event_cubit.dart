@@ -13,8 +13,8 @@ class ManageEventCubit extends Cubit<ManageEventState> {
       : super(ManageEventInitial());
 
   Future<void> getEventCategory() async {
+    emit(ManageEventLoading());
     try {
-      emit(ManageEventLoading());
       final categories = await manageEventRepository.getEventCategory();
       emit(ManageEventLoaded(categories: categories));
     } catch (e) {
@@ -22,12 +22,38 @@ class ManageEventCubit extends Cubit<ManageEventState> {
     }
   }
 
-  Future<void> createEvent(EventDetailInputModel eventDetail,
-      ContentVisualInputModel content, List<TicketInputModel> tickets) async {
+  Future<void> changeEventStatus(String status, String id) async {
+    emit(SaveEventLoading());
+    try {
+      final message = await manageEventRepository.changeEventStatus(status, id);
+      emit(SaveEventSuccess(message: message));
+    } catch (e) {
+      emit(SaveEventError(error: e.toString()));
+    }
+  }
+
+  Future<void> editEvent(EventDetailInputModel eventDetail, String id,
+      {ContentVisualInputModel? content,
+      List<TicketInputModel>? tickets,
+      String? status}) async {
     try {
       emit(SaveEventLoading());
-      final message = await manageEventRepository.createEvent(
-          eventDetail, content, tickets);
+      final message = await manageEventRepository.editEvent(eventDetail, id,
+          content: content, tickets: tickets, status: status);
+      emit(SaveEventSuccess(message: message));
+    } catch (e) {
+      emit(SaveEventError(error: e.toString()));
+    }
+  }
+
+  Future<void> createEvent(EventDetailInputModel eventDetail,
+      {ContentVisualInputModel? content,
+      List<TicketInputModel>? tickets,
+      String? status}) async {
+    try {
+      emit(SaveEventLoading());
+      final message = await manageEventRepository.createEvent(eventDetail,
+          content: content, tickets: tickets, status: status);
       emit(SaveEventSuccess(message: message));
     } catch (e) {
       emit(SaveEventError(error: e.toString()));

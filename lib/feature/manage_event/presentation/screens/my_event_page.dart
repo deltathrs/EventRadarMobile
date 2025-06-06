@@ -56,9 +56,16 @@ class _MyEventPageState extends State<MyEventPage> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => EventDetail(
-                                              eventId: state.myEvents[index].id,
-                                              isEo: true,
+                                        builder: (context) => BlocProvider(
+                                              create: (context) => GetIt
+                                                  .instance<ManageEventCubit>(),
+                                              child: EventDetail(
+                                                eventId:
+                                                    state.myEvents[index].id,
+                                                isEo: true,
+                                                status: state
+                                                    .myEvents[index].status,
+                                              ),
                                             )));
                               },
                               child:

@@ -2,6 +2,7 @@ import 'package:event_radar2/feature/manage_event/data/my_event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class EoEventBox extends StatefulWidget {
@@ -69,7 +70,38 @@ class _EoEventBoxState extends State<EoEventBox> {
                           categoryEvent(widget.eventData.categories[1], true),
                         ],
                       ),
-                      Container(decoration: BoxDecoration(color: Colors.green,borderRadius: BorderRadius.circular(15.r)),child: Center(child: Text(widget.eventData.),),)
+                      Container(
+                        decoration: BoxDecoration(
+                            color: widget.eventData.status == 'draft'
+                                ? Colors.blueGrey
+                                : widget.eventData.status == 'waiting'
+                                    ? Colors.blue
+                                    : widget.eventData.status == 'approved'
+                                        ? Colors.green
+                                        : widget.eventData.status == 'ongoing'
+                                            ? Colors.yellow
+                                            : widget.eventData.status ==
+                                                    'completed'
+                                                ? Colors.green[900]
+                                                : widget.eventData.status ==
+                                                        'rejected'
+                                                    ? Colors.red
+                                                    : Color(0xFF231EAF),
+                            borderRadius: BorderRadius.circular(15.r)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 5),
+                          child: Center(
+                            child: Text(
+                              '${widget.eventData.status[0].toUpperCase()}${widget.eventData.status.substring(1)}',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                   const SizedBox(

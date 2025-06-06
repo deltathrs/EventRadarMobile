@@ -23,18 +23,8 @@ class EventDetailWidget extends StatefulWidget {
 }
 
 class EventDetailWidgetState extends State<EventDetailWidget> {
-  // final TextEditingController titleController = TextEditingController();
-  // final TextEditingController dateController = TextEditingController();
-  // final categoryController = MultiSelectController<String>();
-  // final TextEditingController locationController = TextEditingController();
-  // final TextEditingController linkController = TextEditingController();
 
-  // final TextEditingController startTimeController = TextEditingController();
-  // final TextEditingController endTimeController = TextEditingController();
-
-  // String? selectedEventType;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  // List<DropdownItem<String>> items = [];
 
   String? _validateRequired(String? value, String fieldName) {
     if (value == null || value.isEmpty) {

@@ -211,7 +211,7 @@ Widget eventBox(MyEventModel event) {
     children: [
       Container(
         width: 378.w,
-        height: 145.h,
+        height: 129.h,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.blue),
           borderRadius: BorderRadius.circular(15.r),

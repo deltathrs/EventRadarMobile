@@ -19,6 +19,7 @@ class MyEventModel {
   DateTime endDatetime;
   int maxParticipants;
   String location;
+  String status;
   bool isOnline;
   String organizerName;
   String organizerId;
@@ -35,6 +36,7 @@ class MyEventModel {
     required this.location,
     required this.isOnline,
     required this.organizerName,
+    required this.status,
     required this.organizerId,
     required this.eventThumbnail,
     required this.categories,
@@ -43,12 +45,13 @@ class MyEventModel {
   factory MyEventModel.fromJson(Map<String, dynamic> json) => MyEventModel(
         id: json["id"],
         name: json["name"],
-        eventDetail: json["event_detail"],
+        eventDetail: json["event_detail"] ?? '',
         datetime: DateTime.parse(json["datetime"]),
         endDatetime: DateTime.parse(json["end_datetime"]),
         maxParticipants: json["max_participants"],
         location: json["location"] ?? "Online",
         isOnline: json["is_online"],
+        status: json['status'],
         organizerName: json["organizer_name"],
         organizerId: json["organizer_id"],
         eventThumbnail: json["event_thumbnail"] ?? "",

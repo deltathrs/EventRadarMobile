@@ -15,7 +15,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 class ManageEventFormButtonWidget extends StatefulWidget {
   final HandleContentEventCubit cubit;
+  final bool isCreateNew;
   final ManageEventCubit manageEventCubit;
+  String? id;
   final GlobalKey<EventDetailWidgetState> eventDetailKey;
   final GlobalKey<ContentVisualWidgetState> contentVisualKey;
   final GlobalKey<TicketSetupWidgetState> ticketSetupKey;
@@ -23,7 +25,7 @@ class ManageEventFormButtonWidget extends StatefulWidget {
   final EventDetailInputModel eventDetailInputModel;
   final ContentVisualInputModel contentVisualInputModel;
 
-  const ManageEventFormButtonWidget(
+  ManageEventFormButtonWidget(
       {Key? key,
       required this.cubit,
       required this.manageEventCubit,
@@ -31,7 +33,9 @@ class ManageEventFormButtonWidget extends StatefulWidget {
       required this.contentVisualKey,
       required this.ticketSetupKey,
       required this.eventDetailInputModel,
+      required this.isCreateNew,
       required this.contentVisualInputModel,
+      this.id,
       required this.tickets})
       : super(key: key);
 
@@ -128,8 +132,8 @@ class _ManageEventFormButtonWidgetState
               ),
               child: Padding(
                 padding: EdgeInsets.only(
-                  left: 20,
-                  right: 20,
+                  // left: 20,
+                  // right: 20,
                   bottom: MediaQuery.of(context).viewPadding.bottom == 0
                       ? 20
                       : MediaQuery.of(context).viewPadding.bottom,
@@ -202,11 +206,18 @@ class _ManageEventFormButtonWidgetState
                                     false;
                                 if (!allValid) return;
 
-                                context.read<ManageEventCubit>().createEvent(
+                                if (widget.isCreateNew) {
+                                  context.read<ManageEventCubit>().createEvent(
                                       widget.eventDetailInputModel,
-                                      widget.contentVisualInputModel,
-                                      widget.tickets,
-                                    );
+                                      content: widget.contentVisualInputModel,
+                                      tickets: widget.tickets);
+                                } else {
+                                  context.read<ManageEventCubit>().editEvent(
+                                      widget.eventDetailInputModel,
+                                      content: widget.contentVisualInputModel,
+                                      tickets: widget.tickets,
+                                      widget.id ?? '');
+                                }
                               } else {
                                 widget.cubit.nextPage();
                               }

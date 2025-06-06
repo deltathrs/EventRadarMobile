@@ -7,6 +7,7 @@ import 'package:event_radar2/feature/home/presentation/widgets/event_box.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/event_detail.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/events/events_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/filter_widget.dart';
+import 'package:event_radar2/feature/manage_event/presentation/cubits/manage_event/manage_event_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -133,6 +134,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                   BlocProvider(
                                     create: (context) =>
                                         GetIt.instance<EventTransactionCubit>(),
+                                  ),
+                                  BlocProvider(
+                                    create: (context) =>
+                                        GetIt.instance<ManageEventCubit>(),
                                   ),
                                 ],
                                 child: EventDetail(

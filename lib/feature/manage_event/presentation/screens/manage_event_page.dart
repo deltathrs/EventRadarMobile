@@ -14,6 +14,7 @@ import 'package:event_radar2/feature/manage_event/presentation/widgets/manage_ev
 import 'package:event_radar2/feature/manage_event/presentation/widgets/manage_event_step_indicator_widget.dart';
 import 'package:event_radar2/feature/manage_event/presentation/widgets/ticket_setup_widget.dart';
 import 'package:event_radar2/feature/schedule/data/event.dart';
+import 'package:event_radar2/navigation_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -30,7 +31,9 @@ import 'package:multi_dropdown/multi_dropdown.dart';
 class ManageEventPage extends StatefulWidget {
   final bool isCreateNew;
   final EventDetailModel? eventDetail;
-  const ManageEventPage({Key? key, required this.isCreateNew, this.eventDetail})
+  String? id;
+  ManageEventPage(
+      {Key? key, required this.isCreateNew, this.eventDetail, this.id})
       : super(key: key);
 
   @override
@@ -60,6 +63,7 @@ class _ManageEventPageState extends State<ManageEventPage> {
   late PageController _pageController;
   List<String> items = [];
   bool initializeAllPage = true;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -161,19 +165,81 @@ class _ManageEventPageState extends State<ManageEventPage> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (!didPop) {
+          BottomSheetUtils.displayChoiceBottomSheet(
+              title: 'Cancel current progress?',
+              description:
+                  'You have unsaved changes. Are you certain you want to leave this page?',
+              image: 'asset/img/event/failed.jpg',
+              buttonFont1: 'Cancel',
+              onTap1: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              buttonFont2: 'Save As Draft',
+              onTap2: () {
+                if (eventDetailInputModel.isEmpty) {
+                  Navigator.pop(context);
+                  return ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text(
+                            'Unable to save as draft. Please complete all event details.')),
+                  );
+                } else {
+                  _cubit.createEvent(eventDetailInputModel, status: 'draft');
+                }
+              },
+              context: context);
+        }
+      },
       child: GestureDetector(
         child: BlocConsumer<ManageEventCubit, ManageEventState>(
           bloc: _cubit,
-          listener: (context, state) {},
+          listener: (context, state) {
+            if (state is SaveEventLoading) {
+              BottomSheetUtils.showLoadingDialog(context);
+            }
+
+            if (state is SaveEventSuccess) {
+              BottomSheetUtils.displayResultBottomSheet(
+                  title: 'Successfully Create Event',
+                  description: state.message,
+                  image: 'asset/img/event/success.jpg',
+                  completion: 'Back to My Events',
+                  onTap: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const NavigationPage()),
+                      (Route<dynamic> route) => false,
+                    );
+                  },
+                  context: context);
+            }
+
+            if (state is SaveEventError) {
+              Navigator.pop(context);
+              BottomSheetUtils.displayResultBottomSheet(
+                  title: 'Save Event Failed',
+                  description: state.error,
+                  image: 'asset/img/event/failed.jpg',
+                  completion: 'Try Again',
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  context: context);
+            }
+          },
           builder: (context, state) {
             if (state is ManageEventLoaded) {
               final dropdownItems = state.categories
                   .map((e) => DropdownItem<String>(value: e, label: e))
                   .toList();
-      
+
               eventDetailInputModel.categoryController.setItems(dropdownItems);
-      
+
               // Only do this when editing an existing event
               if (!widget.isCreateNew) {
                 final selected = widget.eventDetail!.categories; // List<String>
@@ -288,6 +354,8 @@ class _ManageEventPageState extends State<ManageEventPage> {
                           cubit: _handleContentEventCubit,
                           manageEventCubit: _cubit,
                           eventDetailKey: eventDetailKey,
+                          id: widget.id,
+                          isCreateNew: widget.isCreateNew,
                           tickets: ticketList,
                           eventDetailInputModel: eventDetailInputModel,
                           contentVisualInputModel: contentVisualInputModel,

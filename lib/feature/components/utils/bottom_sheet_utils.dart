@@ -15,6 +15,149 @@ class BottomSheetUtils {
     );
   }
 
+  static Future<void> displayChoiceBottomSheet({
+    required String title,
+    required String description,
+    required String image,
+    required String buttonFont1,
+    required String buttonFont2,
+    required BuildContext context,
+    Function()? onTap2,
+    Function()? onTap1,
+    bool isDismiss = true, // Default value
+  }) {
+    return showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12.r),
+          topRight: Radius.circular(12.r),
+        ),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.all(8.w),
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(12.r),
+                    topRight: Radius.circular(12.r))),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 240.h,
+                  color: Colors.transparent,
+                  child: Center(
+                    child: Image.asset(
+                      image,
+                      width: 237.w,
+                      height: 223.h,
+                    ),
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  height: 175.h,
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        title,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 3.h,
+                      ),
+                      SizedBox(
+                          width: 283.w,
+                          child: Text(
+                            description,
+                            style: GoogleFonts.poppins(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                            textAlign: TextAlign.center,
+                          )),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: GestureDetector(
+                              onTap: onTap1,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(22.r),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(12.w),
+                                  child: Center(
+                                    child: Text(
+                                      buttonFont1,
+                                      style: TextStyle(
+                                        fontFamily: 'Citroen',
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            flex: 2,
+                            child: GestureDetector(
+                              onTap: onTap2,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(22.r),
+                                  color: const Color(0xFF1F24EA),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(12.w),
+                                  child: Center(
+                                    child: Text(
+                                      buttonFont2,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   static void showCustomBottomSheet(BuildContext context,
       {required Widget child}) {
     showModalBottomSheet(

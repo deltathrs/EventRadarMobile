@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:event_radar2/feature/components/utils/bottom_sheet_utils.dart';
+import 'package:event_radar2/feature/components/utils/empty_data_utils.dart';
 import 'package:event_radar2/feature/components/utils/url_launcher_utils.dart';
 import 'package:event_radar2/feature/home/data/event_detail_model.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
@@ -24,7 +25,9 @@ import 'package:markdown_viewer/markdown_viewer.dart';
 class EventDetail extends StatefulWidget {
   final String eventId;
   final bool isEo;
-  const EventDetail({super.key, required this.eventId, this.isEo = false});
+  String? status;
+  EventDetail(
+      {super.key, required this.eventId, this.isEo = false, this.status = ""});
 
   @override
   State<EventDetail> createState() => _EventDetailState();
@@ -33,7 +36,7 @@ class EventDetail extends StatefulWidget {
 class _EventDetailState extends State<EventDetail> {
   final String baseUrlImage = dotenv.env['BASE_URL']!;
   final EventDetailCubit eventDetail = GetIt.instance<EventDetailCubit>();
-  late EventDetailModel eventDetailModel;
+  EventDetailModel? eventDetailModel;
   final EventTransactionCubit eventTransaction =
       GetIt.instance<EventTransactionCubit>();
 
@@ -56,307 +59,414 @@ class _EventDetailState extends State<EventDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        scrolledUnderElevation: 0,
-        title: Text(
-          'Details',
-          style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 32.sp,
-              fontWeight: FontWeight.w600),
-        ),
-      ),
-      bottomNavigationBar: widget.isEo
-          ? Container(
-              height: 90.h,
-              width: double.infinity,
-              color: Colors.white,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MultiBlocProvider(
-                                  providers: [
-                                    BlocProvider(
-                                      create: (context) =>
-                                          HandleContentEventCubit(),
-                                    ),
-                                    BlocProvider(
-                                      create: (context) =>
-                                          GetIt.instance<ManageEventCubit>(),
-                                    ),
-                                  ],
-                                  child: ManageEventPage(
-                                    isCreateNew: false,
-                                    eventDetail: eventDetailModel,
-                                  ),
-                                )));
-                  },
-                  icon: Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xFF231EAF),
-                      borderRadius: BorderRadius.circular(15.r),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 10.h, horizontal: 15.w),
-                      child: Center(
-                        child: Text(
-                          'Edit Event',
-                          style: GoogleFonts.poppins(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white),
+    return BlocConsumer<ManageEventCubit, ManageEventState>(
+      listener: (context, state) {
+        if (state is SaveEventLoading) {
+          BottomSheetUtils.showLoadingDialog(context);
+        }
+        if (state is SaveEventSuccess) {
+          BottomSheetUtils.displayResultBottomSheet(
+              title: 'Successfully Change Event Status',
+              description: 'Your event status has been successfully changed',
+              image: 'asset/img/event/success.jpg',
+              completion: 'Back to My Events',
+              onTap: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const NavigationPage()),
+                  (Route<dynamic> route) => false,
+                );
+              },
+              context: context);
+        }
+
+        if (state is SaveEventError) {
+          Navigator.pop(context);
+          BottomSheetUtils.displayResultBottomSheet(
+              title: 'Failed to Change Event Status',
+              description: state.error,
+              image: 'asset/img/event/failed.jpg',
+              completion: 'Back',
+              onTap: () {
+                Navigator.pop(context);
+              },
+              context: context);
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            scrolledUnderElevation: 0,
+            title: Text(
+              'Details',
+              style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 32.sp,
+                  fontWeight: FontWeight.w600),
+            ),
+          ),
+          bottomNavigationBar: widget.isEo && widget.status != 'completed'
+              ? Container(
+                  height: 90.h,
+                  width: double.infinity,
+                  color: Colors.white,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    child: IconButton(
+                      onPressed: () {
+                        if (widget.status == 'draft' ||
+                            widget.status == 'rejected') {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider(
+                                            create: (context) =>
+                                                HandleContentEventCubit(),
+                                          ),
+                                          BlocProvider(
+                                            create: (context) => GetIt.instance<
+                                                ManageEventCubit>(),
+                                          ),
+                                        ],
+                                        child: ManageEventPage(
+                                          isCreateNew: false,
+                                          eventDetail: eventDetailModel,
+                                          id: eventDetailModel?.id.toString(),
+                                        ),
+                                      )));
+                        } else if (widget.status == 'approved' ||
+                            widget.status == 'ongoing') {
+                          BottomSheetUtils.displayChoiceBottomSheet(
+                              title: widget.status == 'approved'
+                                  ? 'Start Event'
+                                  : 'End Event',
+                              description:
+                                  'Are you sure you want to ${widget.status == "approved" ? "change status to ongoing" : widget.status == "ongoing" ? "change status to completed" : "change the status"}?',
+                              image: 'asset/img/event/success.jpg',
+                              buttonFont1: 'Cancel',
+                              onTap1: () {
+                                Navigator.pop(context);
+                              },
+                              buttonFont2: 'Change Status',
+                              onTap2: () {
+                                context
+                                    .read<ManageEventCubit>()
+                                    .changeEventStatus(
+                                        widget.status == "approved"
+                                            ? "ongoing"
+                                            : widget.status == "ongoing"
+                                                ? "completed"
+                                                : "",
+                                        eventDetailModel!.id);
+                              },
+                              context: context);
+                        } else {
+                          BottomSheetUtils.displayResultBottomSheet(
+                              title: 'Cannot Edit Event',
+                              description:
+                                  'Please await further notice from us before proceeding with the management of your event',
+                              image: 'asset/img/event/success.jpg',
+                              completion: 'Okay',
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              context: context);
+                        }
+                      },
+                      icon: Container(
+                        decoration: BoxDecoration(
+                          color: widget.status == 'draft' ||
+                                  widget.status == 'approved' ||
+                                  widget.status == 'rejected' ||
+                                  widget.status == 'ongoing'
+                              ? Color(0xFF231EAF)
+                              : Colors.blueGrey,
+                          borderRadius: BorderRadius.circular(15.r),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10.h, horizontal: 15.w),
+                          child: Center(
+                              child: (widget.status == "approved" ||
+                                      widget.status == "ongoing")
+                                  ? Text(
+                                      'Change Event Status',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : Text(
+                                      'Edit Event',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    )),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            )
-          : null,
-      body: BlocConsumer<EventDetailCubit, EventDetailState>(
-        bloc: eventDetail,
-        listener: (context, state) {},
-        builder: (context, state) {
-          if (state is EventDetailLoaded) {
-            eventDetailModel = state.eventDetail;
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 308.h,
-                    width: double.infinity,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        Image.network(
-                          "$baseUrlImage${state.eventDetail.eventThumbnail}",
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.asset(
-                              'asset/img/event/placeholder.jpg',
+                )
+              : null,
+          body: BlocConsumer<EventDetailCubit, EventDetailState>(
+            bloc: eventDetail,
+            listener: (context, state) {},
+            builder: (context, state) {
+              if (state is EventDetailLoaded) {
+                eventDetailModel = state.eventDetail;
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 308.h,
+                        width: double.infinity,
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            Image.network(
+                              "$baseUrlImage${state.eventDetail.eventThumbnail}",
                               fit: BoxFit.cover,
-                            );
-                          },
-                        ),
-                        ClipRRect(
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                            child: Container(
-                              color: Colors.grey.withOpacity(0.1),
-                              alignment: Alignment.center,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.asset(
+                                  'asset/img/event/placeholder.jpg',
+                                  fit: BoxFit.cover,
+                                );
+                              },
                             ),
-                          ),
-                        ),
-                        Positioned(
-                          left:
-                              (MediaQuery.of(context).size.width - 195.w) / 2.w,
-                          top: (308.h - 275.h) / 2.h,
-                          child: Image.network(
-                            "$baseUrlImage${state.eventDetail.eventThumbnail}",
-                            width: 195.w,
-                            height: 275.h,
-                            fit: BoxFit.contain,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Image.asset(
-                                width: 195.w,
-                                height: 275.h,
-                                'asset/img/event/placeholder.jpg',
-                                fit: BoxFit.contain,
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 356.h,
-                    child: Stack(
-                      children: [
-                        Container(
-                          color: const Color(0xFFD3E1FF),
-                        ),
-                        Positioned.fill(
-                            child: Center(
-                          child: Container(
-                            width: 350.w,
-                            // height: 300.h,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20.r),
-                                color: Colors.white),
-                            child: Padding(
-                              padding: const EdgeInsets.all(15),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const SizedBox(width: 5),
-                                      ...state.eventDetail.categories
-                                          .map((category) => Row(
-                                                children: [
-                                                  CategoryEvent(category),
-                                                  const SizedBox(width: 5),
-                                                ],
-                                              ))
-                                          .toList(),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  Text(
-                                    state.eventDetail.name,
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 16.sp),
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  const Divider(
-                                    color: Color(0xFFC9C9C9),
-                                    thickness: 1,
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  TimeAndCalendar(state.eventDetail.datetime,
-                                      state.eventDetail.endDatetime),
-                                  const SizedBox(
-                                    height: 2,
-                                  ),
-                                  LocationSession(state.eventDetail.isOnline
-                                      ? 'Online'
-                                      : state.eventDetail.location),
-                                  const SizedBox(
-                                    height: 2,
-                                  ),
-                                  const Divider(
-                                    color: Color(0xFFC9C9C9),
-                                    thickness: 1,
-                                  ),
-                                  OrganizerInfo(
-                                      "$baseUrlImage${state.eventOrganizer.profile}",
-                                      state.eventDetail.organizerName,
-                                      state.eventOrganizer.email,
-                                      state.eventOrganizer.phoneNumber),
-                                ],
+                            ClipRRect(
+                              child: BackdropFilter(
+                                filter:
+                                    ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                child: Container(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  alignment: Alignment.center,
+                                ),
                               ),
                             ),
-                          ),
-                        )),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'About',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14.sp,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: MarkdownViewer(
-                            state.eventDetail.eventDetail,
-                            styleSheet: MarkdownStyle(
-                              paragraph: GoogleFonts.poppins(fontSize: 13.sp),
-                              headline1: GoogleFonts.poppins(
-                                  fontSize: 13.sp, fontWeight: FontWeight.bold),
-                              headline2: GoogleFonts.poppins(
-                                  fontSize: 13.sp, fontWeight: FontWeight.bold),
-                              headline3: GoogleFonts.poppins(
-                                  fontSize: 13.sp, fontWeight: FontWeight.bold),
-                              strongEmphasis: GoogleFonts.poppins(
-                                  fontSize: 13.sp, fontWeight: FontWeight.w600),
-                              emphasis: GoogleFonts.poppins(
-                                  fontSize: 13.sp, fontStyle: FontStyle.italic),
-                              listItem: GoogleFonts.poppins(fontSize: 13.sp),
-                              blockquote: GoogleFonts.poppins(
-                                  fontSize: 13.sp, fontStyle: FontStyle.italic),
-                              codeSpan: GoogleFonts.poppins(
-                                  fontSize: 13.sp,
-                                  backgroundColor: Colors.grey[200]),
+                            Positioned(
+                              left:
+                                  (MediaQuery.of(context).size.width - 195.w) /
+                                      2.w,
+                              top: (308.h - 275.h) / 2.h,
+                              child: Image.network(
+                                "$baseUrlImage${state.eventDetail.eventThumbnail}",
+                                width: 195.w,
+                                height: 275.h,
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.asset(
+                                    width: 195.w,
+                                    height: 275.h,
+                                    'asset/img/event/placeholder.jpg',
+                                    fit: BoxFit.contain,
+                                  );
+                                },
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                        const SizedBox(
-                          height: 15,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 356.h,
+                        child: Stack(
+                          children: [
+                            Container(
+                              color: const Color(0xFFD3E1FF),
+                            ),
+                            Positioned.fill(
+                                child: Center(
+                              child: Container(
+                                width: 350.w,
+                                // height: 300.h,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20.r),
+                                    color: Colors.white),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Wrap(
+                                        spacing: 5,
+                                        runSpacing: 5,
+                                        children: state.eventDetail.categories
+                                            .map<Widget>((category) =>
+                                                CategoryEvent(category))
+                                            .toList(),
+                                      ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        state.eventDetail.name,
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 16.sp),
+                                      ),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                      const Divider(
+                                        color: Color(0xFFC9C9C9),
+                                        thickness: 1,
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      TimeAndCalendar(
+                                          state.eventDetail.datetime,
+                                          state.eventDetail.endDatetime),
+                                      const SizedBox(
+                                        height: 2,
+                                      ),
+                                      LocationSession(state.eventDetail.isOnline
+                                          ? 'Online'
+                                          : state.eventDetail.location),
+                                      const SizedBox(
+                                        height: 2,
+                                      ),
+                                      const Divider(
+                                        color: Color(0xFFC9C9C9),
+                                        thickness: 1,
+                                      ),
+                                      OrganizerInfo(
+                                          "$baseUrlImage${state.eventOrganizer.profile}",
+                                          state.eventDetail.organizerName,
+                                          state.eventOrganizer.email,
+                                          state.eventOrganizer.phoneNumber),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )),
+                          ],
                         ),
-                        Text(
-                          'Available Ticket',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14.sp,
-                          ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'About',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14.sp,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: MarkdownViewer(
+                                state.eventDetail.eventDetail,
+                                styleSheet: MarkdownStyle(
+                                  paragraph:
+                                      GoogleFonts.poppins(fontSize: 13.sp),
+                                  headline1: GoogleFonts.poppins(
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.bold),
+                                  headline2: GoogleFonts.poppins(
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.bold),
+                                  headline3: GoogleFonts.poppins(
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.bold),
+                                  strongEmphasis: GoogleFonts.poppins(
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.w600),
+                                  emphasis: GoogleFonts.poppins(
+                                      fontSize: 13.sp,
+                                      fontStyle: FontStyle.italic),
+                                  listItem:
+                                      GoogleFonts.poppins(fontSize: 13.sp),
+                                  blockquote: GoogleFonts.poppins(
+                                      fontSize: 13.sp,
+                                      fontStyle: FontStyle.italic),
+                                  codeSpan: GoogleFonts.poppins(
+                                      fontSize: 13.sp,
+                                      backgroundColor: Colors.grey[200]),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            state.eventDetail.tickets.isEmpty
+                                ? EmptyDataUtils().emptyDataWithoutButton(
+                                    'Ticket is Empty',
+                                    "You haven't make any ticket for this event yet",
+                                    'asset/img/event/empty_data.jpg')
+                                : Text(
+                                    'Available Ticket',
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14.sp,
+                                    ),
+                                  ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            ListView.builder(
+                                itemCount: state.eventDetail.tickets.length,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(bottom: 10.h),
+                                    child: eventTicket(
+                                        state.eventDetail.tickets[index]
+                                                    .ticketType ==
+                                                "Standard Ticket"
+                                            ? const Color(0xFF505050)
+                                            : const Color(0xFF0022BA),
+                                        state.eventDetail.tickets[index]
+                                            .ticketType,
+                                        state.eventDetail.tickets[index].price,
+                                        state.eventDetail.tickets[index]
+                                            .ticketLimit,
+                                        formatDate(state.eventDetail
+                                            .tickets[index].registrationEnd
+                                            .toIso8601String()),
+                                        state.eventDetail.tickets[index].id),
+                                  );
+                                }),
+                          ],
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        ListView.builder(
-                            itemCount: state.eventDetail.tickets.length,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: EdgeInsets.only(bottom: 10.h),
-                                child: eventTicket(
-                                    state.eventDetail.tickets[index]
-                                                .ticketType ==
-                                            "Standard Ticket"
-                                        ? const Color(0xFF505050)
-                                        : const Color(0xFF0022BA),
-                                    state.eventDetail.tickets[index].ticketType,
-                                    state.eventDetail.tickets[index].price,
-                                    state
-                                        .eventDetail.tickets[index].ticketLimit,
-                                    formatDate(state.eventDetail.tickets[index]
-                                        .registrationEnd
-                                        .toIso8601String()),
-                                    state.eventDetail.tickets[index].id),
-                              );
-                            }),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            );
-          }
+                      )
+                    ],
+                  ),
+                );
+              }
 
-          return const Center(
-            child: CircularProgressIndicator(
-              color: Color(0xFF0022BA),
-            ),
-          );
-        },
-      ),
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Color(0xFF0022BA),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
