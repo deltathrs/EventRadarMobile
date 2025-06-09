@@ -1,7 +1,9 @@
 import 'package:event_radar2/feature/profile/data/ticket_detail_model.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile/profile_cubit.dart';
+import 'package:event_radar2/feature/profile/presentation/widgets/ticket_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -184,7 +186,22 @@ class _SchedulePageState extends State<SchedulePage> {
                               return ListView.builder(
                                 itemCount: value.length,
                                 itemBuilder: (context, index) {
-                                  return eventBox(value[index]);
+                                  return GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BlocProvider(
+                                                      create: (context) =>
+                                                          GetIt.instance<
+                                                              ProfileCubit>(),
+                                                      child: TicketDetail(
+                                                          ticketDetailModel:
+                                                              value[index]),
+                                                    )));
+                                      },
+                                      child: eventBox(value[index]));
                                 },
                               );
                             } else {

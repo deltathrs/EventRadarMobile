@@ -216,9 +216,9 @@ class _EditProfileState extends State<EditProfile> {
                           children: [
                             CircleAvatar(
                               backgroundImage: NetworkImage(
-                                state.profile.profileGoogle.isNotEmpty
-                                    ? state.profile.profileGoogle
-                                    : "$baseUrlImage${state.profile.profile}",
+                                state.profile.profile.isNotEmpty
+                                    ? "$baseUrlImage${state.profile.profile}"
+                                    : state.profile.profileGoogle,
                               ),
                               onBackgroundImageError: (_, __) {
                                 AssetImage(
@@ -295,7 +295,11 @@ class _EditProfileState extends State<EditProfile> {
                             DropdownMenuItem(
                                 value: 'Surabaya', child: Text('Surabaya')),
                             DropdownMenuItem(
+                                value: 'Sidoarjo', child: Text('Sidoarjo')),
+                            DropdownMenuItem(
                                 value: 'Medan', child: Text('Medan')),
+                            DropdownMenuItem(
+                                value: 'Malang', child: Text('Malang')),
                             DropdownMenuItem(
                                 value: 'Semarang', child: Text('Semarang')),
                             DropdownMenuItem(

@@ -1,9 +1,13 @@
+import 'package:event_radar2/feature/home/presentation/cubits/favourite_event/favourite_event_cubit.dart';
+import 'package:event_radar2/feature/home/presentation/widgets/event_detail.dart';
 import 'package:event_radar2/feature/manage_event/data/my_event_model.dart';
 import 'package:event_radar2/feature/manage_event/presentation/cubits/event/event_cubit.dart';
+import 'package:event_radar2/feature/manage_event/presentation/cubits/manage_event/manage_event_cubit.dart';
 import 'package:event_radar2/feature/profile/data/ticket_detail_model.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -168,7 +172,34 @@ class _ScheduleEoPageState extends State<ScheduleEoPage> {
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 10, horizontal: 10),
-                                    child: eventBox(value[index]),
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MultiBlocProvider(
+                                                  providers: [
+                                                    BlocProvider(
+                                                      create: (context) =>
+                                                          GetIt.instance<
+                                                              ManageEventCubit>(),
+                                                    ),
+                                                    BlocProvider(
+                                                      create: (context) =>
+                                                          GetIt.instance<
+                                                              FavouriteEventCubit>(),
+                                                    ),
+                                                  ],
+                                                  child: EventDetail(
+                                                    eventId: value[index].id,
+                                                    isEo: true,
+                                                    status: value[index].status,
+                                                  ),
+                                                ),
+                                              ));
+                                        },
+                                        child: eventBox(value[index])),
                                   );
                                 },
                               );

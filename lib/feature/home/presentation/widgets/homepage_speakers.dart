@@ -28,7 +28,7 @@ class HomepageProfile extends StatelessWidget {
                 padding: const EdgeInsets.all(.5),
                 decoration: const BoxDecoration(
                     color: Colors.black, shape: BoxShape.circle),
-                child: image,
+                child: ClipOval(child: image),
               ),
               const SizedBox(height: 4),
               Text(overflow: TextOverflow.ellipsis, name),

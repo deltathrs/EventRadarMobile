@@ -64,10 +64,10 @@ class _EoEventBoxState extends State<EoEventBox> {
                       Row(
                         children: [
                           categoryEvent(widget.eventData.categories[0], false),
-                          SizedBox(
-                            width: 5.w,
-                          ),
-                          categoryEvent(widget.eventData.categories[1], true),
+                          if (widget.eventData.categories.length > 1) ...[
+                            SizedBox(width: 5.w),
+                            categoryEvent(widget.eventData.categories[1], true),
+                          ],
                         ],
                       ),
                       Container(

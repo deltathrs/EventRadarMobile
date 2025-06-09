@@ -2,12 +2,16 @@ import 'dart:ui';
 
 import 'package:event_radar2/feature/components/utils/url_launcher_utils.dart';
 import 'package:event_radar2/feature/home/data/list_eo_model.dart';
+import 'package:event_radar2/feature/home/presentation/cubits/creator_list/creator_list_cubit.dart';
+import 'package:event_radar2/feature/home/presentation/cubits/favourite_event/favourite_event_cubit.dart';
+import 'package:event_radar2/feature/home/presentation/screen/eo_detail_screen.dart';
 import 'package:event_radar2/feature/profile/data/ticket_detail_model.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:intl/intl.dart';
@@ -132,12 +136,12 @@ class _TicketDetailState extends State<TicketDetail> {
                               child: Padding(
                                 padding: const EdgeInsets.all(15),
                                 child: Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Wrap(
-                                      spacing: 5, 
-                                      runSpacing:
-                                          5, 
+                                      spacing: 5,
+                                      runSpacing: 5,
                                       children: widget
                                           .ticketDetailModel.categories
                                           .map<Widget>((category) =>
@@ -181,11 +185,7 @@ class _TicketDetailState extends State<TicketDetail> {
                                       color: Color(0xFFC9C9C9),
                                       thickness: 1,
                                     ),
-                                    OrganizerInfo(
-                                        "$baseUrlImage${state.eoModel.profile}",
-                                        widget.ticketDetailModel.organizerName,
-                                        state.eoModel.email,
-                                        state.eoModel.phoneNumber),
+                                    OrganizerInfo(state.eoModel),
                                   ],
                                 ),
                               ),
@@ -320,6 +320,9 @@ class _TicketDetailState extends State<TicketDetail> {
 
   Widget eventTicket(Color outline, String title, double price, int slot,
       String date, String ticketId) {
+    final formattedPrice =
+        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0)
+            .format(price);
     return Stack(
       children: [
         Container(
@@ -470,7 +473,7 @@ class _TicketDetailState extends State<TicketDetail> {
                                 color: Color(0xFFFFB800),
                               ),
                               Text(
-                                ' Rp $price',
+                                formattedPrice,
                                 style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w600,
@@ -529,17 +532,41 @@ class _TicketDetailState extends State<TicketDetail> {
     );
   }
 
-  OrganizerInfo(String emailLogo, String name, String email, String phone) {
+  OrganizerInfo(ListEoModel eo) {
     return Row(
       children: [
-        Container(
-          width: 36.w,
-          height: 36.h,
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-          ),
-          child: Center(
-            child: Image.network(emailLogo),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MultiBlocProvider(
+                          providers: [
+                            BlocProvider(
+                              create: (context) =>
+                                  GetIt.instance<CreatorListCubit>(),
+                            ),
+                            BlocProvider(
+                              create: (context) =>
+                                  GetIt.instance<FavouriteEventCubit>(),
+                            ),
+                          ],
+                          child: EoDetailScreen(
+                              eoModel: eo,
+                              eoImage: "$baseUrlImage${eo.profile}"),
+                        )));
+          },
+          child: Container(
+            width: 36.w,
+            height: 36.h,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+            ),
+            child: ClipOval(
+              child: Center(
+                child: Image.network("$baseUrlImage${eo.profile}"),
+              ),
+            ),
           ),
         ),
         const SizedBox(
@@ -549,7 +576,7 @@ class _TicketDetailState extends State<TicketDetail> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              name,
+              eo.fullname,
               style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 11.sp,
@@ -560,7 +587,7 @@ class _TicketDetailState extends State<TicketDetail> {
               height: 2,
             ),
             Text(
-              email,
+              eo.email,
               style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 8.sp,
@@ -572,7 +599,8 @@ class _TicketDetailState extends State<TicketDetail> {
         const Spacer(),
         GestureDetector(
           onTap: () {
-            UrlLauncherUtils.launchURL(actionType: 'whatsapp', value: phone);
+            UrlLauncherUtils.launchURL(
+                actionType: 'whatsapp', value: eo.phoneNumber);
           },
           child: Image.asset(
             'asset/img/event_organizer/whatsapp.png',

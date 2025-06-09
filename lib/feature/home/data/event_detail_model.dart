@@ -21,6 +21,7 @@ class EventDetailModel {
   String location;
   bool isApproved;
   bool isOnline;
+  bool? isLiked;
   String organizerName;
   String organizerId;
   String eventThumbnail;
@@ -42,6 +43,7 @@ class EventDetailModel {
     required this.eventThumbnail,
     required this.categories,
     required this.tickets,
+    this.isLiked,
   });
 
   factory EventDetailModel.fromJson(Map<String, dynamic> json) =>
@@ -55,6 +57,7 @@ class EventDetailModel {
         location: json["location"] ?? "Online",
         isApproved: json["is_approved"] ?? true,
         isOnline: json["is_online"],
+        isLiked: json['is_liked'] ?? false,
         organizerName: json["organizer_name"],
         organizerId: json["organizer_id"],
         eventThumbnail: json["event_thumbnail"] ?? "",

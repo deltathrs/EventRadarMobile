@@ -200,23 +200,28 @@ class _ManageEventFormButtonWidgetState
                                   widget.cubit.nextPage();
                                 }
                               } else if (pageIndex == 3) {
-                                bool allValid = widget
-                                        .ticketSetupKey.currentState
-                                        ?.validateAllForms() ??
-                                    false;
-                                if (!allValid) return;
+                                if (isLoading == false) {
+                                  bool allValid = widget
+                                          .ticketSetupKey.currentState
+                                          ?.validateAllForms() ??
+                                      false;
+                                  if (!allValid) return;
 
-                                if (widget.isCreateNew) {
-                                  context.read<ManageEventCubit>().createEvent(
-                                      widget.eventDetailInputModel,
-                                      content: widget.contentVisualInputModel,
-                                      tickets: widget.tickets);
-                                } else {
-                                  context.read<ManageEventCubit>().editEvent(
-                                      widget.eventDetailInputModel,
-                                      content: widget.contentVisualInputModel,
-                                      tickets: widget.tickets,
-                                      widget.id ?? '');
+                                  if (widget.isCreateNew) {
+                                    context
+                                        .read<ManageEventCubit>()
+                                        .createEvent(
+                                            widget.eventDetailInputModel,
+                                            content:
+                                                widget.contentVisualInputModel,
+                                            tickets: widget.tickets);
+                                  } else {
+                                    context.read<ManageEventCubit>().editEvent(
+                                        widget.eventDetailInputModel,
+                                        content: widget.contentVisualInputModel,
+                                        tickets: widget.tickets,
+                                        widget.id ?? '');
+                                  }
                                 }
                               } else {
                                 widget.cubit.nextPage();

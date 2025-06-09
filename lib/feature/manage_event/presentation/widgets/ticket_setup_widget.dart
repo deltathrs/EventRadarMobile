@@ -101,6 +101,7 @@ class TicketSetupWidgetState extends State<TicketSetupWidget> {
                           InputTextfieldUtils(
                             label: 'Ticket Price',
                             hint: 'Input ticket price',
+                            keyboardType: TextInputType.number,
                             isPriceFormat: true,
                             controller: ticket.priceController,
                             validator: (val) => val == null || val.isEmpty
@@ -112,6 +113,7 @@ class TicketSetupWidgetState extends State<TicketSetupWidget> {
                             label: 'Ticket Quantity',
                             hint: 'Input ticket quantity',
                             controller: ticket.quantityController,
+                            keyboardType: TextInputType.number,
                             validator: (val) => val == null || val.isEmpty
                                 ? 'Ticket quantity is required'
                                 : null,

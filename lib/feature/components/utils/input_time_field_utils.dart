@@ -20,23 +20,37 @@ class InputTimeFieldUtils extends StatelessWidget {
     this.validator,
   });
 
+  String _formatTime(TimeOfDay time) {
+    final hour = time.hourOfPeriod; // 1-12
+    final minute = time.minute.toString().padLeft(2, '0');
+    final period = time.period == DayPeriod.am ? 'AM' : 'PM';
+    return '$hour:$minute $period';
+  }
+
   Future<void> _selectTime(BuildContext context) async {
     if (eventDate == DateTime(0)) {
-      // Show dialog/snackbar if date is invalid
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please select the event date first.")),
       );
       return;
     }
-    final TimeOfDay initialTime = TimeOfDay.fromDateTime(eventDate);
 
+    final TimeOfDay initialTime = TimeOfDay.fromDateTime(eventDate);
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: initialTime,
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            alwaysUse24HourFormat: false,
+          ),
+          child: child!,
+        );
+      },
     );
+
     if (picked != null) {
-      final formattedTime = picked.format(context);
-      controller.text = formattedTime;
+      controller.text = _formatTime(picked);
     }
   }
 

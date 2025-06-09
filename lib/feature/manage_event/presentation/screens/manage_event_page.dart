@@ -80,12 +80,22 @@ class _ManageEventPageState extends State<ManageEventPage> {
     init();
   }
 
-  Future<File> urlToFile(String imageUrl) async {
-    final response = await http.get(Uri.parse(imageUrl));
-    final documentDirectory = await getTemporaryDirectory();
-    final filePath = '${documentDirectory.path}/temp_image.jpg';
-    final file = File(filePath);
-    return await file.writeAsBytes(response.bodyBytes);
+  Future<File?> urlToFile(String imageUrl) async {
+    try {
+      if (imageUrl.isEmpty) return null;
+
+      final response = await http.get(Uri.parse(imageUrl));
+
+      if (response.statusCode != 200) return null;
+
+      final documentDirectory = await getTemporaryDirectory();
+      final filePath = '${documentDirectory.path}/temp_image.jpg';
+      final file = File(filePath);
+      return await file.writeAsBytes(response.bodyBytes);
+    } catch (e) {
+      // Log or handle the error if needed
+      return null;
+    }
   }
 
   void _eventDataEntities() async {
@@ -135,8 +145,14 @@ class _ManageEventPageState extends State<ManageEventPage> {
       return model;
     }).toList();
 
-    contentVisualInputModel.userImage =
-        await urlToFile("$baseUrlImage${widget.eventDetail!.eventThumbnail}");
+    if (widget.eventDetail!.eventThumbnail.isNotEmpty) {
+      final imageFile =
+          await urlToFile("$baseUrlImage${widget.eventDetail!.eventThumbnail}");
+      contentVisualInputModel.userImage = imageFile;
+    } else {
+      final imageFile = await urlToFile(widget.eventDetail!.eventThumbnail);
+      contentVisualInputModel.userImage = imageFile;
+    }
   }
 
   void init() async {

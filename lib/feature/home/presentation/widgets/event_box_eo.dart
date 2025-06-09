@@ -2,6 +2,7 @@ import 'package:event_radar2/feature/home/data/eo_event_model.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/favourite_event/favourite_event_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/event_detail.dart';
+import 'package:event_radar2/feature/manage_event/presentation/cubits/manage_event/manage_event_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -161,9 +162,21 @@ class _EventBoxEoState extends State<EventBoxEo> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => BlocProvider(
-                                    create: (context) =>
-                                        GetIt.instance<EventDetailCubit>(),
+                              builder: (context) => MultiBlocProvider(
+                                    providers: [
+                                      BlocProvider(
+                                        create: (context) =>
+                                            GetIt.instance<EventDetailCubit>(),
+                                      ),
+                                      BlocProvider(
+                                        create: (context) =>
+                                            GetIt.instance<ManageEventCubit>(),
+                                      ),
+                                      BlocProvider(
+                                        create: (context) => GetIt.instance<
+                                            FavouriteEventCubit>(),
+                                      ),
+                                    ],
                                     child:
                                         EventDetail(eventId: widget.event.id),
                                   )));
@@ -177,7 +190,7 @@ class _EventBoxEoState extends State<EventBoxEo> {
                         padding: EdgeInsets.all(4.w),
                         child: Center(
                           child: Text(
-                            'Checkout',
+                            'Check Event',
                             style: GoogleFonts.inter(
                                 fontSize: 10.sp,
                                 fontWeight: FontWeight.w600,

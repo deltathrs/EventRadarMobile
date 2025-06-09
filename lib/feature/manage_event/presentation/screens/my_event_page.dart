@@ -1,4 +1,5 @@
 import 'package:event_radar2/feature/components/utils/empty_data_utils.dart';
+import 'package:event_radar2/feature/home/presentation/cubits/favourite_event/favourite_event_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/widgets/event_detail.dart';
 import 'package:event_radar2/feature/manage_event/presentation/cubits/event/event_cubit.dart';
 import 'package:event_radar2/feature/manage_event/presentation/cubits/handle_content_event/handle_content_event_cubit.dart';
@@ -45,33 +46,39 @@ class _MyEventPageState extends State<MyEventPage> {
         builder: (context, state) {
           if (state is MyEventLoaded) {
             if (state.myEvents.isNotEmpty) {
-              return Expanded(
-                  child: ListView.builder(
-                      itemCount: state.myEvents.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: EdgeInsets.all(15.w),
-                          child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => BlocProvider(
+              return ListView.builder(
+                  itemCount: state.myEvents.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.all(15.w),
+                      child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MultiBlocProvider(
+                                          providers: [
+                                            BlocProvider(
                                               create: (context) => GetIt
                                                   .instance<ManageEventCubit>(),
-                                              child: EventDetail(
-                                                eventId:
-                                                    state.myEvents[index].id,
-                                                isEo: true,
-                                                status: state
-                                                    .myEvents[index].status,
-                                              ),
-                                            )));
-                              },
-                              child:
-                                  EoEventBox(eventData: state.myEvents[index])),
-                        );
-                      }));
+                                            ),
+                                            BlocProvider(
+                                              create: (context) =>
+                                                  GetIt.instance<
+                                                      FavouriteEventCubit>(),
+                                            ),
+                                          ],
+                                          child: EventDetail(
+                                            eventId: state.myEvents[index].id,
+                                            isEo: true,
+                                            status:
+                                                state.myEvents[index].status,
+                                          ),
+                                        )));
+                          },
+                          child: EoEventBox(eventData: state.myEvents[index])),
+                    );
+                  });
             } else {
               return Center(
                 child: EmptyDataUtils().emptyDataWithoutButton(

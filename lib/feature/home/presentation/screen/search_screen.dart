@@ -139,6 +139,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                     create: (context) =>
                                         GetIt.instance<ManageEventCubit>(),
                                   ),
+                                  BlocProvider(
+                                    create: (context) =>
+                                        GetIt.instance<FavouriteEventCubit>(),
+                                  ),
                                 ],
                                 child: EventDetail(
                                   eventId: item.id,

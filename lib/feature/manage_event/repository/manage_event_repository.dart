@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:event_radar2/feature/home/data/event_detail_model.dart';
@@ -10,7 +9,6 @@ import 'package:event_radar2/feature/manage_event/data/ticket_model.dart';
 import 'package:event_radar2/network/api_services.dart';
 import 'package:event_radar2/network/secure_storage_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
@@ -192,20 +190,6 @@ class ManageEventRepository {
         endTime.minute,
       );
 
-      Uint8List? compressedImageBytes;
-
-      if (content?.userImage != null) {
-        final imagePath = content!.userImage!.path;
-
-        compressedImageBytes = await FlutterImageCompress.compressWithFile(
-          imagePath,
-          minWidth: 800, // You can adjust width/height as needed
-          minHeight: 800,
-          quality: 70, // 0 = max compression, 100 = best quality
-          format: CompressFormat.jpeg,
-        );
-      }
-
       // Convert ticket info only if tickets are provided
       List<Map<String, dynamic>> ticketsJsonList = [];
       if (tickets != null) {
@@ -244,12 +228,12 @@ class ManageEventRepository {
       // Build form data
       final formMap = {
         "data": jsonEncode(modelData),
-        'event_thumbnail': compressedImageBytes != null
-      ? MultipartFile.fromBytes(
-          compressedImageBytes,
-          filename: content!.userImage!.path.split("/").last,
-        )
-      : null,
+        'event_thumbnail': content?.userImage != null
+            ? await MultipartFile.fromFile(
+                content!.userImage!.path,
+                filename: content.userImage!.path.split("/").last,
+              )
+            : null,
         "status": status ?? "waiting",
       };
 

@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:event_radar2/feature/components/utils/url_launcher_utils.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/ad_slider/ad_slider_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/creator_list/creator_list_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/cubits/event_detail/event_detail_cubit.dart';
@@ -174,19 +175,25 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: CarouselSlider(
                     items: state.adSliderList
-                        .map((item) => Image.network(
-                              "$baseUrlImage${item.image}",
-                              width: 430.w,
-                              height: 196.h,
-                              fit: BoxFit.fill,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Image.asset(
-                                  'asset/img/event/placeholder.jpg',
-                                  width: 430.w,
-                                  height: 196.h,
-                                  fit: BoxFit.fill,
-                                );
+                        .map((item) => GestureDetector(
+                              onTap: () {
+                                UrlLauncherUtils.launchURL(
+                                    actionType: 'browser', value: item.adUrl);
                               },
+                              child: Image.network(
+                                "$baseUrlImage${item.image}",
+                                width: 430.w,
+                                height: 196.h,
+                                fit: BoxFit.fill,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.asset(
+                                    'asset/img/event/placeholder.jpg',
+                                    width: 430.w,
+                                    height: 196.h,
+                                    fit: BoxFit.fill,
+                                  );
+                                },
+                              ),
                             ))
                         .toList(),
                     carouselController: carouselController,
@@ -296,6 +303,10 @@ class _HomePageState extends State<HomePage> {
                                           create: (context) => GetIt.instance<
                                               ManageEventCubit>(),
                                         ),
+                                        BlocProvider(
+                                          create: (context) => GetIt.instance<
+                                              FavouriteEventCubit>(),
+                                        ),
                                       ],
                                       child: EventDetail(
                                         eventId: state.events[index].id,
@@ -379,7 +390,7 @@ class _HomePageState extends State<HomePage> {
                                   child: EoDetailScreen(
                                       eoModel: filteredEoList[index],
                                       eoImage:
-                                          '//${filteredEoList[index].profile}'),
+                                          '$baseUrlImage${filteredEoList[index].profile}'),
                                 )));
                   },
                   child: HomepageProfile(
