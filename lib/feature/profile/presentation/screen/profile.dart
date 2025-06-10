@@ -13,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePage extends StatefulWidget {
   final bool isEo;
@@ -217,7 +218,46 @@ class _ProfilePageState extends State<ProfilePage> {
                             )
                           ],
                         )
-                      : SizedBox.shrink()
+                      : Container(
+                          width: double.infinity,
+                          height: 100.h,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.r),
+                              gradient: const LinearGradient(
+                                colors: <Color>[
+                                  Color(0xff0022ba),
+                                  Color(0xff0022ba),
+                                  Color(0xff4f4cee),
+                                  Color(0xff7f7df3)
+                                ],
+                                stops: <double>[0, 0, 0.531, 1],
+                              )),
+                          child: Padding(
+                            padding: EdgeInsets.all(15.w),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Balance',
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 18.sp,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'Rp 1.000.0000',
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 20.sp,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
                 ],
               ),
             );
