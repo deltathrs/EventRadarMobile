@@ -11,8 +11,10 @@ import 'package:event_radar2/feature/home/presentation/cubits/event_transaction/
 import 'package:event_radar2/feature/home/presentation/cubits/favourite_event/favourite_event_cubit.dart';
 import 'package:event_radar2/feature/home/presentation/screen/eo_detail_screen.dart';
 import 'package:event_radar2/feature/home/presentation/screen/payment_screen.dart';
+import 'package:event_radar2/feature/manage_event/presentation/cubits/atendees/atendees_cubit.dart';
 import 'package:event_radar2/feature/manage_event/presentation/cubits/handle_content_event/handle_content_event_cubit.dart';
 import 'package:event_radar2/feature/manage_event/presentation/cubits/manage_event/manage_event_cubit.dart';
+import 'package:event_radar2/feature/manage_event/presentation/screens/atendees_page.dart';
 import 'package:event_radar2/feature/manage_event/presentation/screens/manage_event_page.dart';
 import 'package:event_radar2/navigation_page.dart';
 import 'package:flutter/material.dart';
@@ -112,6 +114,36 @@ class _EventDetailState extends State<EventDetail> {
                   fontSize: 32.sp,
                   fontWeight: FontWeight.w600),
             ),
+            actions: [
+              widget.status == 'approved' ||
+                      widget.status == 'ongoing' ||
+                      widget.status == 'completed'
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: IconButton(
+                        onPressed: () {
+                          if (eventDetailModel != null) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => BlocProvider(
+                                          create: (context) =>
+                                              GetIt.instance<AtendeesCubit>(),
+                                          child: AtendeesPage(
+                                            eventId: eventDetailModel!.id,
+                                          ),
+                                        )));
+                          }
+                        },
+                        icon: Icon(
+                          Icons.people,
+                          size: 24.w,
+                          color: Colors.blueGrey,
+                        ),
+                      ),
+                    )
+                  : SizedBox.shrink()
+            ],
           ),
           body: BlocListener<FavouriteEventCubit, FavouriteEventState>(
             listener: (context, state) {

@@ -190,9 +190,6 @@ class _EditProfileState extends State<EditProfile> {
             ],
             child: BlocConsumer<ProfileCubit, ProfileState>(
               listener: (context, state) {
-                // TODO: implement listener
-              },
-              builder: (context, state) {
                 if (state is ProfileLoaded) {
                   nameController =
                       TextEditingController(text: state.profile.fullname);
@@ -205,7 +202,10 @@ class _EditProfileState extends State<EditProfile> {
                   }
                   phoneController =
                       TextEditingController(text: state.profile.phoneNumber);
-
+                }
+              },
+              builder: (context, state) {
+                if (state is ProfileLoaded) {
                   return Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: Column(

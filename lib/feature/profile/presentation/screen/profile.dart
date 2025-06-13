@@ -1,4 +1,5 @@
 import 'package:event_radar2/feature/home/presentation/cubits/favourite_event/favourite_event_cubit.dart';
+import 'package:event_radar2/feature/profile/presentation/cubits/balance/balance_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile/profile_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile_avatar/profile_avatar_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/save_profile/save_profile_cubit.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProfilePage extends StatefulWidget {
   final bool isEo;
@@ -31,6 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
     // TODO: implement initState
     super.initState();
     context.read<ProfileCubit>().getProfile();
+    context.read<BalanceCubit>().getBalance();
   }
 
   @override
@@ -218,45 +221,64 @@ class _ProfilePageState extends State<ProfilePage> {
                             )
                           ],
                         )
-                      : Container(
-                          width: double.infinity,
-                          height: 100.h,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.r),
-                              gradient: const LinearGradient(
-                                colors: <Color>[
-                                  Color(0xff0022ba),
-                                  Color(0xff0022ba),
-                                  Color(0xff4f4cee),
-                                  Color(0xff7f7df3)
-                                ],
-                                stops: <double>[0, 0, 0.531, 1],
-                              )),
-                          child: Padding(
-                            padding: EdgeInsets.all(15.w),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Balance',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 18.sp,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500),
+                      : BlocBuilder<BalanceCubit, BalanceState>(
+                          builder: (context, state) {
+                            if (state is BalanceLoaded) {
+                              return Container(
+                                width: double.infinity,
+                                height: 100.h,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                    gradient: const LinearGradient(
+                                      colors: <Color>[
+                                        Color(0xff0022ba),
+                                        Color(0xff0022ba),
+                                        Color(0xff4f4cee),
+                                        Color(0xff7f7df3)
+                                      ],
+                                      stops: <double>[0, 0, 0.531, 1],
+                                    )),
+                                child: Padding(
+                                  padding: EdgeInsets.all(15.w),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Balance',
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 18.sp,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        '${state.balance.currency} ${state.balance.totalBalance}',
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 20.sp,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                                SizedBox(
-                                  height: 10,
+                              );
+                            }
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                width: double.infinity,
+                                height: 100.h,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12.0),
                                 ),
-                                Text(
-                                  'Rp 1.000.0000',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 20.sp,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600),
-                                )
-                              ],
-                            ),
-                          ),
+                              ),
+                            );
+                          },
                         )
                 ],
               ),

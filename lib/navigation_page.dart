@@ -5,6 +5,7 @@ import 'package:event_radar2/feature/home/presentation/screen/home_screen.dart';
 import 'package:event_radar2/feature/manage_event/presentation/cubits/event/event_cubit.dart';
 import 'package:event_radar2/feature/manage_event/presentation/screens/my_event_page.dart';
 import 'package:event_radar2/feature/notification/presentation/screens/notification_page.dart';
+import 'package:event_radar2/feature/profile/presentation/cubits/balance/balance_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/cubits/profile/profile_cubit.dart';
 import 'package:event_radar2/feature/profile/presentation/screen/profile.dart';
 import 'package:event_radar2/feature/schedule/presentation/screens/schedule_eo_page.dart';
@@ -82,8 +83,15 @@ class _NavigationPage extends State<NavigationPage> {
                   create: (context) => GetIt.instance<ProfileCubit>(),
                   child: const SchedulePage(),
                 ),
-          BlocProvider(
-            create: (context) => GetIt.instance<ProfileCubit>(),
+          MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => GetIt.instance<ProfileCubit>(),
+              ),
+              BlocProvider(
+                create: (context) => GetIt.instance<BalanceCubit>(),
+              ),
+            ],
             child: ProfilePage(
               isEo: userRole == 'organizer' ? true : false,
             ),

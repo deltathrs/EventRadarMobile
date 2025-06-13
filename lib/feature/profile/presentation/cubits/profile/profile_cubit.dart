@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:event_radar2/feature/home/data/list_eo_model.dart';
 import 'package:event_radar2/feature/home/repository/event_repository.dart';
+import 'package:event_radar2/feature/profile/data/balance_model.dart';
 import 'package:event_radar2/feature/profile/data/profile_model.dart';
 import 'package:event_radar2/feature/profile/data/ticket_detail_model.dart';
 import 'package:event_radar2/feature/profile/repository/profile_repository.dart';
@@ -25,6 +26,8 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileError(message: e.toString()));
     }
   }
+
+
 
   Future<void> getTicketList({String? status}) async {
     emit(TicketListLoading());

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:event_radar2/feature/home/data/event_detail_model.dart';
+import 'package:event_radar2/feature/manage_event/data/atendees_model.dart';
 import 'package:event_radar2/feature/manage_event/data/content_visual_input_model.dart';
 import 'package:event_radar2/feature/manage_event/data/event_detail_input_model.dart';
 import 'package:event_radar2/feature/manage_event/data/my_event_model.dart';
@@ -47,6 +48,30 @@ class ManageEventRepository {
       return categories;
     } catch (e, stackTrace) {
       Logger().e('Error in getEventCategory: $e', stackTrace: stackTrace);
+      throw e;
+    }
+  }
+
+  Future<List<AtendeesModel>> getAtendeesList(String eventId) async {
+    try {
+      final response =
+          await apiService.getApiData("${dotenv.env['ATTENDEES']!}/$eventId");
+
+      if (response.statusCode == 200) {
+        final jsonData = response.data['data']['attendees'];
+
+        if (jsonData is List) {
+          return jsonData
+              .map((item) =>
+                  AtendeesModel.fromJson(Map<String, dynamic>.from(item)))
+              .toList();
+        } else {
+          return [];
+        }
+      }
+      throw response.data;
+    } catch (e, stackTrace) {
+      Logger().e('Error in getAtendees: $e', stackTrace: stackTrace);
       throw e;
     }
   }

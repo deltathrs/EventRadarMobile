@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:event_radar2/feature/home/data/event_detail_model.dart';
+import 'package:event_radar2/feature/profile/data/balance_model.dart';
 import 'package:event_radar2/feature/profile/data/profile_model.dart';
 import 'package:event_radar2/network/api_services.dart';
 import 'package:event_radar2/network/secure_storage_service.dart';
@@ -26,6 +27,20 @@ class ProfileRepository {
       return response.data;
     } catch (e, stackTrace) {
       Logger().e('Error getProfile: $e', stackTrace: stackTrace);
+      throw e;
+    }
+  }
+
+  Future<BalanceModel> getBalance() async {
+    try {
+      final response = await apiService.getApiData(dotenv.env['BALANCE']!);
+
+      if (response.statusCode == 200) {
+        return BalanceModel.fromJson(response.data['data']);
+      }
+      throw response.data;
+    } catch (e, stackTrace) {
+      Logger().e('Error in getBalance: $e', stackTrace: stackTrace);
       throw e;
     }
   }
