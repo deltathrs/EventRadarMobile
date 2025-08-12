@@ -62,10 +62,7 @@ dependencies:
   dash_chat_2: ^0.0.21
   chat_gpt_sdk: ^2.2.5
   logger: ^2.5.0
-  markdown_viewer:
-    git:
-      url: https://github.com/ogtushar/markdown_viewer
-      ref: fix-breaking-changes
+  markdown_viewer: ^0.6.2
   package_info_plus: ^8.3.0
   readmore: ^3.0.0
   shared_preferences: ^2.5.3

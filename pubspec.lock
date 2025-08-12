@@ -968,11 +968,10 @@ packages:
   markdown_viewer:
     dependency: "direct main"
     description:
-      path: "."
-      ref: fix-breaking-changes
-      resolved-ref: "58adbfb47a93f60586b5e73c9445fea8c0592edc"
-      url: "https://github.com/ogtushar/markdown_viewer"
-    source: git
+      name: markdown_viewer
+      sha256: e819ea779eaeca933bb38228e02888ad72409aba922efb2e65abb2f8b046dc8e
+      url: "https://pub.dev"
+    source: hosted
     version: "0.6.2"
   matcher:
     dependency: transitive
