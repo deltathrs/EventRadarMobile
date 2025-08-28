@@ -23,10 +23,12 @@ class TicketDetailModel {
   bool isOnline;
   String organizerName;
   String organizerId;
+  String organizerEmail;
+  String organizerPhone;
+  String organizerImage;
   String eventThumbnail;
   List<String> categories;
   List<Ticket> tickets;
-  bool? isApproved;
 
   TicketDetailModel({
     required this.id,
@@ -40,10 +42,12 @@ class TicketDetailModel {
     required this.isOnline,
     required this.organizerName,
     required this.organizerId,
+    required this.organizerEmail,
+    required this.organizerPhone,
+    required this.organizerImage,
     required this.eventThumbnail,
     required this.categories,
     required this.tickets,
-    this.isApproved,
   });
 
   factory TicketDetailModel.fromJson(Map<String, dynamic> json) =>
@@ -59,11 +63,13 @@ class TicketDetailModel {
         isOnline: json["is_online"],
         organizerName: json["organizer_name"],
         organizerId: json["organizer_id"],
+        organizerEmail: json["organizer_email"],
+        organizerPhone: json["organizer_phone"],
+        organizerImage: json["organizer_image"],
         eventThumbnail: json["event_thumbnail"],
         categories: List<String>.from(json["categories"].map((x) => x)),
         tickets:
             List<Ticket>.from(json["tickets"].map((x) => Ticket.fromJson(x))),
-        isApproved: json["is_approved"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -78,10 +84,12 @@ class TicketDetailModel {
         "is_online": isOnline,
         "organizer_name": organizerName,
         "organizer_id": organizerId,
+        "organizer_email": organizerEmail,
+        "organizer_phone": organizerPhone,
+        "organizer_image": organizerImage,
         "event_thumbnail": eventThumbnail,
         "categories": List<dynamic>.from(categories.map((x) => x)),
         "tickets": List<dynamic>.from(tickets.map((x) => x.toJson())),
-        "is_approved": isApproved,
       };
 }
 
@@ -89,9 +97,12 @@ class Ticket {
   String id;
   String ticketType;
   int ticketLimit;
-  double price;
+  int price;
   String description;
   DateTime registrationEnd;
+  String? onlinePlatform;
+  String? onlineEventLink;
+  String? onlineEventPasscode;
 
   Ticket({
     required this.id,
@@ -100,15 +111,21 @@ class Ticket {
     required this.price,
     required this.description,
     required this.registrationEnd,
+    this.onlinePlatform,
+    this.onlineEventLink,
+    this.onlineEventPasscode,
   });
 
   factory Ticket.fromJson(Map<String, dynamic> json) => Ticket(
         id: json["id"],
         ticketType: json["ticket_type"],
         ticketLimit: json["ticket_limit"],
-        price: json["price"]?.toDouble(),
+        price: json["price"],
         description: json["description"],
         registrationEnd: DateTime.parse(json["registration_end"]),
+        onlinePlatform: json["online_platform"],
+        onlineEventLink: json["online_event_link"],
+        onlineEventPasscode: json["online_event_passcode"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -118,5 +135,8 @@ class Ticket {
         "price": price,
         "description": description,
         "registration_end": registrationEnd.toIso8601String(),
+        "online_platform": onlinePlatform,
+        "online_event_link": onlineEventLink,
+        "online_event_passcode": onlineEventPasscode,
       };
 }

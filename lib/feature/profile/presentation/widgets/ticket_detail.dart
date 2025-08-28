@@ -64,6 +64,30 @@ class _TicketDetailState extends State<TicketDetail> {
                 fontWeight: FontWeight.w600),
           ),
         ),
+        bottomSheet: widget.ticketDetailModel.isOnline
+            ? Container(
+                width: double.infinity,
+                height: 60.h,
+                color: Colors.blue,
+                child: GestureDetector(
+                  onTap: () {
+                    UrlLauncherUtils.launchURL(
+                        actionType: 'browser',
+                        value: widget
+                            .ticketDetailModel.tickets[0].onlineEventLink!);
+                  },
+                  child: Center(
+                    child: Text(
+                      'Join Event',
+                      style: GoogleFonts.poppins(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white),
+                    ),
+                  ),
+                ),
+              )
+            : null,
         body: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
             if (state is EoDataLoaded) {
@@ -287,7 +311,8 @@ class _TicketDetailState extends State<TicketDetail> {
                                                       .tickets[index]
                                                       .ticketType,
                                                   widget.ticketDetailModel
-                                                      .tickets[index].price,
+                                                      .tickets[index].price
+                                                      .toDouble(),
                                                   widget
                                                       .ticketDetailModel
                                                       .tickets[index]
